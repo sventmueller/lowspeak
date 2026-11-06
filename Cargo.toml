@@ -1,0 +1,80 @@
+[package]
+name = "lowspeak"
+# The app version is in VERSION; xtask writes it into Info.plist.
+version = "0.0.0"
+description = "Menu bar speech-to-text for macOS: hold fn, speak, release"
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+# macOS shows the executable name for processes outside a bundle, hence the capital letter.
+[[bin]]
+name = "Lowspeak"
+path = "src/main.rs"
+
+[workspace]
+members = ["xtask"]
+
+[workspace.package]
+edition = "2024"
+license = "MIT OR Apache-2.0"
+publish = false
+
+[workspace.lints.rust]
+unsafe_op_in_unsafe_fn = "deny"
+
+[workspace.lints.clippy]
+undocumented_unsafe_blocks = "deny"
+cast_possible_truncation = "deny"
+cast_possible_wrap = "deny"
+cast_sign_loss = "deny"
+cast_lossless = "deny"
+
+[lints]
+workspace = true
+
+[dependencies]
+anyhow = "1"
+libc = "0.2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha1 = "0.11"
+sha2 = "0.11"
+unicode-general-category = "1"
+ureq = { version = "3.5", features = ["platform-verifier"] }
+cpal = "0.18"
+rubato = "5"
+security-framework = "3.7"
+whisper-rs = { version = "0.16", features = ["metal"] }
+
+block2 = "0.6"
+dispatch2 = "0.3"
+objc2 = "0.6"
+objc2-app-kit = "0.3"
+objc2-application-services = "0.3"
+objc2-audio-toolbox = "0.3"
+objc2-av-foundation = "0.3"
+objc2-core-audio-types = "0.3"
+objc2-core-foundation = "0.3"
+objc2-core-graphics = "0.3"
+objc2-core-ml = "0.3"
+objc2-foundation = "0.3"
+objc2-service-management = "0.3"
+objc2-user-notifications = "0.3"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+
+# whisper.cpp and the resampler are unusably slow without optimisation.
+[profile.dev.package."*"]
+opt-level = 3
+
+# AppKit menus and status items must be built on the main thread, which the test harness does not use.
+[[test]]
+name = "menu"
+harness = false
+
+[dev-dependencies]
+proptest = { version = "1.12.0", default-features = false, features = ["std"] }

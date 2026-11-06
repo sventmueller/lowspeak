@@ -1,0 +1,14 @@
+/target
+/build/
+# Release images go to the GitHub release; the notes next to them stay in the repository.
+/dist/*.dmg
+.DS_Store
+
+# API keys and signing material: the keys live in Application Support, the Developer ID key in the keychain.
+.api-key
+*.env
+*.p12
+*.cer
+*.csr
+*.key
+*.pem

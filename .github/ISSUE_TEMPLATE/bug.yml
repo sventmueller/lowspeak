@@ -1,0 +1,41 @@
+name: Report a problem
+description: Something in Lowspeak does not work as it should.
+labels: [bug]
+body:
+  - type: textarea
+    id: happened
+    attributes:
+      label: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: Transcription
+      placeholder: e.g. Groq Whisper Large V3, Parakeet Ultra on this Mac
+  - type: textarea
+    id: log
+    attributes:
+      label: Log excerpt
+      description: >-
+        The logs are in ~/Library/Application Support/Lowspeak/ (appstate.log, audio.log, hotkey.log). Issues are public;
+        remove anything private before pasting.
+      render: text
+  - type: input
+    id: version
+    attributes:
+      label: Lowspeak version
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version
+    validations:
+      required: true

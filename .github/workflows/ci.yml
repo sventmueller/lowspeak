@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    # Signing, notarization and the tests that need models, keys or a microphone run on the developer's Mac.
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Rust from rust-toolchain.toml
+        run: rustup show active-toolchain || rustup toolchain install
+      - name: CMake for whisper.cpp
+        run: cmake --version || brew install cmake
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+      - run: make check
+      - run: cargo xtask universal
+
+  intel:
+    # The Macs that build and test everything else run only the Apple Silicon half of the universal program.
+    runs-on: macos-26-intel
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Rust from rust-toolchain.toml
+        run: rustup show active-toolchain || rustup toolchain install
+      - name: CMake for whisper.cpp
+        run: cmake --version || brew install cmake
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+      - run: cargo test --release --workspace --no-fail-fast

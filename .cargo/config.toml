@@ -1,0 +1,7 @@
+[alias]
+xtask = "run --quiet --package xtask --"
+
+[env]
+MACOSX_DEPLOYMENT_TARGET = "14.0"
+# Everything run through Cargo logs here; `cargo xtask deploy` removes it before launching the app.
+LOWSPEAK_LOG_DIR = { value = "target/logs", relative = true }
