@@ -327,6 +327,10 @@ fn hold_and_speak(world: &Shared) {
 const INTENDED_PANICS: [&str; 2] = ["the model crashed", "the disk is gone"];
 
 fn main() {
+    if std::env::var_os("LOWSPEAK_SKIP_WINDOW_TESTS").is_some() {
+        println!("app test skipped: LOWSPEAK_SKIP_WINDOW_TESTS is set");
+        return;
+    }
     let report = std::panic::take_hook();
     std::panic::set_hook(Box::new(move |info| {
         let message = info.payload().downcast_ref::<&str>().copied().unwrap_or("");

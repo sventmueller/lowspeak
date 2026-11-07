@@ -259,7 +259,7 @@ cargo xtask signing-identity  # once per Mac: local certificate so updates keep 
 - The Parakeet module is a translation of FluidAudio's Swift code; Apache-2.0 asks that the license goes along and that the module says so, which its doc comment does
 
 ### CI
-- `.github/workflows/ci.yml` runs `make check` on a macOS runner for every push to `main` and every pull request. Signing, notarisation and the `#[ignore]` tests need the developer's keychain, keys, models or microphone and run only locally
+- `.github/workflows/ci.yml` runs `make check` on a macOS runner for every push to `main` and every pull request; the Intel job runs the tests as Intel code without the window tests (`tests/menu.rs`, `tests/app.rs`, skipped by `LOWSPEAK_SKIP_WINDOW_TESTS`), since that runner draws windows a hundred times slower. `make test-intel` runs them under Rosetta. Both jobs stop after 45 minutes. Signing, notarisation and the `#[ignore]` tests need the developer's keychain, keys, models or microphone and run only locally
 
 ### Version
 - `VERSION` holds `major.minor.build`, the version the next build gets; `xtask` writes it into `CFBundleShortVersionString` and `CFBundleVersion`. The version in `Cargo.toml` stays `0.0.0`

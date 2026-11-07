@@ -116,6 +116,10 @@ fn clipboard_offers_the_dictation_lazily_and_restores_what_was_there() {
 }
 
 fn main() {
+    if std::env::var_os("LOWSPEAK_SKIP_WINDOW_TESTS").is_some() {
+        println!("menu test skipped: LOWSPEAK_SKIP_WINDOW_TESTS is set");
+        return;
+    }
     let mtm = MainThreadMarker::new().expect("the menu test must run on the main thread");
     let _application = NSApplication::sharedApplication(mtm);
     clipboard_offers_the_dictation_lazily_and_restores_what_was_there();
