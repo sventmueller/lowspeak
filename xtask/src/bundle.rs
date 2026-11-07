@@ -7,8 +7,24 @@ use anyhow::Result;
 
 use crate::*;
 
+/// The interface languages, named as the README folders and the folders of `resources/`. macOS shows the texts of
+/// frameworks such as Sparkle and AppKit only in a language the app declares.
+pub(crate) const LOCALIZATIONS: [&str; 35] = [
+    "ar", "ca", "cs", "da", "de", "el", "en", "es", "fi", "fr", "he", "hi", "hr", "hu", "id", "it",
+    "ja", "ko", "ms", "nl", "no", "pl", "pt_BR", "pt_PT", "ro", "ru", "sk", "sl", "sv", "th", "tr",
+    "uk", "vi", "zh-Hans", "zh-Hant",
+];
+
+/// `resources/<language>.lproj/InfoPlist.strings`: the property list's texts macOS shows, translated; of those, only
+/// the microphone prompt shows the app's own words.
+pub(crate) const STRINGS: &str = "InfoPlist.strings";
+
 /// `updates` adds what Sparkle reads: where the feed is and the key every update must be signed with.
 pub(crate) fn info_plist(version: &str, updates: bool) -> String {
+    let localizations: String = LOCALIZATIONS
+        .iter()
+        .map(|language| format!("        <string>{language}</string>\n"))
+        .collect();
     let updates = if updates {
         format!(
             "    <key>SUFeedURL</key>\n    <string>{}</string>\n    <key>SUPublicEDKey</key>\n    <string>{UPDATE_KEY}</string>\n",
@@ -24,6 +40,9 @@ pub(crate) fn info_plist(version: &str, updates: bool) -> String {
 <dict>
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
+    <key>CFBundleLocalizations</key>
+    <array>
+{localizations}    </array>
     <key>CFBundleExecutable</key>
     <string>{APP_NAME}</string>
     <key>CFBundleIconFile</key>
@@ -118,6 +137,14 @@ pub(crate) fn assemble(build: Build, version: &str) -> Result<PathBuf> {
         contents.join("Resources").join("AppIcon.icns"),
     )
     .context("copying the icon (run `cargo xtask icon` first)")?;
+    for language in LOCALIZATIONS {
+        let lproj = format!("{language}.lproj");
+        let target = contents.join("Resources").join(&lproj);
+        std::fs::create_dir_all(&target)?;
+        let strings = root.join("resources").join(&lproj).join(STRINGS);
+        std::fs::copy(&strings, target.join(STRINGS))
+            .with_context(|| format!("copying {}", strings.display()))?;
+    }
     std::fs::write(
         contents.join("Info.plist"),
         info_plist(version, build.updates()),

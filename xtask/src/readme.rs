@@ -157,6 +157,13 @@ mod tests {
     use super::*;
 
     #[test]
+    fn the_bundle_declares_every_readme_language() {
+        let mut folders: Vec<&str> = READMES.iter().map(|(folder, _)| *folder).collect();
+        folders.sort_unstable();
+        assert_eq!(folders, LOCALIZATIONS);
+    }
+
+    #[test]
     fn languages_link_each_other_over_their_common_folder() {
         let german = readme_path("de");
         let dir = german.parent().unwrap();

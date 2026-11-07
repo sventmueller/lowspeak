@@ -164,6 +164,45 @@ mod tests {
             plist.contains("<key>CFBundleShortVersionString</key>\n    <string>1.2.3</string>")
         );
         assert!(plist.contains("<key>CFBundleVersion</key>\n    <string>1.2.3</string>"));
+        assert!(plist.contains(
+            "<key>CFBundleLocalizations</key>\n    <array>\n        <string>ar</string>\n"
+        ));
+        assert!(plist.contains("        <string>zh-Hant</string>\n    </array>\n"));
+    }
+
+    #[test]
+    fn every_language_explains_the_microphone_prompt() {
+        let plist = info_plist("1.2.3", false);
+        let english = plist
+            .split("<key>NSMicrophoneUsageDescription</key>\n    <string>")
+            .nth(1)
+            .and_then(|rest| rest.split("</string>").next())
+            .unwrap();
+        let mut folders: Vec<String> = std::fs::read_dir(root().join("resources"))
+            .unwrap()
+            .flatten()
+            .map(|entry| entry.file_name().to_string_lossy().into_owned())
+            .collect();
+        folders.sort_unstable();
+        let expected: Vec<String> = LOCALIZATIONS.iter().map(|l| format!("{l}.lproj")).collect();
+        assert_eq!(folders, expected);
+        for language in LOCALIZATIONS {
+            let path = root().join(format!("resources/{language}.lproj/{STRINGS}"));
+            let text = std::fs::read_to_string(&path).unwrap();
+            let value = text
+                .strip_prefix("\"NSMicrophoneUsageDescription\" = \"")
+                .and_then(|rest| rest.strip_suffix("\";\n"))
+                .unwrap_or_else(|| panic!("{}: {text:?}", path.display()));
+            assert!(
+                value.contains("Lowspeak") && !value.contains('"'),
+                "{language}: {value}"
+            );
+            if language == "en" {
+                assert_eq!(value, english);
+            } else {
+                assert_ne!(value, english, "{language} is not translated");
+            }
+        }
     }
 
     #[test]

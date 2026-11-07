@@ -123,7 +123,15 @@ Lowspeak tinggal dalam bar menu. Tahan kekunci fn (Glob) dan bercakap; apabila a
 
 **Daripada imej cakera.** Muat turun [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), buka dan seret Lowspeak ke folder Aplikasi. Imej ini ditandatangani dengan Developer ID dan dinotarisasi oleh Apple, jadi ia dibuka tanpa amaran.
 
-**Kemas kini.** Lowspeak daripada imej cakera mengemas kini dirinya sendiri melalui [Sparkle](https://sparkle-project.org). Pada pelancaran kali kedua, ia bertanya sama ada ia boleh mencari kemas kini sendiri, sekali sehari. **Semak Kemas Kini…** dalam menu menyemak serta-merta; **Semak Kemas Kini Secara Automatik** dan **Muat Turun dan Pasang Kemas Kini Secara Automatik** di bawahnya mengubah pilihan anda kemudian. Apabila semakan menemui versi baharu semasa anda bekerja dalam app lain, satu titik muncul pada cincin dalam bar menu, dan **Semak Kemas Kini…** membawa kemas kini itu ke hadapan. Lowspeak memasang kemas kini hanya jika ia membawa tandatangan pembangun; tetapan, kunci dan model anda kekal. Versi 1.0.0 tidak mempunyai pengemas kini: pasang versi yang lebih baharu di atasnya sekali sahaja, daripada [halaman keluaran](https://github.com/sventmueller/lowspeak/releases). Binaan anda sendiri juga tidak mempunyai pengemas kini.
+**Dengan Homebrew.** Cask berada dalam tap tersendiri:
+
+```sh
+brew install --cask sventmueller/tap/lowspeak
+```
+
+`brew uninstall --zap --cask lowspeak` turut membuang tetapan, model, log dan cache Lowspeak; kunci API kekal dalam rantai kunci log masuk anda.
+
+**Kemas kini.** Lowspeak daripada imej cakera atau Homebrew mengemas kini dirinya sendiri melalui [Sparkle](https://sparkle-project.org). Pada pelancaran kali kedua, ia bertanya sama ada ia boleh mencari kemas kini sendiri, sekali sehari. **Semak Kemas Kini…** dalam menu menyemak serta-merta; **Semak Kemas Kini Secara Automatik** dan **Muat Turun dan Pasang Kemas Kini Secara Automatik** di bawahnya mengubah pilihan anda kemudian. Apabila semakan menemui versi baharu semasa anda bekerja dalam app lain, satu titik muncul pada cincin dalam bar menu, dan **Semak Kemas Kini…** membawa kemas kini itu ke hadapan. Lowspeak memasang kemas kini hanya jika ia membawa tandatangan pembangun; tetapan, kunci dan model anda kekal. `brew upgrade --cask lowspeak` turut mengemas kini salinan daripada Homebrew. Versi 1.0.0 tidak mempunyai pengemas kini: pasang versi yang lebih baharu di atasnya sekali sahaja, daripada [halaman keluaran](https://github.com/sventmueller/lowspeak/releases). Binaan anda sendiri juga tidak mempunyai pengemas kini.
 
 **Daripada kod sumber.** Lihat [Membina & memasang](../../../docs/development.md#build--deploy) untuk prasyarat, kemudian:
 

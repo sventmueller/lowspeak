@@ -123,7 +123,15 @@ El Lowspeak viu a la barra de menús. Mantén premuda la tecla fn (globus terraq
 
 **Des de la imatge de disc.** Descarrega [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), obre’l i arrossega el Lowspeak a la carpeta Aplicacions. La imatge està signada amb un Developer ID i notaritzada per Apple, de manera que s’obre sense advertiments.
 
-**Actualitzacions.** El Lowspeak de la imatge de disc s’actualitza sol amb [Sparkle](https://sparkle-project.org). A la segona obertura pregunta si pot cercar actualitzacions pel seu compte, un cop al dia. **Cerca actualitzacions…** al menú les cerca a l’instant; **Cerca actualitzacions automàticament** i **Descarrega i instal·la actualitzacions automàticament**, just a sota, et permeten canviar l’elecció més endavant. Si una cerca troba una versió nova mentre treballes en una altra app, apareix un punt a l’anell de la barra de menús, i **Cerca actualitzacions…** porta l’actualització al primer pla. El Lowspeak només instal·la una actualització si porta la signatura del desenvolupador; els teus ajustos, claus i models es conserven. La versió 1.0.0 no té actualitzador: instal·la un cop una versió més nova damunt seu, des de la [pàgina de versions](https://github.com/sventmueller/lowspeak/releases). Una compilació pròpia tampoc no té actualitzador.
+**Amb Homebrew.** El cask viu en un tap propi:
+
+```sh
+brew install --cask sventmueller/tap/lowspeak
+```
+
+`brew uninstall --zap --cask lowspeak` elimina també els ajustos, els models, els registres i les memòries cau del Lowspeak; les teves claus d’API es queden al clauer d’inici de sessió.
+
+**Actualitzacions.** El Lowspeak de la imatge de disc o de Homebrew s’actualitza sol amb [Sparkle](https://sparkle-project.org). A la segona obertura pregunta si pot cercar actualitzacions pel seu compte, un cop al dia. **Cerca actualitzacions…** al menú les cerca a l’instant; **Cerca actualitzacions automàticament** i **Descarrega i instal·la actualitzacions automàticament**, just a sota, et permeten canviar l’elecció més endavant. Si una cerca troba una versió nova mentre treballes en una altra app, apareix un punt a l’anell de la barra de menús, i **Cerca actualitzacions…** porta l’actualització al primer pla. El Lowspeak només instal·la una actualització si porta la signatura del desenvolupador; els teus ajustos, claus i models es conserven. `brew upgrade --cask lowspeak` també actualitza una còpia de Homebrew. La versió 1.0.0 no té actualitzador: instal·la un cop una versió més nova damunt seu, des de la [pàgina de versions](https://github.com/sventmueller/lowspeak/releases). Una compilació pròpia tampoc no té actualitzador.
 
 **Des del codi font.** Mira [Compilació i desplegament](../../../docs/development.md#build--deploy) per als requisits previs i després:
 

@@ -123,7 +123,15 @@ Lowspeak živi v menijski vrstici. Pridržite tipko fn (Globus) in govorite; ko 
 
 **Z diskovne slike.** Prenesite [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), jo odprite in povlecite Lowspeak v mapo Aplikacije. Slika je podpisana z ID-jem razvijalca in overjena pri Applu, zato se odpre brez opozoril.
 
-**Posodobitve.** Lowspeak z diskovne slike se posodablja sam s pomočjo [Sparkla](https://sparkle-project.org). Ob drugem zagonu vpraša, ali sme enkrat na dan sam preveriti, ali so na voljo posodobitve. **Preveri, ali so na voljo posodobitve…** v meniju preveri takoj; **Samodejno preverjaj, ali so na voljo posodobitve** in **Samodejno prenesi in namesti posodobitve** pod njim pozneje spremenita vašo izbiro. Ko preverjanje najde novo različico, medtem ko delate v drugi aplikaciji, se na obroču v menijski vrstici pokaže pika, **Preveri, ali so na voljo posodobitve…** pa posodobitev prikaže v ospredju. Lowspeak namesti posodobitev le, če nosi podpis razvijalca; vaše nastavitve, ključi in modeli ostanejo. Različica 1.0.0 nima posodabljalnika: novejšo različico enkrat namestite čeznjo s [strani izdaj](https://github.com/sventmueller/lowspeak/releases). Tudi vaša lastna zgradba nima posodabljalnika.
+**S Homebrewom.** Cask je v lastnem tapu:
+
+```sh
+brew install --cask sventmueller/tap/lowspeak
+```
+
+`brew uninstall --zap --cask lowspeak` odstrani tudi nastavitve, modele, dnevnike in predpomnilnike aplikacije Lowspeak; vaši ključi API ostanejo v verigi ključev za prijavo.
+
+**Posodobitve.** Lowspeak z diskovne slike ali iz Homebrewa se posodablja sam s pomočjo [Sparkla](https://sparkle-project.org). Ob drugem zagonu vpraša, ali sme enkrat na dan sam preveriti, ali so na voljo posodobitve. **Preveri, ali so na voljo posodobitve…** v meniju preveri takoj; **Samodejno preverjaj, ali so na voljo posodobitve** in **Samodejno prenesi in namesti posodobitve** pod njim pozneje spremenita vašo izbiro. Ko preverjanje najde novo različico, medtem ko delate v drugi aplikaciji, se na obroču v menijski vrstici pokaže pika, **Preveri, ali so na voljo posodobitve…** pa posodobitev prikaže v ospredju. Lowspeak namesti posodobitev le, če nosi podpis razvijalca; vaše nastavitve, ključi in modeli ostanejo. `brew upgrade --cask lowspeak` posodobi tudi kopijo iz Homebrewa. Različica 1.0.0 nima posodabljalnika: novejšo različico enkrat namestite čeznjo s [strani izdaj](https://github.com/sventmueller/lowspeak/releases). Tudi vaša lastna zgradba nima posodabljalnika.
 
 **Iz izvorne kode.** Predpogoje najdete v razdelku [Gradnja in namestitev](../../../docs/development.md#build--deploy), nato:
 

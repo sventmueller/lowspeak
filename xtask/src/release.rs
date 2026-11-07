@@ -13,22 +13,173 @@ pub(crate) const NOTARY_PROFILE: &str = "notary";
 /// What the release being built brings, written by hand before `cargo xtask dmg`.
 const NOTES: &str = "RELEASE_NOTES.md";
 
-const REPORT_LINE: &str = "Something wrong or missing? \
-     [Report it on GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).";
+/// The folder with `NOTES` in every other interface language, `<language>.md` for each of `LOCALIZATIONS`.
+const TRANSLATED_NOTES: &str = "release-notes";
+
+const ISSUES: &str = "https://github.com/sventmueller/lowspeak/issues/new/choose";
+
+/// The line below the notes in each interface language; `{issues}` stands for `ISSUES`.
+const REPORT_LINES: [(&str, &str); 35] = [
+    (
+        "en",
+        "Something wrong or missing? [Report it on GitHub]({issues}).",
+    ),
+    (
+        "ar",
+        "هل هناك خطأ أو شيء ناقص؟ [أبلغ عنه على GitHub]({issues}).",
+    ),
+    (
+        "ca",
+        "Alguna cosa falla o hi falta? [Comunica-ho a GitHub]({issues}).",
+    ),
+    (
+        "cs",
+        "Něco nefunguje nebo chybí? [Nahlaste to na GitHubu]({issues}).",
+    ),
+    (
+        "da",
+        "Er noget forkert, eller mangler noget? [Rapportér det på GitHub]({issues}).",
+    ),
+    (
+        "de",
+        "Fehlt etwas oder stimmt etwas nicht? [Melde es auf GitHub]({issues}).",
+    ),
+    (
+        "el",
+        "Κάτι δεν λειτουργεί ή λείπει; [Αναφέρετέ το στο GitHub]({issues}).",
+    ),
+    ("es", "¿Algo falla o falta? [Avísanos en GitHub]({issues})."),
+    (
+        "fi",
+        "Onko jokin vialla tai puuttuuko jotain? [Ilmoita siitä GitHubissa]({issues}).",
+    ),
+    (
+        "fr",
+        "Quelque chose ne va pas ou manque\u{a0}? [Signalez-le sur GitHub]({issues}).",
+    ),
+    (
+        "he",
+        "משהו לא תקין או חסר? [דווחו על כך ב-GitHub]({issues}).",
+    ),
+    ("hi", "कुछ गलत है या कुछ छूट गया है? [GitHub पर बताएँ]({issues})।"),
+    (
+        "hr",
+        "Nešto ne radi ili nedostaje? [Prijavite to na GitHubu]({issues}).",
+    ),
+    (
+        "hu",
+        "Valami nem működik vagy hiányzik? [Jelezze a GitHubon]({issues}).",
+    ),
+    (
+        "id",
+        "Ada yang salah atau kurang? [Laporkan di GitHub]({issues}).",
+    ),
+    (
+        "it",
+        "Qualcosa non va o manca? [Segnalalo su GitHub]({issues}).",
+    ),
+    (
+        "ja",
+        "不具合や足りない点がありましたら、[GitHubで報告してください]({issues})。",
+    ),
+    (
+        "ko",
+        "문제가 있거나 빠진 것이 있나요? [GitHub에 알려 주세요]({issues}).",
+    ),
+    (
+        "ms",
+        "Ada yang salah atau tiada? [Laporkan di GitHub]({issues}).",
+    ),
+    (
+        "nl",
+        "Klopt er iets niet of mist er iets? [Meld het op GitHub]({issues}).",
+    ),
+    (
+        "no",
+        "Er noe feil, eller mangler noe? [Rapporter det på GitHub]({issues}).",
+    ),
+    (
+        "pl",
+        "Coś nie działa lub czegoś brakuje? [Zgłoś to na GitHubie]({issues}).",
+    ),
+    (
+        "pt_BR",
+        "Algo errado ou faltando? [Informe no GitHub]({issues}).",
+    ),
+    (
+        "pt_PT",
+        "Algo errado ou em falta? [Comunique-o no GitHub]({issues}).",
+    ),
+    (
+        "ro",
+        "Ceva nu funcționează sau lipsește? [Raportați pe GitHub]({issues}).",
+    ),
+    (
+        "ru",
+        "Что-то не так или чего-то не хватает? [Сообщите на GitHub]({issues}).",
+    ),
+    (
+        "sk",
+        "Niečo nefunguje alebo chýba? [Nahláste to na GitHube]({issues}).",
+    ),
+    (
+        "sl",
+        "Je kaj narobe ali kaj manjka? [Sporočite na GitHubu]({issues}).",
+    ),
+    (
+        "sv",
+        "Är något fel, eller saknas något? [Rapportera det på GitHub]({issues}).",
+    ),
+    ("th", "มีอะไรผิดพลาดหรือขาดหายไปไหม [แจ้งบน GitHub]({issues})"),
+    (
+        "tr",
+        "Bir sorun ya da eksik mi var? [GitHub’da bildirin]({issues}).",
+    ),
+    (
+        "uk",
+        "Щось не так або чогось бракує? [Повідомте на GitHub]({issues}).",
+    ),
+    (
+        "vi",
+        "Có gì sai hoặc còn thiếu? [Báo cáo trên GitHub]({issues}).",
+    ),
+    (
+        "zh-Hans",
+        "发现问题或缺少功能？[在 GitHub 上反馈]({issues})。",
+    ),
+    (
+        "zh-Hant",
+        "發現問題或缺少功能？[在 GitHub 上回報]({issues})。",
+    ),
+];
+
+fn report_line(language: &str) -> Result<String> {
+    REPORT_LINES
+        .iter()
+        .find(|(known, _)| *known == language)
+        .map(|(_, line)| line.replace("{issues}", ISSUES))
+        .with_context(|| format!("no report line for {language}"))
+}
 
 /// Builds the release app signed with the Developer ID, has Apple notarize it, packs it into a disk image with a
 /// link to /Applications and has Apple notarize the image too, so that Gatekeeper opens both on other Macs, each with
 /// its ticket stapled. Only an image that passed all of this becomes `dist/Lowspeak-<version>.dmg`, next to
 /// `dist/Lowspeak-<version>.md` with the notes of `RELEASE_NOTES.md` and `dist/appcast.xml`, which offers the image to
-/// installed copies once it is on the GitHub release; it replaces the older ones there, and the build number goes up.
-/// A failed run leaves `dist/` and VERSION as they were.
+/// installed copies once it is on the GitHub release, with the notes in every interface language; it replaces the
+/// older ones there, and the build number goes up. A failed run leaves `dist/` and VERSION as they were.
 pub(crate) fn release() -> Result<PathBuf> {
     let version = version()?;
     let dist = root().join("dist");
     let notes_path = root().join(NOTES);
     let written = std::fs::read_to_string(&notes_path)
         .with_context(|| format!("reading {}", notes_path.display()))?;
-    let notes = release_notes(&written, previous_notes(&dist).as_deref())?;
+    let notes = release_notes(
+        NOTES,
+        &written,
+        previous_notes(&dist).as_deref(),
+        &report_line("en")?,
+    )?;
+    let translations = translated_notes(std::fs::read_to_string(dist.join(FEED)).ok().as_deref())?;
     let identity = developer_id()?;
     // Checks the saved login before the release build, which takes minutes.
     run(Command::new("xcrun")
@@ -81,7 +232,13 @@ pub(crate) fn release() -> Result<PathBuf> {
             .env("LC_ALL", "C")
             .args(["-u", "+%a, %d %b %Y %H:%M:%S +0000"]),
     )?;
-    let feed = appcast(&version, signature.trim(), date.trim(), notes.trim_end())?;
+    let feed = appcast(
+        &version,
+        signature.trim(),
+        date.trim(),
+        notes.trim_end(),
+        &translations,
+    )?;
 
     std::fs::create_dir_all(&dist)?;
     let name = format!("{APP_NAME}-{version}");
@@ -102,16 +259,41 @@ pub(crate) fn release() -> Result<PathBuf> {
     Ok(published)
 }
 
-/// What goes with the release: the notes written for it and the way to report a problem.
-pub(crate) fn release_notes(written: &str, previous: Option<&str>) -> Result<String> {
+/// What goes with the release: the notes written for it in `file` and the way to report a problem.
+pub(crate) fn release_notes(
+    file: &str,
+    written: &str,
+    previous: Option<&str>,
+    report: &str,
+) -> Result<String> {
     let written = written.trim();
     if written.is_empty() {
-        bail!("{NOTES} is empty; write what this release brings");
+        bail!("{file} is empty; write what this release brings");
     }
     if previous.is_some_and(|notes| notes.contains(written)) {
-        bail!("{NOTES} still holds the notes of the previous release");
+        bail!("{file} still holds the notes of the previous release");
     }
-    Ok(format!("{written}\n\n{REPORT_LINE}\n"))
+    Ok(format!("{written}\n\n{report}\n"))
+}
+
+/// The notes in every interface language but English, each new since `previous_feed`.
+fn translated_notes(previous_feed: Option<&str>) -> Result<Vec<(&'static str, String)>> {
+    LOCALIZATIONS
+        .into_iter()
+        .filter(|language| *language != "en")
+        .map(|language| {
+            let file = format!("{TRANSLATED_NOTES}/{language}.md");
+            let path = root().join(&file);
+            let written = std::fs::read_to_string(&path).with_context(|| {
+                format!(
+                    "reading {}: the update dialog shows the notes in every interface language",
+                    path.display()
+                )
+            })?;
+            let notes = release_notes(&file, &written, previous_feed, &report_line(language)?)?;
+            Ok((language, notes))
+        })
+        .collect()
 }
 
 /// The notes of the release `dist/` holds, if any.
@@ -390,11 +572,39 @@ mod tests {
 
     #[test]
     fn the_notes_are_new_and_name_the_way_to_report_a_problem() {
-        let notes = release_notes("- New.\n", None).unwrap();
-        assert_eq!(notes, format!("- New.\n\n{REPORT_LINE}\n"));
-        assert!(release_notes(" \n", None).is_err());
-        assert!(release_notes("- New.\n", Some(&notes)).is_err());
-        assert!(release_notes("- Newer.\n", Some(&notes)).is_ok());
+        let report = report_line("en").unwrap();
+        assert_eq!(
+            report,
+            "Something wrong or missing? \
+             [Report it on GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose)."
+        );
+        let notes = release_notes(NOTES, "- New.\n", None, &report).unwrap();
+        assert_eq!(notes, format!("- New.\n\n{report}\n"));
+        assert!(release_notes(NOTES, " \n", None, &report).is_err());
+        let stale = release_notes("release-notes/de.md", "- New.\n", Some(&notes), &report);
+        assert!(
+            stale
+                .unwrap_err()
+                .to_string()
+                .contains("release-notes/de.md")
+        );
+        assert!(release_notes(NOTES, "- Newer.\n", Some(&notes), &report).is_ok());
+    }
+
+    #[test]
+    fn every_interface_language_has_a_report_line() {
+        let languages: Vec<&str> = REPORT_LINES.iter().map(|(language, _)| *language).collect();
+        let mut sorted = languages.clone();
+        sorted.sort_unstable();
+        assert_eq!(sorted, LOCALIZATIONS);
+        for language in languages {
+            let line = report_line(language).unwrap();
+            assert!(
+                line.contains(&format!("({ISSUES})")) && line.contains("GitHub"),
+                "{language}: {line}"
+            );
+        }
+        assert!(report_line("xx").is_err());
     }
 
     fn placed(name: &str, (x, y): (u32, u32)) -> Vec<u8> {

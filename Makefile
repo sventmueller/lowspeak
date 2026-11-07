@@ -35,5 +35,5 @@ test-online: ## OpenAI and Groq with the stored keys, and the model downloads fr
 test-devices: ## The default microphone; the terminal needs microphone access
 	cargo test --release --test recording -- --ignored
 
-release: check ## After make check, with RELEASE_NOTES.md written: dist/Lowspeak-<version>.dmg, notarized; replaces the old one
+release: check ## After make check, with RELEASE_NOTES.md and release-notes/<language>.md written: dist/Lowspeak-<version>.dmg, notarized; replaces the old one
 	cargo xtask dmg

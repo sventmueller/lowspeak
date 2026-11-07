@@ -123,7 +123,15 @@ Lowspeak menü çubuğunda yaşar. fn (Dünya) tuşunu basılı tutun ve konuşu
 
 **Disk görüntüsünden.** [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg) dosyasını indirin, açın ve Lowspeak’i Uygulamalar klasörüne sürükleyin. Görüntü bir Developer ID ile imzalanmış ve Apple tarafından notarize edilmiştir; bu yüzden uyarısız açılır.
 
-**Güncellemeler.** Disk görüntüsünden kurulan Lowspeak kendini [Sparkle](https://sparkle-project.org) ile güncel tutar. İkinci açılışta, günde bir kez kendiliğinden güncelleme arayıp arayamayacağını sorar. Menüdeki **Güncellemeleri Denetle…** hemen denetler; altındaki **Güncellemeleri Otomatik Olarak Denetle** ve **Güncellemeleri Otomatik Olarak İndir ve Yükle** seçimlerinizi sonradan değiştirir. Siz başka bir uygulamada çalışırken bir denetim yeni bir sürüm bulursa menü çubuğundaki halkada bir nokta belirir ve **Güncellemeleri Denetle…** güncellemeyi öne getirir. Lowspeak bir güncellemeyi yalnızca geliştiricinin imzasını taşıyorsa kurar; ayarlarınız, anahtarlarınız ve modelleriniz korunur. 1.0.0 sürümünde güncelleyici yoktur: daha yeni bir sürümü [sürümler sayfasından](https://github.com/sventmueller/lowspeak/releases) bir kez onun üzerine kurun. Kendi derlemenizde de güncelleyici yoktur.
+**Homebrew ile.** Cask kendi tap’inde bulunur:
+
+```sh
+brew install --cask sventmueller/tap/lowspeak
+```
+
+`brew uninstall --zap --cask lowspeak`, Lowspeak’in ayarlarını, modellerini, günlüklerini ve önbelleklerini de kaldırır; API anahtarları oturum açma anahtar zincirinizde kalır.
+
+**Güncellemeler.** Disk görüntüsünden ya da Homebrew ile kurulan Lowspeak kendini [Sparkle](https://sparkle-project.org) ile güncel tutar. İkinci açılışta, günde bir kez kendiliğinden güncelleme arayıp arayamayacağını sorar. Menüdeki **Güncellemeleri Denetle…** hemen denetler; altındaki **Güncellemeleri Otomatik Olarak Denetle** ve **Güncellemeleri Otomatik Olarak İndir ve Yükle** seçimlerinizi sonradan değiştirir. Siz başka bir uygulamada çalışırken bir denetim yeni bir sürüm bulursa menü çubuğundaki halkada bir nokta belirir ve **Güncellemeleri Denetle…** güncellemeyi öne getirir. Lowspeak bir güncellemeyi yalnızca geliştiricinin imzasını taşıyorsa kurar; ayarlarınız, anahtarlarınız ve modelleriniz korunur. Homebrew ile kurulan bir kopyayı `brew upgrade --cask lowspeak` komutu da günceller. 1.0.0 sürümünde güncelleyici yoktur: daha yeni bir sürümü [sürümler sayfasından](https://github.com/sventmueller/lowspeak/releases) bir kez onun üzerine kurun. Kendi derlemenizde de güncelleyici yoktur.
 
 **Kaynaktan.** Önkoşullar için [Derleme ve dağıtım](../../../docs/development.md#build--deploy) bölümüne bakın, ardından:
 

@@ -123,7 +123,15 @@ Lowspeak tinggal di bar menu. Tahan tombol fn (Globe) dan bicaralah; begitu Anda
 
 **Dari image disk.** Unduh [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), buka, lalu seret Lowspeak ke folder Aplikasi. Image ini ditandatangani dengan Developer ID dan dinotarisasi oleh Apple, sehingga terbuka tanpa peringatan.
 
-**Pembaruan.** Lowspeak dari image disk memperbarui dirinya sendiri melalui [Sparkle](https://sparkle-project.org). Pada peluncuran kedua, Lowspeak bertanya apakah boleh mencari pembaruan sendiri, sekali sehari. **Periksa Pembaruan…** di menu langsung memeriksa; **Periksa Pembaruan Secara Otomatis** dan **Unduh dan Instal Pembaruan Secara Otomatis** di bawahnya mengubah pilihan Anda nanti. Jika pemeriksaan menemukan versi baru saat Anda bekerja di app lain, sebuah titik muncul pada cincin di bar menu, dan **Periksa Pembaruan…** membawa pembaruan itu ke depan. Lowspeak hanya menginstal pembaruan yang membawa tanda tangan pengembang; pengaturan, kunci, dan model Anda tetap ada. Versi 1.0.0 tidak punya pemutakhir: instal versi yang lebih baru di atasnya sekali saja, dari [halaman rilis](https://github.com/sventmueller/lowspeak/releases). Build buatan sendiri juga tidak punya pemutakhir.
+**Dengan Homebrew.** Cask-nya ada di tap tersendiri:
+
+```sh
+brew install --cask sventmueller/tap/lowspeak
+```
+
+`brew uninstall --zap --cask lowspeak` juga menghapus pengaturan, model, log, dan cache Lowspeak; kunci API tetap berada di rantai kunci masuk Anda.
+
+**Pembaruan.** Lowspeak dari image disk atau Homebrew memperbarui dirinya sendiri melalui [Sparkle](https://sparkle-project.org). Pada peluncuran kedua, Lowspeak bertanya apakah boleh mencari pembaruan sendiri, sekali sehari. **Periksa Pembaruan…** di menu langsung memeriksa; **Periksa Pembaruan Secara Otomatis** dan **Unduh dan Instal Pembaruan Secara Otomatis** di bawahnya mengubah pilihan Anda nanti. Jika pemeriksaan menemukan versi baru saat Anda bekerja di app lain, sebuah titik muncul pada cincin di bar menu, dan **Periksa Pembaruan…** membawa pembaruan itu ke depan. Lowspeak hanya menginstal pembaruan yang membawa tanda tangan pengembang; pengaturan, kunci, dan model Anda tetap ada. `brew upgrade --cask lowspeak` juga memperbarui salinan dari Homebrew. Versi 1.0.0 tidak punya pemutakhir: instal versi yang lebih baru di atasnya sekali saja, dari [halaman rilis](https://github.com/sventmueller/lowspeak/releases). Build buatan sendiri juga tidak punya pemutakhir.
 
 **Dari sumber.** Lihat [Membangun & memasang](../../../docs/development.md#build--deploy) untuk prasyaratnya, lalu:
 

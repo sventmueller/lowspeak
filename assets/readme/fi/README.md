@@ -123,7 +123,15 @@ Lowspeak asuu valikkorivillä. Pidä fn-näppäintä (Maapallo) painettuna ja pu
 
 **Levykuvasta.** Lataa [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), avaa se ja vedä Lowspeak Apit-kansioon. Kuva on allekirjoitettu Developer ID:llä ja Apple on notarisoinut sen, joten se aukeaa ilman varoituksia.
 
-**Päivitykset.** Levykuvasta asennettu Lowspeak päivittää itsensä [Sparklen](https://sparkle-project.org) avulla. Toisella käynnistyskerralla se kysyy, saako se etsiä päivityksiä itse kerran päivässä. Valikon **Etsi päivityksiä…** etsii heti; sen alla olevat **Etsi päivityksiä automaattisesti** ja **Lataa ja asenna päivitykset automaattisesti** muuttavat valintaasi myöhemmin. Jos haku löytää uuden version, kun työskentelet toisessa apissa, valikkorivin renkaaseen ilmestyy piste ja **Etsi päivityksiä…** tuo päivityksen etualalle. Lowspeak asentaa päivityksen vain, jos siinä on kehittäjän allekirjoitus; asetuksesi, avaimesi ja mallisi säilyvät. Versiossa 1.0.0 ei ole päivitysohjelmaa: asenna uudempi versio sen päälle kerran [julkaisusivulta](https://github.com/sventmueller/lowspeak/releases). Myöskään itse rakennetussa versiossa ei ole päivitysohjelmaa.
+**Homebrew'lla.** Cask sijaitsee omassa tapissaan:
+
+```sh
+brew install --cask sventmueller/tap/lowspeak
+```
+
+`brew uninstall --zap --cask lowspeak` poistaa myös Lowspeakin asetukset, mallit, lokit ja välimuistit; API-avaimesi pysyvät sisäänkirjautumisavainnipussa.
+
+**Päivitykset.** Levykuvasta tai Homebrew'lla asennettu Lowspeak päivittää itsensä [Sparklen](https://sparkle-project.org) avulla. Toisella käynnistyskerralla se kysyy, saako se etsiä päivityksiä itse kerran päivässä. Valikon **Etsi päivityksiä…** etsii heti; sen alla olevat **Etsi päivityksiä automaattisesti** ja **Lataa ja asenna päivitykset automaattisesti** muuttavat valintaasi myöhemmin. Jos haku löytää uuden version, kun työskentelet toisessa apissa, valikkorivin renkaaseen ilmestyy piste ja **Etsi päivityksiä…** tuo päivityksen etualalle. Lowspeak asentaa päivityksen vain, jos siinä on kehittäjän allekirjoitus; asetuksesi, avaimesi ja mallisi säilyvät. `brew upgrade --cask lowspeak` päivittää myös Homebrew'lla asennetun kopion. Versiossa 1.0.0 ei ole päivitysohjelmaa: asenna uudempi versio sen päälle kerran [julkaisusivulta](https://github.com/sventmueller/lowspeak/releases). Myöskään itse rakennetussa versiossa ei ole päivitysohjelmaa.
 
 **Lähdekoodista.** Katso esivaatimukset kohdasta [Rakentaminen ja käyttöönotto](../../../docs/development.md#build--deploy) ja suorita sitten:
 

@@ -123,7 +123,15 @@ Lowspeak wohnt in der Menüleiste. Halte die fn-Taste (Globus) gedrückt und spr
 
 **Vom Disk-Image.** Lade [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), öffne es und ziehe Lowspeak auf den Ordner „Programme“. Das Image ist mit einer Developer ID signiert und von Apple notarisiert, sodass es ohne Warnungen öffnet.
 
-**Updates.** Lowspeak aus dem Disk-Image hält sich mit [Sparkle](https://sparkle-project.org) selbst aktuell. Beim zweiten Start fragt es, ob es einmal täglich selbstständig nach Updates suchen darf. **Nach Updates suchen …** im Menü sucht sofort; **Automatisch nach Updates suchen** und **Updates automatisch laden und installieren** direkt darunter ändern deine Wahl später. Findet eine Suche eine neue Version, während du in einer anderen App arbeitest, erscheint ein Punkt am Ring in der Menüleiste, und **Nach Updates suchen …** bringt das Update in den Vordergrund. Lowspeak installiert ein Update nur, wenn es die Signatur des Entwicklers trägt; deine Einstellungen, Schlüssel und Modelle bleiben erhalten. Version 1.0.0 hat keinen Updater: Installiere einmalig eine neuere Version von der [Release-Seite](https://github.com/sventmueller/lowspeak/releases) darüber. Ein selbst gebautes Lowspeak hat ebenfalls keinen Updater.
+**Mit Homebrew.** Das Cask liegt in einem eigenen Tap:
+
+```sh
+brew install --cask sventmueller/tap/lowspeak
+```
+
+`brew uninstall --zap --cask lowspeak` entfernt zusätzlich die Einstellungen, Modelle, Logs und Caches von Lowspeak; deine API-Schlüssel bleiben im Schlüsselbund „Anmeldung“.
+
+**Updates.** Lowspeak aus dem Disk-Image oder von Homebrew hält sich mit [Sparkle](https://sparkle-project.org) selbst aktuell. Beim zweiten Start fragt es, ob es einmal täglich selbstständig nach Updates suchen darf. **Nach Updates suchen …** im Menü sucht sofort; **Automatisch nach Updates suchen** und **Updates automatisch laden und installieren** direkt darunter ändern deine Wahl später. Findet eine Suche eine neue Version, während du in einer anderen App arbeitest, erscheint ein Punkt am Ring in der Menüleiste, und **Nach Updates suchen …** bringt das Update in den Vordergrund. Lowspeak installiert ein Update nur, wenn es die Signatur des Entwicklers trägt; deine Einstellungen, Schlüssel und Modelle bleiben erhalten. `brew upgrade --cask lowspeak` aktualisiert eine Kopie von Homebrew ebenfalls. Version 1.0.0 hat keinen Updater: Installiere einmalig eine neuere Version von der [Release-Seite](https://github.com/sventmueller/lowspeak/releases) darüber. Ein selbst gebautes Lowspeak hat ebenfalls keinen Updater.
 
 **Aus dem Quellcode.** Die Voraussetzungen stehen unter [Bauen und Installieren](../../../docs/development.md#build--deploy), dann:
 

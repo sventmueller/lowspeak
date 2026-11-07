@@ -123,7 +123,15 @@ Lowspeak finns i menyraden. Håll ned fn-tangenten (Glob) och tala; när du slä
 
 **Från skivavbilden.** Ladda ner [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), öppna den och dra Lowspeak till mappen Appar. Avbilden är signerad med ett Developer ID och notariserad av Apple, så den öppnas utan varningar.
 
-**Uppdateringar.** Lowspeak från skivavbilden håller sig uppdaterat med [Sparkle](https://sparkle-project.org). Vid andra starten frågar appen om den får leta efter uppdateringar på egen hand, en gång om dagen. **Leta efter uppdateringar…** i menyn letar direkt; **Leta efter uppdateringar automatiskt** och **Hämta och installera uppdateringar automatiskt** strax nedanför ändrar ditt val senare. När en sökning hittar en ny version medan du arbetar i en annan app visas en punkt på ringen i menyraden, och **Leta efter uppdateringar…** tar fram uppdateringen. Lowspeak installerar en uppdatering bara om den bär utvecklarens signatur; dina inställningar, nycklar och modeller finns kvar. Version 1.0.0 har ingen uppdateringsfunktion: installera en nyare version över den en gång, från [sidan med releaser](https://github.com/sventmueller/lowspeak/releases). Ett eget bygge har inte heller någon uppdateringsfunktion.
+**Med Homebrew.** Cask-paketet finns i en egen tap:
+
+```sh
+brew install --cask sventmueller/tap/lowspeak
+```
+
+`brew uninstall --zap --cask lowspeak` tar dessutom bort Lowspeaks inställningar, modeller, loggar och cacheminnen; dina API-nycklar ligger kvar i inloggningsnyckelringen.
+
+**Uppdateringar.** Lowspeak från skivavbilden eller Homebrew håller sig uppdaterat med [Sparkle](https://sparkle-project.org). Vid andra starten frågar appen om den får leta efter uppdateringar på egen hand, en gång om dagen. **Leta efter uppdateringar…** i menyn letar direkt; **Leta efter uppdateringar automatiskt** och **Hämta och installera uppdateringar automatiskt** strax nedanför ändrar ditt val senare. När en sökning hittar en ny version medan du arbetar i en annan app visas en punkt på ringen i menyraden, och **Leta efter uppdateringar…** tar fram uppdateringen. Lowspeak installerar en uppdatering bara om den bär utvecklarens signatur; dina inställningar, nycklar och modeller finns kvar. `brew upgrade --cask lowspeak` uppdaterar även en kopia från Homebrew. Version 1.0.0 har ingen uppdateringsfunktion: installera en nyare version över den en gång, från [sidan med releaser](https://github.com/sventmueller/lowspeak/releases). Ett eget bygge har inte heller någon uppdateringsfunktion.
 
 **Från källkod.** Se [Bygge och driftsättning](../../../docs/development.md#build--deploy) för förutsättningarna och kör sedan:
 

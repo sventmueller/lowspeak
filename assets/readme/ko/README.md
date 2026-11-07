@@ -123,7 +123,15 @@ Lowspeak는 메뉴 막대에 있습니다. fn(지구본) 키를 누른 채 말�
 
 **디스크 이미지로 설치.** [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg)를 내려받아 열고, Lowspeak를 응용 프로그램 폴더로 드래그하십시오. 이 이미지는 Developer ID로 서명되고 Apple의 공증을 거쳤으므로 경고 없이 열립니다.
 
-**업데이트.** 디스크 이미지로 설치한 Lowspeak는 [Sparkle](https://sparkle-project.org)로 스스로 최신 상태를 유지합니다. 두 번째로 실행하면 하루에 한 번 직접 업데이트를 확인해도 되는지 묻습니다. 메뉴의 **업데이트 확인…** 항목은 바로 확인하며, 그 아래의 **자동으로 업데이트 확인**과 **자동으로 업데이트 다운로드 및 설치**로 나중에 선택을 바꿀 수 있습니다. 다른 앱에서 작업하는 동안 확인에서 새 버전이 발견되면 메뉴 막대의 링에 점이 나타나고, **업데이트 확인…** 항목이 업데이트를 앞으로 가져옵니다. Lowspeak는 개발자의 서명이 있는 업데이트만 설치하며, 설정, 키, 모델은 그대로 유지됩니다. 버전 1.0.0에는 업데이트 기능이 없습니다. 한 번만 [릴리스 페이지](https://github.com/sventmueller/lowspeak/releases)에서 더 새로운 버전을 받아 그 위에 설치하십시오. 직접 빌드한 버전에도 업데이트 기능이 없습니다.
+**Homebrew로 설치.** 이 cask는 전용 tap에 있습니다.
+
+```sh
+brew install --cask sventmueller/tap/lowspeak
+```
+
+`brew uninstall --zap --cask lowspeak`는 Lowspeak의 설정, 모델, 로그, 캐시까지 함께 삭제하며, API 키는 로그인 키체인에 그대로 남습니다.
+
+**업데이트.** 디스크 이미지나 Homebrew로 설치한 Lowspeak는 [Sparkle](https://sparkle-project.org)로 스스로 최신 상태를 유지합니다. 두 번째로 실행하면 하루에 한 번 직접 업데이트를 확인해도 되는지 묻습니다. 메뉴의 **업데이트 확인…** 항목은 바로 확인하며, 그 아래의 **자동으로 업데이트 확인**과 **자동으로 업데이트 다운로드 및 설치**로 나중에 선택을 바꿀 수 있습니다. 다른 앱에서 작업하는 동안 확인에서 새 버전이 발견되면 메뉴 막대의 링에 점이 나타나고, **업데이트 확인…** 항목이 업데이트를 앞으로 가져옵니다. Lowspeak는 개발자의 서명이 있는 업데이트만 설치하며, 설정, 키, 모델은 그대로 유지됩니다. Homebrew로 설치한 사본은 `brew upgrade --cask lowspeak`로도 업데이트할 수 있습니다. 버전 1.0.0에는 업데이트 기능이 없습니다. 한 번만 [릴리스 페이지](https://github.com/sventmueller/lowspeak/releases)에서 더 새로운 버전을 받아 그 위에 설치하십시오. 직접 빌드한 버전에도 업데이트 기능이 없습니다.
 
 **소스에서 빌드.** 필요한 사항은 [Build & Deploy](../../../docs/development.md#build--deploy)를 참고한 다음 아래를 실행하십시오.
 

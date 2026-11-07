@@ -123,7 +123,15 @@ Lowspeak sídlí na řádku nabídek. Podržte klávesu fn (Glóbus) a mluvte; j
 
 **Z obrazu disku.** Stáhněte si [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), otevřete ho a přetáhněte Lowspeak do složky Aplikace. Obraz je podepsaný certifikátem Developer ID a notarizovaný Applem, takže se otevře bez varování.
 
-**Aktualizace.** Lowspeak z obrazu disku se aktualizuje sám pomocí [Sparkle](https://sparkle-project.org). Při druhém spuštění se zeptá, zda smí jednou denně sám vyhledávat aktualizace. **Vyhledat aktualizace…** v nabídce vyhledá hned; **Vyhledávat aktualizace automaticky** a **Stahovat a instalovat aktualizace automaticky** pod ní vaši volbu později změní. Když kontrola najde novou verzi, zatímco pracujete v jiné aplikaci, objeví se na kroužku na řádku nabídek tečka a **Vyhledat aktualizace…** přenese aktualizaci do popředí. Lowspeak nainstaluje aktualizaci, jen pokud nese podpis vývojáře; vaše nastavení, klíče i modely zůstanou zachovány. Verze 1.0.0 automatické aktualizace nemá: novější verzi přes ni jednou nainstalujte ze [stránky vydání](https://github.com/sventmueller/lowspeak/releases). Ani vlastní sestavení automatické aktualizace nemá.
+**Přes Homebrew.** Cask má vlastní tap:
+
+```sh
+brew install --cask sventmueller/tap/lowspeak
+```
+
+`brew uninstall --zap --cask lowspeak` odstraní také nastavení, modely, protokoly a mezipaměti Lowspeaku; vaše klíče API zůstávají ve svazku klíčů „přihlášení“.
+
+**Aktualizace.** Lowspeak z obrazu disku nebo z Homebrew se aktualizuje sám pomocí [Sparkle](https://sparkle-project.org). Při druhém spuštění se zeptá, zda smí jednou denně sám vyhledávat aktualizace. **Vyhledat aktualizace…** v nabídce vyhledá hned; **Vyhledávat aktualizace automaticky** a **Stahovat a instalovat aktualizace automaticky** pod ní vaši volbu později změní. Když kontrola najde novou verzi, zatímco pracujete v jiné aplikaci, objeví se na kroužku na řádku nabídek tečka a **Vyhledat aktualizace…** přenese aktualizaci do popředí. Lowspeak nainstaluje aktualizaci, jen pokud nese podpis vývojáře; vaše nastavení, klíče i modely zůstanou zachovány. `brew upgrade --cask lowspeak` aktualizuje také kopii z Homebrew. Verze 1.0.0 automatické aktualizace nemá: novější verzi přes ni jednou nainstalujte ze [stránky vydání](https://github.com/sventmueller/lowspeak/releases). Ani vlastní sestavení automatické aktualizace nemá.
 
 **Ze zdrojového kódu.** Předpoklady najdete v části [Sestavení a nasazení](../../../docs/development.md#build--deploy), potom:
 

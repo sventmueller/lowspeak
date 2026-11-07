@@ -146,14 +146,24 @@ Problem…** in Lowspeak's menu: the form opens with your version filled in. If 
 open it and drag Lowspeak onto the Applications folder. The image is signed with a Developer ID and notarized by
 Apple, so it opens without warnings.
 
-**Updates.** Lowspeak from the disk image keeps itself up to date with [Sparkle](https://sparkle-project.org). On the
-second launch it asks whether it may look for updates on its own, once a day. **Check for Updates…** in the menu looks
-right away; **Check for Updates Automatically** and **Automatically Download and Install Updates** below it change your
-choice later. When a check finds a new version while you work in another app, a dot appears on the ring in the menu
-bar, and **Check for Updates…** brings the update to the front. Lowspeak installs an update only if it carries the
-developer's signature; your settings, keys and models stay. Version 1.0.0 has no updater: install a newer version over
-it once, from the [releases page](https://github.com/sventmueller/lowspeak/releases). A build of your own has no
-updater either.
+**With Homebrew.** The cask lives in a tap of its own:
+
+```sh
+brew install --cask sventmueller/tap/lowspeak
+```
+
+`brew uninstall --zap --cask lowspeak` also removes Lowspeak's settings, models, logs and caches; your API keys stay in
+the login keychain.
+
+**Updates.** Lowspeak from the disk image or Homebrew keeps itself up to date with
+[Sparkle](https://sparkle-project.org). On the second launch it asks whether it may look for updates on its own, once a
+day. **Check for Updates…** in the menu looks right away; **Check for Updates Automatically** and **Automatically
+Download and Install Updates** below it change your choice later. When a check finds a new version while you work in
+another app, a dot appears on the ring in the menu bar, and **Check for Updates…** brings the update to the front.
+Lowspeak installs an update only if it carries the developer's signature; your settings, keys and models stay.
+`brew upgrade --cask lowspeak` updates a copy from Homebrew as well. Version 1.0.0 has no updater: install a newer
+version over it once, from the [releases page](https://github.com/sventmueller/lowspeak/releases). A build of your own
+has no updater either.
 
 **From source.** See [Build & Deploy](docs/development.md#build--deploy) for the prerequisites, then:
 

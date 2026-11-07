@@ -123,7 +123,15 @@ Lowspeak mieszka na pasku menu. Przytrzymaj klawisz fn (Globus) i mów; gdy go p
 
 **Z obrazu dysku.** Pobierz [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), otwórz go i przeciągnij Lowspeak do folderu Programy. Obraz jest podpisany certyfikatem Developer ID i poświadczony notarialnie przez Apple, więc otwiera się bez ostrzeżeń.
 
-**Uaktualnienia.** Lowspeak z obrazu dysku sam dba o aktualność dzięki [Sparkle](https://sparkle-project.org). Przy drugim uruchomieniu pyta, czy może raz dziennie samodzielnie szukać uaktualnień. **Sprawdź uaktualnienia…** w menu sprawdza od razu; **Sprawdzaj uaktualnienia automatycznie** i **Pobieraj i instaluj uaktualnienia automatycznie** tuż pod nią pozwalają zmienić decyzję później. Gdy sprawdzanie znajdzie nową wersję, kiedy pracujesz w innej aplikacji, na pierścieniu na pasku menu pojawia się kropka, a **Sprawdź uaktualnienia…** przenosi uaktualnienie na pierwszy plan. Lowspeak instaluje uaktualnienie tylko wtedy, gdy ma ono podpis autora; Twoje ustawienia, klucze i modele pozostaną. Wersja 1.0.0 nie ma mechanizmu uaktualnień: raz zainstaluj nowszą wersję w jej miejsce ze [strony wydań](https://github.com/sventmueller/lowspeak/releases). Własna kompilacja również nie ma mechanizmu uaktualnień.
+**Przez Homebrew.** Cask znajduje się we własnym tapie:
+
+```sh
+brew install --cask sventmueller/tap/lowspeak
+```
+
+`brew uninstall --zap --cask lowspeak` usuwa też ustawienia, modele, dzienniki i pamięć podręczną Lowspeaka; Twoje klucze API pozostają w pęku kluczy logowania.
+
+**Uaktualnienia.** Lowspeak z obrazu dysku lub z Homebrew sam dba o aktualność dzięki [Sparkle](https://sparkle-project.org). Przy drugim uruchomieniu pyta, czy może raz dziennie samodzielnie szukać uaktualnień. **Sprawdź uaktualnienia…** w menu sprawdza od razu; **Sprawdzaj uaktualnienia automatycznie** i **Pobieraj i instaluj uaktualnienia automatycznie** tuż pod nią pozwalają zmienić decyzję później. Gdy sprawdzanie znajdzie nową wersję, kiedy pracujesz w innej aplikacji, na pierścieniu na pasku menu pojawia się kropka, a **Sprawdź uaktualnienia…** przenosi uaktualnienie na pierwszy plan. Lowspeak instaluje uaktualnienie tylko wtedy, gdy ma ono podpis autora; Twoje ustawienia, klucze i modele pozostaną. `brew upgrade --cask lowspeak` uaktualnia też kopię z Homebrew. Wersja 1.0.0 nie ma mechanizmu uaktualnień: raz zainstaluj nowszą wersję w jej miejsce ze [strony wydań](https://github.com/sventmueller/lowspeak/releases). Własna kompilacja również nie ma mechanizmu uaktualnień.
 
 **Ze źródeł.** Wymagania wstępne znajdziesz w części [Kompilacja i wdrażanie](../../../docs/development.md#build--deploy), potem:
 

@@ -123,7 +123,15 @@ A Lowspeak a menüsorban él. Tartsa lenyomva az fn (Földgömb) billentyűt, é
 
 **Lemezképből.** Töltse le a [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg) fájlt, nyissa meg, és húzza a Lowspeaket az Alkalmazások mappára. A lemezképet Developer ID-val írták alá, és az Apple hitelesítette, így figyelmeztetés nélkül megnyílik.
 
-**Frissítések.** A lemezképből telepített Lowspeak a [Sparkle](https://sparkle-project.org) segítségével naprakészen tartja magát. A második indításkor megkérdezi, hogy naponta egyszer magától kereshet-e frissítéseket. A menü **Frissítések keresése…** pontja azonnal keres; az alatta lévő **Frissítések automatikus keresése** és **Frissítések automatikus letöltése és telepítése** később módosítja a választást. Ha egy keresés új verziót talál, miközben Ön egy másik appban dolgozik, egy pont jelenik meg a menüsorban lévő gyűrűn, és a **Frissítések keresése…** előtérbe hozza a frissítést. A Lowspeak csak olyan frissítést telepít, amely hordozza a fejlesztő aláírását; a beállítások, a kulcsok és a modellek megmaradnak. Az 1.0.0-s verziónak nincs frissítője: egyszer telepítsen fölé egy újabb verziót a [kiadások oldaláról](https://github.com/sventmueller/lowspeak/releases). A saját fordításnak sincs frissítője.
+**Homebrew-val.** A cask saját tapben található:
+
+```sh
+brew install --cask sventmueller/tap/lowspeak
+```
+
+A `brew uninstall --zap --cask lowspeak` a Lowspeak beállításait, modelljeit, naplóit és gyorsítótárait is eltávolítja; az API-kulcsok az Ön bejelentkezési kulcskarikáján maradnak.
+
+**Frissítések.** A lemezképből vagy Homebrew-val telepített Lowspeak a [Sparkle](https://sparkle-project.org) segítségével naprakészen tartja magát. A második indításkor megkérdezi, hogy naponta egyszer magától kereshet-e frissítéseket. A menü **Frissítések keresése…** pontja azonnal keres; az alatta lévő **Frissítések automatikus keresése** és **Frissítések automatikus letöltése és telepítése** később módosítja a választást. Ha egy keresés új verziót talál, miközben Ön egy másik appban dolgozik, egy pont jelenik meg a menüsorban lévő gyűrűn, és a **Frissítések keresése…** előtérbe hozza a frissítést. A Lowspeak csak olyan frissítést telepít, amely hordozza a fejlesztő aláírását; a beállítások, a kulcsok és a modellek megmaradnak. A Homebrew-val telepített példányt a `brew upgrade --cask lowspeak` is frissíti. Az 1.0.0-s verziónak nincs frissítője: egyszer telepítsen fölé egy újabb verziót a [kiadások oldaláról](https://github.com/sventmueller/lowspeak/releases). A saját fordításnak sincs frissítője.
 
 **Forráskódból.** Az előfeltételeket lásd a [Fordítás és telepítés](../../../docs/development.md#build--deploy) szakaszban, majd:
 

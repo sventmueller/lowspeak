@@ -123,7 +123,15 @@ Lowspeak se loge dans la barre des menus. Maintenez la touche fn (Globe) enfonc�
 
 **Depuis l’image disque.** Téléchargez [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), ouvrez-la et faites glisser Lowspeak dans le dossier Applications. L’image est signée avec un Developer ID et notarisée par Apple : elle s’ouvre donc sans avertissement.
 
-**Mises à jour.** Lowspeak, installé depuis l’image disque, se met à jour tout seul grâce à [Sparkle](https://sparkle-project.org). Au deuxième lancement, il demande s’il peut rechercher des mises à jour de lui-même, une fois par jour. **Rechercher les mises à jour…** dans le menu lance la recherche tout de suite ; **Rechercher automatiquement les mises à jour** et **Télécharger et installer automatiquement les mises à jour**, juste en dessous, permettent de changer ce choix plus tard. Si une recherche trouve une nouvelle version pendant que vous travaillez dans une autre app, un point apparaît sur l’anneau dans la barre des menus, et **Rechercher les mises à jour…** fait passer la mise à jour au premier plan. Lowspeak n’installe une mise à jour que si elle porte la signature du développeur ; vos réglages, vos clés et vos modèles sont conservés. La version 1.0.0 n’a pas de mise à jour automatique : installez une seule fois une version plus récente par-dessus, depuis la [page des versions](https://github.com/sventmueller/lowspeak/releases). Une version compilée par vos soins n’a pas non plus de mise à jour automatique.
+**Avec Homebrew.** Le cask se trouve dans un tap à part :
+
+```sh
+brew install --cask sventmueller/tap/lowspeak
+```
+
+`brew uninstall --zap --cask lowspeak` supprime aussi les réglages, les modèles, les journaux et les caches de Lowspeak ; vos clés API restent dans votre trousseau de session.
+
+**Mises à jour.** Lowspeak, installé depuis l’image disque ou avec Homebrew, se met à jour tout seul grâce à [Sparkle](https://sparkle-project.org). Au deuxième lancement, il demande s’il peut rechercher des mises à jour de lui-même, une fois par jour. **Rechercher les mises à jour…** dans le menu lance la recherche tout de suite ; **Rechercher automatiquement les mises à jour** et **Télécharger et installer automatiquement les mises à jour**, juste en dessous, permettent de changer ce choix plus tard. Si une recherche trouve une nouvelle version pendant que vous travaillez dans une autre app, un point apparaît sur l’anneau dans la barre des menus, et **Rechercher les mises à jour…** fait passer la mise à jour au premier plan. Lowspeak n’installe une mise à jour que si elle porte la signature du développeur ; vos réglages, vos clés et vos modèles sont conservés. `brew upgrade --cask lowspeak` met aussi à jour une copie installée avec Homebrew. La version 1.0.0 n’a pas de mise à jour automatique : installez une seule fois une version plus récente par-dessus, depuis la [page des versions](https://github.com/sventmueller/lowspeak/releases). Une version compilée par vos soins n’a pas non plus de mise à jour automatique.
 
 **Depuis les sources.** Consultez [Build & Deploy](../../../docs/development.md#build--deploy) pour les prérequis, puis :
 

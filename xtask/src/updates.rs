@@ -89,16 +89,33 @@ pub(crate) fn check_update_key() -> Result<()> {
 }
 
 /// The update feed: the release's disk image with the EdDSA signature and length `sign_update` printed for it, and
-/// its notes as Markdown. Macs older than `MINIMUM_SYSTEM` are not offered it.
-pub(crate) fn appcast(version: &str, signature: &str, date: &str, notes: &str) -> Result<String> {
+/// its notes as Markdown, in English and in the `translations`. Sparkle shows the notes in the language macOS picks
+/// for the app. Macs older than `MINIMUM_SYSTEM` are not offered it.
+pub(crate) fn appcast(
+    version: &str,
+    signature: &str,
+    date: &str,
+    notes: &str,
+    translations: &[(&str, String)],
+) -> Result<String> {
     ensure!(
         signature.starts_with("sparkle:edSignature=\"") && signature.contains(" length=\""),
         "sign_update printed {signature:?}"
     );
-    ensure!(
-        !notes.contains("]]>"),
-        "the notes contain ]]>, which would end the feed's text early"
-    );
+    let mut descriptions = String::new();
+    for (language, text) in std::iter::once(("en", notes)).chain(
+        translations
+            .iter()
+            .map(|(language, text)| (*language, text.trim_end())),
+    ) {
+        ensure!(
+            !text.contains("]]>"),
+            "the {language} notes contain ]]>, which would end the feed's text early"
+        );
+        descriptions.push_str(&format!(
+            "      <description sparkle:format=\"markdown\" xml:lang=\"{language}\"><![CDATA[{text}]]></description>\n"
+        ));
+    }
     Ok(format!(
         r#"<?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
@@ -110,8 +127,7 @@ pub(crate) fn appcast(version: &str, signature: &str, date: &str, notes: &str) -
       <sparkle:version>{version}</sparkle:version>
       <sparkle:shortVersionString>{version}</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>{MINIMUM_SYSTEM}</sparkle:minimumSystemVersion>
-      <description sparkle:format="markdown"><![CDATA[{notes}]]></description>
-      <enclosure url="{RELEASES}/download/v{version}/{APP_NAME}-{version}.dmg" {signature} type="application/octet-stream"/>
+{descriptions}      <enclosure url="{RELEASES}/download/v{version}/{APP_NAME}-{version}.dmg" {signature} type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
@@ -125,11 +141,13 @@ mod tests {
 
     #[test]
     fn the_feed_offers_the_signed_image_of_its_release() {
+        let signature = "sparkle:edSignature=\"c2ln\" length=\"42\"";
         let feed = appcast(
             "1.0.4",
-            "sparkle:edSignature=\"c2ln\" length=\"42\"",
+            signature,
             "Sat, 07 Nov 2026 12:00:00 +0000",
             "- New.",
+            &[("de", "- Neu.\n".to_owned())],
         )
         .unwrap();
         assert!(feed.contains(
@@ -138,21 +156,13 @@ mod tests {
         ));
         assert!(feed.contains("<sparkle:version>1.0.4</sparkle:version>"));
         assert!(feed.contains("<sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>"));
-        assert!(
-            feed.contains(
-                "<description sparkle:format=\"markdown\"><![CDATA[- New.]]></description>"
-            )
-        );
-        assert!(appcast("1.0.4", "ERROR: no key", "", "").is_err());
-        assert!(
-            appcast(
-                "1.0.4",
-                "sparkle:edSignature=\"c2ln\" length=\"42\"",
-                "",
-                "a ]]> b"
-            )
-            .is_err()
-        );
+        assert!(feed.contains(
+            "      <description sparkle:format=\"markdown\" xml:lang=\"en\"><![CDATA[- New.]]></description>\n\
+             \x20     <description sparkle:format=\"markdown\" xml:lang=\"de\"><![CDATA[- Neu.]]></description>\n"
+        ));
+        assert!(appcast("1.0.4", "ERROR: no key", "", "", &[]).is_err());
+        assert!(appcast("1.0.4", signature, "", "a ]]> b", &[]).is_err());
+        assert!(appcast("1.0.4", signature, "", "a", &[("de", "b ]]>".to_owned())]).is_err());
         assert_eq!(
             feed_url(),
             "https://github.com/sventmueller/lowspeak/releases/latest/download/appcast.xml"

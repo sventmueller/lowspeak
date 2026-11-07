@@ -123,7 +123,15 @@ Lowspeak 常驻菜单栏。按住 fn（地球仪）键说话，松开后，你�
 
 **通过磁盘映像。** 下载 [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg)，打开后将 Lowspeak 拖到“应用程序”文件夹。该映像已使用 Developer ID 签名并经 Apple 公证，因此打开时不会出现警告。
 
-**更新。** 通过磁盘映像安装的 Lowspeak 会借助 [Sparkle](https://sparkle-project.org) 自行保持最新。第二次启动时，它会询问是否可以每天自动检查一次更新。菜单中的 **检查更新…** 会立即检查；之后可通过其下方的 **自动检查更新** 和 **自动下载并安装更新** 更改你的选择。如果在你使用其他 App 时检查到新版本，菜单栏中的圆环上会出现一个圆点，**检查更新…** 会将更新调到最前面。只有带有开发者签名的更新，Lowspeak 才会安装；你的设置、密钥和模型都会保留。1.0.0 版本没有更新功能：请从[发布页面](https://github.com/sventmueller/lowspeak/releases)下载较新的版本，直接安装在它之上，只需这一次。自行构建的版本同样没有更新功能。
+**通过 Homebrew。** Cask 位于专属的 tap 中：
+
+```sh
+brew install --cask sventmueller/tap/lowspeak
+```
+
+`brew uninstall --zap --cask lowspeak` 还会移除 Lowspeak 的设置、模型、日志和缓存；你的 API 密钥会保留在登录钥匙串中。
+
+**更新。** 通过磁盘映像或 Homebrew 安装的 Lowspeak 会借助 [Sparkle](https://sparkle-project.org) 自行保持最新。第二次启动时，它会询问是否可以每天自动检查一次更新。菜单中的 **检查更新…** 会立即检查；之后可通过其下方的 **自动检查更新** 和 **自动下载并安装更新** 更改你的选择。如果在你使用其他 App 时检查到新版本，菜单栏中的圆环上会出现一个圆点，**检查更新…** 会将更新调到最前面。只有带有开发者签名的更新，Lowspeak 才会安装；你的设置、密钥和模型都会保留。通过 Homebrew 安装的副本也可以用 `brew upgrade --cask lowspeak` 更新。1.0.0 版本没有更新功能：请从[发布页面](https://github.com/sventmueller/lowspeak/releases)下载较新的版本，直接安装在它之上，只需这一次。自行构建的版本同样没有更新功能。
 
 **从源代码构建。** 先查看[构建与部署](../../../docs/development.md#build--deploy)了解所需的前提条件，然后执行：
 

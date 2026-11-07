@@ -123,7 +123,15 @@ Lowspeak nằm trên thanh menu. Giữ phím fn (địa cầu) và nói; khi b�
 
 **Từ ảnh đĩa.** Tải về [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), mở ra rồi kéo Lowspeak vào thư mục Ứng dụng. Ảnh đĩa được ký bằng Developer ID và được Apple công chứng, nên mở ra mà không có cảnh báo nào.
 
-**Cập nhật.** Lowspeak cài từ ảnh đĩa tự cập nhật nhờ [Sparkle](https://sparkle-project.org). Ở lần mở thứ hai, Lowspeak hỏi xem nó có được tự tìm bản cập nhật mỗi ngày một lần hay không. **Kiểm tra Bản cập nhật…** trong menu kiểm tra ngay lập tức; **Tự động Kiểm tra Bản cập nhật** và **Tự động Tải về và Cài đặt Bản cập nhật** bên dưới cho phép bạn đổi lựa chọn sau này. Khi một lần kiểm tra tìm thấy phiên bản mới trong lúc bạn đang làm việc trong ứng dụng khác, một dấu chấm xuất hiện trên vòng tròn ở thanh menu, và **Kiểm tra Bản cập nhật…** đưa bản cập nhật lên phía trước. Lowspeak chỉ cài bản cập nhật nếu nó mang chữ ký của nhà phát triển; cài đặt, khóa và mô hình của bạn vẫn được giữ nguyên. Phiên bản 1.0.0 không có trình cập nhật: hãy cài một phiên bản mới hơn đè lên nó một lần, từ [trang phát hành](https://github.com/sventmueller/lowspeak/releases). Bản tự build cũng không có trình cập nhật.
+**Với Homebrew.** Cask nằm trong một tap riêng:
+
+```sh
+brew install --cask sventmueller/tap/lowspeak
+```
+
+`brew uninstall --zap --cask lowspeak` xóa luôn cài đặt, mô hình, nhật ký và bộ nhớ đệm của Lowspeak; khóa API vẫn nằm trong chuỗi khóa đăng nhập của bạn.
+
+**Cập nhật.** Lowspeak cài từ ảnh đĩa hoặc Homebrew tự cập nhật nhờ [Sparkle](https://sparkle-project.org). Ở lần mở thứ hai, Lowspeak hỏi xem nó có được tự tìm bản cập nhật mỗi ngày một lần hay không. **Kiểm tra Bản cập nhật…** trong menu kiểm tra ngay lập tức; **Tự động Kiểm tra Bản cập nhật** và **Tự động Tải về và Cài đặt Bản cập nhật** bên dưới cho phép bạn đổi lựa chọn sau này. Khi một lần kiểm tra tìm thấy phiên bản mới trong lúc bạn đang làm việc trong ứng dụng khác, một dấu chấm xuất hiện trên vòng tròn ở thanh menu, và **Kiểm tra Bản cập nhật…** đưa bản cập nhật lên phía trước. Lowspeak chỉ cài bản cập nhật nếu nó mang chữ ký của nhà phát triển; cài đặt, khóa và mô hình của bạn vẫn được giữ nguyên. `brew upgrade --cask lowspeak` cũng cập nhật bản cài từ Homebrew. Phiên bản 1.0.0 không có trình cập nhật: hãy cài một phiên bản mới hơn đè lên nó một lần, từ [trang phát hành](https://github.com/sventmueller/lowspeak/releases). Bản tự build cũng không có trình cập nhật.
 
 **Từ mã nguồn.** Xem [Xây dựng & triển khai](../../../docs/development.md#build--deploy) để biết các điều kiện cần có, rồi:
 

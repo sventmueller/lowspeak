@@ -41,6 +41,8 @@ Xcode.
 | `assets/readme/` | the README in the other 34 interface languages |
 | `.github/` | issue, discussion and pull request templates, CI |
 | root | `VERSION`, `Makefile` (entry points), `rust-toolchain.toml`, `LICENSE-MIT`, `LICENSE-APACHE`, `CONTRIBUTING.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, `ACCESSIBILITY.md` |
+| `resources/` | `<language>.lproj/InfoPlist.strings` for the 35 interface languages: the microphone prompt's text |
+| `release-notes/` | `<language>.md`: `RELEASE_NOTES.md` in the 34 other interface languages, for the update dialog |
 | `assets/` | `icon.svg` (source of the app icon, splat's colours) and its render `icon-1024.png`, `AppIcon.icns`, `Lowspeak.entitlements`, `dmg-background.svg` (source of the disk image background) and its render `dmg-background.tiff` at 1× and 2× |
 | `examples/transcribe.rs` | transcribe a WAV with a local model from the command line |
 
@@ -175,6 +177,8 @@ fn UP   → event tap thread → dispatch → App::fn_up → FnGesture (held: st
 - The languages are splat's. Chinese (Traditional) and Portuguese (Portugal) are variants for the interface and post-processing; Whisper gets `zh` and `pt` (`Language::code`), gpt-transcribe gets `zh-tw` for Traditional Chinese (`Language::code_for`)
 - Auto-detect maps the macOS language: Chinese with `Hant`, or from Taiwan, Hong Kong or Macao, is Traditional; Portuguese with a region other than Brazil is European
 - The Language menu lists every language under its own name (`Language::display_name`), whatever the interface language
+- `Info.plist` declares the 35 languages (`CFBundleLocalizations`, xtask's `LOCALIZATIONS`). Without them macOS shows the texts of frameworks such as Sparkle and AppKit in English only, even though Sparkle brings its own translations. Those texts follow the macOS language (or the one set for Lowspeak in System Settings › General › Language & Region), Lowspeak's own the dictation language. Sparkle has no Hindi, Indonesian or Malay and shows English there
+- `resources/<language>.lproj/InfoPlist.strings` translates `NSMicrophoneUsageDescription`, the app's words in the microphone prompt. The Accessibility prompt has no such text: macOS shows its own (tccd knows no purpose string for it), so `NSAccessibilityUsageDescription` stays untranslated
 - macOS 27 renamed Privacy & Security › Accessibility to Device Control and Data Access. `Texts` holds both names as Apple translates them (`accessibility_list`, `device_control_list`); `Texts::accessibility_setting` picks the one of the running system
 
 ### README
@@ -277,6 +281,10 @@ and the build number goes up. A failed run leaves `dist/` and `VERSION` as they 
   updated again
 - `RELEASE_NOTES.md` with what this release brings; `dmg` stops if it is empty or still holds the notes in `dist/`.
   The update dialog shows the notes above a line on how to report a problem
+- the same notes in the 34 other interface languages as `release-notes/<language>.md`, each new since the previous
+  feed. The feed carries them with `xml:lang`, and Sparkle shows the one in the language macOS picks for the app,
+  with the report line in that language (`REPORT_LINES` in `xtask/src/release.rs`). Copies up to 1.0.1 declare no
+  languages and show the English notes
 
 If one of them is missing, `dmg` stops before building. On the first run, macOS asks whether Terminal may control the
 Finder, which lays out the disk image window. `dmg` then reads the icon positions Finder stored in the image and stops
@@ -289,6 +297,13 @@ The images are not committed (`.gitignore`); the notes and the feed are. The dow
 `gh release create v<version> dist/Lowspeak-<version>.dmg target/Lowspeak.dmg dist/appcast.xml --notes-file dist/Lowspeak-<version>.md`.
 Creating the release publishes the update: installed copies read the feed from the latest release, and its download
 link points at `Lowspeak-<version>.dmg` of that release, so pushing to `main` alone offers nothing.
+
+Last, the Homebrew cask: set `version` and `sha256` (`shasum -a 256 dist/Lowspeak-<version>.dmg`) in
+`Casks/lowspeak.rb` of [sventmueller/homebrew-tap](https://github.com/sventmueller/homebrew-tap), push it to `main` and
+check it with `brew audit --cask --online sventmueller/tap/lowspeak` and `brew livecheck --cask
+sventmueller/tap/lowspeak`. Copies from Homebrew update themselves through Sparkle as well (`auto_updates true`); the
+cask decides what `brew install` and `brew upgrade` fetch. Its `zap` leaves `Application Support/Lowspeak/Signing`
+alone, the local signing identity of a developer's Mac.
 
 ### Updates
 Only the disk image carries the updater, [Sparkle](https://sparkle-project.org), which the build downloads once into

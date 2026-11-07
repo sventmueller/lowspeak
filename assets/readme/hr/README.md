@@ -123,7 +123,15 @@ Lowspeak živi u traci s izbornicima. Držite tipku fn (globus) i govorite; kad 
 
 **Iz slike diska.** Preuzmite [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), otvorite je i povucite Lowspeak na mapu Aplikacije. Slika je potpisana certifikatom Developer ID i ovjerena (notarizirana) od Applea, pa se otvara bez upozorenja.
 
-**Ažuriranja.** Lowspeak iz slike diska sam se održava ažurnim putem [Sparkla](https://sparkle-project.org). Pri drugom pokretanju pita smije li jednom dnevno sam potražiti ažuriranja. **Potraži ažuriranja…** u izborniku traži odmah; **Automatski traži ažuriranja** i **Automatski preuzmi i instaliraj ažuriranja** ispod nje kasnije mijenjaju vaš odabir. Kad provjera pronađe novu verziju dok radite u drugoj aplikaciji, na prstenu u traci s izbornicima pojavljuje se točka, a **Potraži ažuriranja…** donosi ažuriranje u prvi plan. Lowspeak instalira ažuriranje samo ako nosi potpis razvojnog programera; vaše postavke, ključevi i modeli ostaju. Verzija 1.0.0 nema automatsko ažuriranje: jednom preko nje instalirajte noviju verziju sa [stranice izdanja](https://github.com/sventmueller/lowspeak/releases). Ni vlastita izgradnja nema automatsko ažuriranje.
+**S Homebrewom.** Cask se nalazi u vlastitom tapu:
+
+```sh
+brew install --cask sventmueller/tap/lowspeak
+```
+
+`brew uninstall --zap --cask lowspeak` uklanja i Lowspeakove postavke, modele, zapisnike i predmemoriju; vaši API ključevi ostaju u privjesku ključeva za prijavu.
+
+**Ažuriranja.** Lowspeak iz slike diska ili iz Homebrewa sam se održava ažurnim putem [Sparkla](https://sparkle-project.org). Pri drugom pokretanju pita smije li jednom dnevno sam potražiti ažuriranja. **Potraži ažuriranja…** u izborniku traži odmah; **Automatski traži ažuriranja** i **Automatski preuzmi i instaliraj ažuriranja** ispod nje kasnije mijenjaju vaš odabir. Kad provjera pronađe novu verziju dok radite u drugoj aplikaciji, na prstenu u traci s izbornicima pojavljuje se točka, a **Potraži ažuriranja…** donosi ažuriranje u prvi plan. Lowspeak instalira ažuriranje samo ako nosi potpis razvojnog programera; vaše postavke, ključevi i modeli ostaju. `brew upgrade --cask lowspeak` ažurira i kopiju iz Homebrewa. Verzija 1.0.0 nema automatsko ažuriranje: jednom preko nje instalirajte noviju verziju sa [stranice izdanja](https://github.com/sventmueller/lowspeak/releases). Ni vlastita izgradnja nema automatsko ažuriranje.
 
 **Iz izvornog koda.** Preduvjete potražite u odjeljku [Izgradnja i postavljanje](../../../docs/development.md#build--deploy), a zatim:
 

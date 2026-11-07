@@ -123,7 +123,15 @@ Lowspeak se află în bara de meniu. Țineți apăsată tasta fn (Glob) și vorb
 
 **Din imaginea de disc.** Descărcați [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), deschideți-o și trageți Lowspeak în dosarul Aplicații. Imaginea este semnată cu un Developer ID și notarizată de Apple, deci se deschide fără avertismente.
 
-**Actualizări.** Lowspeak din imaginea de disc se actualizează singur prin [Sparkle](https://sparkle-project.org). La a doua pornire întreabă dacă are voie să caute singur actualizări, o dată pe zi. **Căutați actualizări…** din meniu caută imediat; **Căutați automat actualizări** și **Descărcați și instalați automat actualizările**, chiar dedesubt, vă schimbă ulterior alegerea. Dacă o căutare găsește o versiune nouă în timp ce lucrați în altă aplicație, pe inelul din bara de meniu apare un punct, iar **Căutați actualizări…** aduce actualizarea în prim-plan. Lowspeak instalează o actualizare doar dacă are semnătura dezvoltatorului; setările, cheile și modelele rămân. Versiunea 1.0.0 nu are mecanism de actualizare: instalați o singură dată peste ea o versiune mai nouă, de pe [pagina de lansări](https://github.com/sventmueller/lowspeak/releases). Nici versiunile compilate de dumneavoastră nu au mecanism de actualizare.
+**Cu Homebrew.** Cask-ul se află într-un tap propriu:
+
+```sh
+brew install --cask sventmueller/tap/lowspeak
+```
+
+`brew uninstall --zap --cask lowspeak` elimină și setările, modelele, jurnalele și cache-urile Lowspeak; cheile API rămân în portcheiul dumneavoastră de login.
+
+**Actualizări.** Lowspeak din imaginea de disc sau din Homebrew se actualizează singur prin [Sparkle](https://sparkle-project.org). La a doua pornire întreabă dacă are voie să caute singur actualizări, o dată pe zi. **Căutați actualizări…** din meniu caută imediat; **Căutați automat actualizări** și **Descărcați și instalați automat actualizările**, chiar dedesubt, vă schimbă ulterior alegerea. Dacă o căutare găsește o versiune nouă în timp ce lucrați în altă aplicație, pe inelul din bara de meniu apare un punct, iar **Căutați actualizări…** aduce actualizarea în prim-plan. Lowspeak instalează o actualizare doar dacă are semnătura dezvoltatorului; setările, cheile și modelele rămân. `brew upgrade --cask lowspeak` actualizează și o copie instalată din Homebrew. Versiunea 1.0.0 nu are mecanism de actualizare: instalați o singură dată peste ea o versiune mai nouă, de pe [pagina de lansări](https://github.com/sventmueller/lowspeak/releases). Nici versiunile compilate de dumneavoastră nu au mecanism de actualizare.
 
 **Din sursă.** Vedeți [Compilare și instalare](../../../docs/development.md#build--deploy) pentru cerințe, apoi:
 
