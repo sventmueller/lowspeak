@@ -135,6 +135,14 @@ pub static CS: Texts = Texts {
     model_retired: |provider| {
         format!("Služba {provider} už nenabízí model pro následné zpracování.")
     },
+    no_post_processing_key: |first, second| {
+        format!(
+            "Následné zpracování potřebuje klíč API od {first} nebo {second}. Nastavte ho na řádku nabídek."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("Služba {provider} už nenabízí {model}. Vyberte v nabídce jiný model.")
+    },
     request_rejected: |provider, status| {
         format!("Služba {provider} odmítla požadavek na následné zpracování ({status}).")
     },

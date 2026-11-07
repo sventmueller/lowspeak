@@ -144,6 +144,10 @@ pub struct Texts {
     pub network_error: fn(message: &str) -> String,
     pub key_rejected: fn(provider: &str) -> String,
     pub model_retired: fn(provider: &str) -> String,
+    /// Post-processing works with a key of either provider.
+    pub no_post_processing_key: fn(first: &str, second: &str) -> String,
+    /// The provider answers 404 for the transcription model.
+    pub online_model_retired: fn(provider: &str, model: &str) -> String,
     pub request_rejected: fn(provider: &str, status: u16) -> String,
 
     pub microphone_permission_denied: &'static str,
@@ -377,6 +381,12 @@ mod tests {
             keeps((t.network_error)("‹e›"), "‹e›");
             keeps((t.key_rejected)("‹p›"), "‹p›");
             keeps((t.model_retired)("‹p›"), "‹p›");
+            let either = (t.no_post_processing_key)("‹a›", "‹b›");
+            keeps(either.clone(), "‹a›");
+            keeps(either, "‹b›");
+            let retired = (t.online_model_retired)("‹p›", "‹m›");
+            keeps(retired.clone(), "‹p›");
+            keeps(retired, "‹m›");
             let rejected = (t.request_rejected)("‹p›", 422);
             keeps(rejected.clone(), "‹p›");
             keeps(rejected, "422");
@@ -442,6 +452,14 @@ mod tests {
                 (
                     (t.delete_failed_info)("m"),
                     (en::EN.delete_failed_info)("m"),
+                ),
+                (
+                    (t.online_model_retired)("p", "m"),
+                    (en::EN.online_model_retired)("p", "m"),
+                ),
+                (
+                    (t.no_post_processing_key)("a", "b"),
+                    (en::EN.no_post_processing_key)("a", "b"),
                 ),
             ] {
                 assert_ne!(text, english, "{} is not translated", language.raw_value());

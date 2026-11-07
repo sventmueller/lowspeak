@@ -112,6 +112,12 @@ pub static ZH_HANT: Texts = Texts {
     network_error: |message| format!("網路錯誤：{message}"),
     key_rejected: |provider| format!("{provider} 拒絕了 API 密鑰。"),
     model_retired: |provider| format!("{provider} 已不再提供後處理模型。"),
+    no_post_processing_key: |first, second| {
+        format!("後處理需要 {first} 或 {second} 的 API 密鑰。請透過選單列設定。")
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} 已不再提供 {model}。請在選單中選擇其他模型。")
+    },
     request_rejected: |provider, status| format!("{provider} 拒絕了後處理要求（{status}）。"),
     microphone_permission_denied: "Lowspeak 無法取用麥克風。請在「系統設定」→「隱私權與安全性」→「麥克風」中允許取用。",
     no_microphone: "未連接麥克風。",

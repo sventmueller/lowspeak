@@ -134,6 +134,14 @@ pub static RO: Texts = Texts {
     network_error: |message| format!("Eroare de rețea: {message}"),
     key_rejected: |provider| format!("{provider} a respins cheia API."),
     model_retired: |provider| format!("{provider} nu mai oferă modelul de postprocesare."),
+    no_post_processing_key: |first, second| {
+        format!(
+            "Postprocesarea necesită o cheie API de la {first} sau {second}. Configurați-o din bara de meniuri."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} nu mai oferă {model}. Alegeți alt model din meniu.")
+    },
     request_rejected: |provider, status| {
         format!("{provider} a respins cererea de postprocesare ({status}).")
     },

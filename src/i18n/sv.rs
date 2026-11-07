@@ -129,6 +129,14 @@ pub static SV: Texts = Texts {
     model_retired: |provider| {
         format!("{provider} erbjuder inte längre modellen för efterbearbetning.")
     },
+    no_post_processing_key: |first, second| {
+        format!(
+            "Efterbearbetning kräver en API-nyckel från {first} eller {second}. Ange den via menyraden."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} erbjuder inte längre {model}. Välj en annan modell i menyn.")
+    },
     request_rejected: |provider, status| {
         format!("{provider} avvisade begäran om efterbearbetning ({status}).")
     },

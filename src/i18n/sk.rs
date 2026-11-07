@@ -139,6 +139,14 @@ pub static SK: Texts = Texts {
     model_retired: |provider| {
         format!("Služba {provider} už neponúka model na následné spracovanie.")
     },
+    no_post_processing_key: |first, second| {
+        format!(
+            "Následné spracovanie potrebuje kľúč API pre {first} alebo {second}. Nastavte ho v lište menu."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("Služba {provider} už neponúka {model}. Vyberte v menu iný model.")
+    },
     request_rejected: |provider, status| {
         format!("Služba {provider} odmietla požiadavku na následné spracovanie ({status}).")
     },

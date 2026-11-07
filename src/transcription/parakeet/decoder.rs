@@ -132,14 +132,13 @@ pub fn decode<N: Networks>(networks: &N, blank_id: usize, window: &Window) -> Re
     }
     let frames = window.frames;
     let placement = window.placement;
+    // FluidAudio 0.17.7 leaves the mel-context frame out of the window's length, so its v2 windows
+    // never decode their last frame.
     let effective = i64::try_from(
         window
             .encoder_sequence_length
-            .min(placement.actual_audio_frames),
+            .min(placement.actual_audio_frames + placement.context_frame_adjustment),
     )?;
-    // FluidAudio skips a mel-context frame here but still counts it in timestamps and leaves it out
-    // of `actual_audio_frames`, so such windows stamp tokens one frame late and never decode their
-    // last frame.
     let mut time = i64::try_from(
         placement
             .initial_time_index_override
@@ -359,10 +358,12 @@ mod tests {
 
     #[test]
     fn decoding_starts_after_the_context_and_stops_at_the_real_audio() {
-        let networks = Scripted::new(word_at(&[(5, 0), (6, 2), (7, 8)]));
+        // Eight frames of real audio follow the context frame; a token whose duration runs past the
+        // last of them is the next window's.
+        let networks = Scripted::new(word_at(&[(5, 0), (6, 2), (7, 7), (8, 8)]));
         let mut at = placement(8);
         at.context_frame_adjustment = 1;
-        assert_eq!(run(&networks, 12, at), [(6, 2)]);
+        assert_eq!(run(&networks, 12, at), [(6, 2), (7, 7)]);
     }
 
     #[test]

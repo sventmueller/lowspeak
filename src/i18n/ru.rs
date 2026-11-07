@@ -137,6 +137,12 @@ pub static RU: Texts = Texts {
     model_retired: |provider| {
         format!("Сервис {provider} больше не предоставляет модель для постобработки.")
     },
+    no_post_processing_key: |first, second| {
+        format!("Для постобработки нужен ключ API {first} или {second}. Задайте его в строке меню.")
+    },
+    online_model_retired: |provider, model| {
+        format!("Сервис {provider} больше не предоставляет {model}. Выберите другую модель в меню.")
+    },
     request_rejected: |provider, status| {
         format!("Сервис {provider} отклонил запрос на постобработку ({status}).")
     },

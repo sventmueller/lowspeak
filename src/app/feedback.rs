@@ -16,21 +16,18 @@ pub fn open(address: &str) {
     }
 }
 
-pub fn report_problem() {
+/// The problem form with this Lowspeak's and this Mac's versions filled in.
+pub fn problem_report() -> String {
     let system = NSProcessInfo::processInfo().operatingSystemVersion();
     let macos = format!(
         "{}.{}.{}",
         system.majorVersion, system.minorVersion, system.patchVersion
     );
-    open(&problem_address(&version::app_version(), &macos));
+    problem_address(&version::app_version(), &macos)
 }
 
-pub fn suggest_feature() {
-    open(&format!("{REPOSITORY}/discussions/new?category=ideas"));
-}
-
-pub fn show_repository() {
-    open(REPOSITORY);
+pub fn feature_suggestion() -> String {
+    format!("{REPOSITORY}/discussions/new?category=ideas")
 }
 
 /// GitHub fills the fields of `.github/ISSUE_TEMPLATE/bug.yml` from the query by their ids.

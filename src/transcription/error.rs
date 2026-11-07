@@ -1,7 +1,7 @@
 use std::fmt;
 
 use crate::i18n::Texts;
-use crate::models::ApiProvider;
+use crate::models::{ApiProvider, OnlineModel};
 use crate::util::retry::Retryable;
 use crate::util::url_session::RequestError;
 
@@ -14,6 +14,8 @@ pub enum TranscriptionError {
         message: String,
     },
     Network(RequestError),
+    /// The provider answers 404 for the model, so it no longer offers it under this name.
+    ModelRetired(OnlineModel),
     ModelNotAvailable,
     /// The recording could not be converted to 16 kHz.
     Audio(anyhow::Error),
@@ -66,6 +68,12 @@ impl fmt::Display for TranscriptionError {
             Self::InvalidResponse => f.write_str("invalid response from the API"),
             Self::Api { status, message } => write!(f, "API error ({status}): {message}"),
             Self::Network(error) => write!(f, "network error: {error}"),
+            Self::ModelRetired(model) => write!(
+                f,
+                "{} no longer offers {} (HTTP 404)",
+                model.provider().display_name(),
+                model.raw_value()
+            ),
             Self::ModelNotAvailable => f.write_str("local model not downloaded"),
             Self::Audio(error) => write!(f, "audio conversion failed: {error:#}"),
             Self::Engine(error) => write!(f, "local model failed: {error:#}"),
@@ -81,6 +89,7 @@ impl std::error::Error for TranscriptionError {
             Self::NoApiKey(_)
             | Self::InvalidResponse
             | Self::Api { .. }
+            | Self::ModelRetired(_)
             | Self::ModelNotAvailable => None,
         }
     }
@@ -103,6 +112,9 @@ impl TranscriptionError {
             },
             Self::Network(RequestError::TimedOut) => t.request_timed_out.to_owned(),
             Self::Network(error) => (t.network_error)(&error.to_string()),
+            Self::ModelRetired(model) => {
+                (t.online_model_retired)(model.provider().display_name(), model.name())
+            }
             Self::ModelNotAvailable => (t.model_not_available)(t.manage_models),
             Self::Audio(_) => t.audio_failed.to_owned(),
             Self::Engine(_) => t.local_model_failed.to_owned(),
@@ -115,7 +127,11 @@ impl Retryable for TranscriptionError {
         match self {
             Self::Api { status, .. } => !StatusClass::of(*status).is_permanent(),
             Self::InvalidResponse | Self::Network(_) => true,
-            Self::NoApiKey(_) | Self::ModelNotAvailable | Self::Audio(_) | Self::Engine(_) => false,
+            Self::NoApiKey(_)
+            | Self::ModelRetired(_)
+            | Self::ModelNotAvailable
+            | Self::Audio(_)
+            | Self::Engine(_) => false,
         }
     }
 }
@@ -172,6 +188,20 @@ mod tests {
             message: "sk-secret echoed".into(),
         };
         assert!(!body.user_facing_description(t).contains("secret"));
+    }
+
+    #[test]
+    fn a_retired_model_is_named_with_its_provider() {
+        let retired = TranscriptionError::ModelRetired(OnlineModel::GroqWhisperLargeV3);
+        assert!(!retired.is_retryable());
+        assert_eq!(
+            retired.user_facing_description(i18n::texts(Language::En)),
+            "Groq no longer offers Whisper Large V3. Choose another model in the menu."
+        );
+        assert_eq!(
+            retired.to_string(),
+            "Groq no longer offers whisper-large-v3 (HTTP 404)"
+        );
     }
 
     #[test]

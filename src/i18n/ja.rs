@@ -128,6 +128,14 @@ pub static JA: Texts = Texts {
     network_error: |message| format!("ネットワークエラー：{message}"),
     key_rejected: |provider| format!("{provider}がAPIキーを拒否しました。"),
     model_retired: |provider| format!("{provider}は後処理用モデルの提供を終了しました。"),
+    no_post_processing_key: |first, second| {
+        format!(
+            "後処理には{first}または{second}のAPIキーが必要です。メニューバーから設定してください。"
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider}は{model}の提供を終了しました。メニューで別のモデルを選択してください。")
+    },
     request_rejected: |provider, status| {
         format!("{provider}が後処理のリクエストを拒否しました（{status}）。")
     },

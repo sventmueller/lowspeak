@@ -132,6 +132,14 @@ pub static FR: Texts = Texts {
     network_error: |message| format!("Erreur réseau : {message}"),
     key_rejected: |provider| format!("{provider} a refusé la clé API."),
     model_retired: |provider| format!("{provider} ne propose plus le modèle de post-traitement."),
+    no_post_processing_key: |first, second| {
+        format!(
+            "Le post-traitement nécessite une clé API de {first} ou de {second}. Définissez-la depuis la barre des menus."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} ne propose plus {model}. Choisissez un autre modèle dans le menu.")
+    },
     request_rejected: |provider, status| {
         format!("{provider} a refusé la requête de post-traitement ({status}).")
     },

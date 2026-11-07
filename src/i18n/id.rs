@@ -120,6 +120,14 @@ pub static ID: Texts = Texts {
     network_error: |message| format!("Kesalahan jaringan: {message}"),
     key_rejected: |provider| format!("{provider} menolak kunci API."),
     model_retired: |provider| format!("{provider} tidak lagi menyediakan model pascapemrosesan."),
+    no_post_processing_key: |first, second| {
+        format!(
+            "Pascapemrosesan memerlukan kunci API {first} atau {second}. Atur melalui bar menu."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} tidak lagi menyediakan {model}. Pilih model lain di menu.")
+    },
     request_rejected: |provider, status| {
         format!("{provider} menolak permintaan pascapemrosesan ({status}).")
     },

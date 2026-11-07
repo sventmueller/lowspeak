@@ -124,6 +124,12 @@ pub static VI: Texts = Texts {
     network_error: |message| format!("Lỗi mạng: {message}"),
     key_rejected: |provider| format!("{provider} đã từ chối khóa API."),
     model_retired: |provider| format!("{provider} không còn cung cấp mô hình hậu xử lý."),
+    no_post_processing_key: |first, second| {
+        format!("Hậu xử lý cần khóa API của {first} hoặc {second}. Hãy đặt khóa qua thanh menu.")
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} không còn cung cấp {model}. Hãy chọn mô hình khác trong menu.")
+    },
     request_rejected: |provider, status| {
         format!("{provider} đã từ chối yêu cầu hậu xử lý ({status}).")
     },

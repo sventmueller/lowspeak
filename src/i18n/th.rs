@@ -114,6 +114,12 @@ pub static TH: Texts = Texts {
     network_error: |message| format!("ข้อผิดพลาดของเครือข่าย: {message}"),
     key_rejected: |provider| format!("{provider} ปฏิเสธคีย์ API"),
     model_retired: |provider| format!("{provider} เลิกให้บริการโมเดลสำหรับการประมวลผลภายหลังแล้ว"),
+    no_post_processing_key: |first, second| {
+        format!("การประมวลผลภายหลังต้องใช้คีย์ API ของ {first} หรือ {second} ตั้งค่าได้จากแถบเมนู")
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} เลิกให้บริการ {model} แล้ว เลือกโมเดลอื่นในเมนู")
+    },
     request_rejected: |provider, status| {
         format!("{provider} ปฏิเสธคำขอการประมวลผลภายหลัง ({status})")
     },

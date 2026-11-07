@@ -136,6 +136,14 @@ pub static PT_PT: Texts = Texts {
     model_retired: |provider| {
         format!("{provider} já não disponibiliza o modelo de pós-processamento.")
     },
+    no_post_processing_key: |first, second| {
+        format!(
+            "O pós-processamento precisa de uma chave de API do {first} ou do {second}. Defina-a na barra de menus."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} já não disponibiliza o {model}. Escolha outro modelo no menu.")
+    },
     request_rejected: |provider, status| {
         format!("{provider} recusou o pedido de pós-processamento ({status}).")
     },

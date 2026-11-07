@@ -126,6 +126,14 @@ pub static HU: Texts = Texts {
     model_retired: |provider| {
         format!("A szolgáltató ({provider}) már nem kínálja az utófeldolgozási modellt.")
     },
+    no_post_processing_key: |first, second| {
+        format!("Az utófeldolgozáshoz {first} vagy {second} API-kulcs kell. Adja meg a menüsoron.")
+    },
+    online_model_retired: |provider, model| {
+        format!(
+            "A szolgáltató ({provider}) már nem kínálja ezt a modellt: {model}. Válasszon másikat a menüben."
+        )
+    },
     request_rejected: |provider, status| {
         format!("A szolgáltató ({provider}) elutasította az utófeldolgozási kérést ({status}).")
     },

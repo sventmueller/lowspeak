@@ -124,6 +124,14 @@ pub static MS: Texts = Texts {
     network_error: |message| format!("Ralat rangkaian: {message}"),
     key_rejected: |provider| format!("{provider} menolak kunci API."),
     model_retired: |provider| format!("{provider} tidak lagi menawarkan model pascapemprosesan."),
+    no_post_processing_key: |first, second| {
+        format!(
+            "Pascapemprosesan memerlukan kunci API {first} atau {second}. Setkannya melalui bar menu."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} tidak lagi menawarkan {model}. Pilih model lain dalam menu.")
+    },
     request_rejected: |provider, status| {
         format!("{provider} menolak permintaan pascapemprosesan ({status}).")
     },

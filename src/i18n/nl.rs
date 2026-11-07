@@ -130,6 +130,14 @@ pub static NL: Texts = Texts {
     network_error: |message| format!("Netwerkfout: {message}"),
     key_rejected: |provider| format!("{provider} heeft de API-sleutel geweigerd."),
     model_retired: |provider| format!("{provider} biedt het nabewerkingsmodel niet meer aan."),
+    no_post_processing_key: |first, second| {
+        format!(
+            "Nabewerking heeft een API-sleutel van {first} of {second} nodig. Stel deze in via de menubalk."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} biedt {model} niet meer aan. Kies een ander model in het menu.")
+    },
     request_rejected: |provider, status| {
         format!("{provider} heeft het nabewerkingsverzoek geweigerd ({status}).")
     },

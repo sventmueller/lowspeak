@@ -130,6 +130,12 @@ pub static AR: Texts = Texts {
     network_error: |message| format!("خطأ في الشبكة: {message}"),
     key_rejected: |provider| format!("رفضت خدمة {provider} مفتاح API."),
     model_retired: |provider| format!("لم تعد خدمة {provider} توفر نموذج المعالجة اللاحقة."),
+    no_post_processing_key: |first, second| {
+        format!("تحتاج المعالجة اللاحقة إلى مفتاح API من {first} أو {second}. عيّنه من شريط القوائم.")
+    },
+    online_model_retired: |provider, model| {
+        format!("لم تعد خدمة {provider} توفر {model}. اختر نموذجًا آخر من القائمة.")
+    },
     request_rejected: |provider, status| {
         format!("رفضت خدمة {provider} طلب المعالجة اللاحقة ({status}).")
     },

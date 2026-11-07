@@ -137,6 +137,14 @@ pub static PL: Texts = Texts {
     model_retired: |provider| {
         format!("Usługa {provider} nie oferuje już modelu do przetwarzania końcowego.")
     },
+    no_post_processing_key: |first, second| {
+        format!(
+            "Przetwarzanie końcowe wymaga klucza API dla {first} lub {second}. Ustaw go na pasku menu."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("Usługa {provider} nie oferuje już modelu {model}. Wybierz inny model w menu.")
+    },
     request_rejected: |provider, status| {
         format!("Usługa {provider} odrzuciła żądanie przetwarzania końcowego ({status}).")
     },

@@ -118,6 +118,14 @@ pub static KO: Texts = Texts {
     network_error: |message| format!("네트워크 오류: {message}"),
     key_rejected: |provider| format!("{provider}에서 API 키를 거부했습니다."),
     model_retired: |provider| format!("{provider}에서 후처리 모델을 더 이상 제공하지 않습니다."),
+    no_post_processing_key: |first, second| {
+        format!("후처리에는 {first} 또는 {second} API 키가 필요합니다. 메뉴 막대에서 설정하십시오.")
+    },
+    online_model_retired: |provider, model| {
+        format!(
+            "{provider}에서 {model}을(를) 더 이상 제공하지 않습니다. 메뉴에서 다른 모델을 선택하십시오."
+        )
+    },
     request_rejected: |provider, status| {
         format!("{provider}에서 후처리 요청을 거부했습니다({status}).")
     },

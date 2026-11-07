@@ -132,6 +132,14 @@ pub static CA: Texts = Texts {
     network_error: |message| format!("Error de xarxa: {message}"),
     key_rejected: |provider| format!("{provider} ha rebutjat la clau d’API."),
     model_retired: |provider| format!("{provider} ja no ofereix el model de postprocessament."),
+    no_post_processing_key: |first, second| {
+        format!(
+            "El postprocessament necessita una clau d’API de {first} o {second}. Configura-la des de la barra de menús."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} ja no ofereix {model}. Tria un altre model al menú.")
+    },
     request_rejected: |provider, status| {
         format!("{provider} ha rebutjat la sol·licitud de postprocessament ({status}).")
     },

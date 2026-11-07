@@ -128,6 +128,14 @@ pub static IT: Texts = Texts {
     network_error: |message| format!("Errore di rete: {message}"),
     key_rejected: |provider| format!("{provider} ha rifiutato la chiave API."),
     model_retired: |provider| format!("{provider} non offre più il modello di post-elaborazione."),
+    no_post_processing_key: |first, second| {
+        format!(
+            "La post-elaborazione richiede una chiave API di {first} o {second}. Impostala dalla barra dei menu."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} non offre più {model}. Scegli un altro modello nel menu.")
+    },
     request_rejected: |provider, status| {
         format!("{provider} ha rifiutato la richiesta di post-elaborazione ({status}).")
     },

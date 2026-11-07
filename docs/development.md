@@ -26,7 +26,7 @@ Xcode.
 | Path | Purpose |
 |---|---|
 | `src/main.rs` | `NSApplication` setup, single-instance check, Accessibility prompt, app delegate (terminate) |
-| `src/app/` | `state.rs` what the app decides, without AppKit or threads (events in, `Effect`s out), built from `recording.rs` (the running recording), `delivery.rs` (dictations on their way to the paste) and `model_library.rs` (installed models, the running download or deletion); `mod.rs` carries the effects out on the main thread; `capture.rs` the recorder on its own thread; `policy.rs` further decisions without AppKit (selection fallback, notification streaks, time limits, dictation order); `gesture.rs` fn hold/double-tap; `menu.rs` status item, icons, menu; `dialogs.rs` API key and vocabulary alerts; `notify.rs` user notifications; `reference.rs` Help → Quick Reference window; `feedback.rs` GitHub links of the Help menu; `about.rs` About panel; `updates.rs` Sparkle, loaded at run time where the bundle carries it |
+| `src/app/` | `state.rs` what the app decides, without AppKit or threads (events in, `Effect`s out), built from `recording.rs` (the running recording), `delivery.rs` (dictations on their way to the paste) and `model_library.rs` (installed models, the running download or deletion); `mod.rs` carries the effects out on the main thread; `capture.rs` the recorder on its own thread; `policy.rs` further decisions without AppKit (selection fallback, notification streaks, time limits, dictation order); `gesture.rs` fn hold/double-tap; `menu.rs` status item, icons, menu; `dialogs.rs` API key and vocabulary alerts; `notify.rs` user notifications; `reference.rs` Help → Quick Reference window; `feedback.rs` GitHub links of the Help menu; `about.rs` About panel; `updates.rs` Sparkle, loaded at run time where the bundle carries it; `platform.rs` everything `App` does outside its state, behind `Platform` and `Background`, and `Mac`, which does it |
 | `src/hotkey.rs` | fn key detection via event tap |
 | `src/models.rs` | the settings enums and the model catalogue (`LocalModel::spec`); how a model runs and where it comes from is in `transcription/catalog.rs` |
 | `src/audio/` | `mod.rs` sample rate and minimum length; `recorder.rs` capture, `vad.rs` silence trimming, `preprocess.rs` resampling, HPF and normalisation, `aac.rs` M4A encoding, `mp4.rs` M4A padding removal, `wav.rs` |
@@ -48,6 +48,7 @@ Xcode.
 
 ### Threads and state
 - `State` decides everything the app does: keys, timers, finished work and menu choices go in, a list of `Effect`s comes out. It knows neither AppKit nor threads, so `app/state.rs` tests the paste order, the recording lifecycle and the model library without them. `App` carries the effects out and feeds the results back as events
+- `App` reaches the Mac only through `Platform` (main thread: recorder, clipboard, notifications, dialogs, settings, keychain, login item) and `Background` (worker threads: transcription, downloads, deletion, the microphone list). `platform::Mac` is a thin layer of one call each; `tests/app.rs` puts substitutes in its place
 - `App` lives in a `thread_local` on the main thread. `with_app(|app| …)` borrows it; `dispatch(|app| …)` queues work from other threads onto the main queue. Timers and callbacks go through `dispatch` too, so work that finds the state borrowed is re-queued, never dropped
 - Never hold the `App` borrow across anything that spins the run loop (modal `NSAlert`, `NSApp.terminate`). `MenuTarget::menu_action` runs those outside the borrow
 - Every menu choice is an `Action` that carries its data and goes through one exhaustive match; the menu is rebuilt in `menuNeedsUpdate:` from a `Snapshot`
@@ -111,9 +112,11 @@ fn UP   → event tap thread → dispatch → App::fn_up → FnGesture (held: st
 
 ### Parakeet (`transcription/parakeet/`)
 - Port of FluidAudio 0.17.7: `coreml.rs` (MLModel/MLMultiArray wrappers), `networks.rs` (prediction and joint networks behind the `Networks` trait), `decoder.rs` (greedy TDT decoding), `chunks.rs` (long-form driver), `layout.rs` (window starts and lengths), `energy.rs` (frame energy for window starts and seam repair), `merge.rs` (token merge of overlapping windows), `seams.rs` (seam-word collapse, seam-gap repair), `text.rs` (vocabulary)
-- One deliberate departure from FluidAudio: the seam-word collapse and the gap repair act only where two windows meet. FluidAudio applies them to the whole transcript, which drops genuine words such as "Das Essen essen wir" and re-decodes every pause; the repair is capped at two decodes per seam
+- Two deliberate departures from FluidAudio. The seam-word collapse and the gap repair act only where two windows meet: FluidAudio applies them to the whole transcript, which drops genuine words such as "Das Essen essen wir" and re-decodes every pause; the repair is capped at two decodes per seam. And a v2 window counts its frames from its mel-context frame and decodes up to its last real frame: FluidAudio stamps those tokens one frame (80 ms) late and never decodes the window's last frame. On the English seam recordings below, v2 gives the same text either way
+- The speech gate for seam repair is FluidAudio's adaptive one (`energy.rs`): scaled to the recording's level between −66 and −42 dBFS, so quiet recordings are repaired too, while noise above −42 dBFS counts as speech
+- `parakeet_keeps_every_word_across_window_seams` (`tests/transcription.rs`, ignored) speaks two long dictations with pauses and repeated words through macOS's `say`, in English and German, clean, 30 dB quieter and with noise above the gate, each shifted so the pauses meet the seams elsewhere. It compares the transcript with the pieces transcribed one by one; on Ultra they differ by at most two words of context ("a"/"the", "zwölf"/"12"), never a lost or doubled phrase. Parakeet itself sometimes drops the second "das" of "Das das", even within one window
 - Each threshold says whether it is FluidAudio's value or Lowspeak's own tuning
-- Output is verified identical to FluidAudio 0.17.7 on the test fixtures (`tests/transcription.rs`); merge logic has FluidAudio's unit tests in `chunks.rs`
+- Ultra's output is verified identical to FluidAudio 0.17.7 on the test fixtures (`tests/transcription.rs`); merge logic has FluidAudio's unit tests in `chunks.rs`
 - Models: `~/Library/Application Support/FluidAudio/Models/{parakeet-tdt-0.6b-v2,parakeet-ultra}/` — FluidAudio's own cache, so models it downloaded are reused. Installed = all four `.mlmodelc` bundles + `parakeet_vocab.json` present
 - Ultra (`FluidInference/parakeet-ultra-coreml`) is a post-trained v3 with v3's files and decoding (FluidAudio's `isV3Family`): `JointDecisionv3.mlmodelc`, blank 8192, no mel-context, silence-aligned + end-aligned windows. v2: `JointDecision.mlmodelc`, blank 1024, 80 ms mel-context, regular windows
 - Ultra replaced v3 (more accurate in all 24 FLEURS languages at the same speed). A saved `parakeet-v3` selection maps to Ultra; an existing v3 folder stays in the shared FluidAudio cache
@@ -207,6 +210,7 @@ fn UP   → event tap thread → dispatch → App::fn_up → FnGesture (held: st
 ### Errors
 - One error type per layer: `RequestError` (URLSession), `TranscriptionError` (pipeline), `PostProcessError`, `recorder::StartError`; `anyhow` only inside the engines and for downloads, converted explicitly at the boundary
 - HTTP statuses are classified once (`error::StatusClass`) for transcription and post-processing alike
+- A 404 for the transcription model becomes `TranscriptionError::ModelRetired`, whose notification names the provider and the model; a missing post-processing key names both providers, since either works
 - Notifications show translated texts (`user_facing_description`, and fixed texts for download, deletion, key and login item failures), never raw API bodies, error chains or paths; the details go to the log
 - A failed resampling (`TranscriptionError::Audio`) and a failed ⌘V (`Pasted::Failed`, text left on the clipboard) reach the user as notifications
 
@@ -351,7 +355,7 @@ half is missing. `make universal` builds only the program, into `target/universa
 ## Tests
 ```bash
 make check                                             # what CI runs
-cargo test --release                                   # unit and property tests, pipeline with substitutes, menu
+cargo test --release                                   # unit and property tests, pipeline with substitutes, menu, app
 cargo clippy --release --all-targets --workspace       # lint rules in Cargo.toml; must pass without findings
 cargo test --release --test transcription -- --ignored # installed models; filter with `parakeet` or `whisper`
 cargo test --release --test recording -- --ignored     # the default microphone; the terminal needs microphone access
@@ -360,10 +364,10 @@ cargo test --release --test online -- --ignored        # OpenAI and Groq request
 cargo test --release --test fallback -- --ignored      # invalid key → local Parakeet Ultra takes over
 cargo run --release --example transcribe -- tests/fixtures/builtin.wav parakeet-ultra
 ```
-- `tests/menu.rs` runs without the test harness, because AppKit needs the main thread
+- `tests/menu.rs` and `tests/app.rs` run without the test harness, because AppKit needs the main thread. `tests/app.rs` runs `App` with substitutes for `Platform` and `Background`: dictations held and locked, silence, a crashing model, a failing recorder, the level check after five seconds, every menu action, keys stored and removed, downloads done, failed, cancelled and crashed, deletion, calls from other threads and from inside the app's own work, and quitting during a download. What stays untested is `launch()` with the real Mac, the forced exit when a model does not let go, and `platform::Mac`
 - Tests that need models, keys, the network or the microphone are `#[ignore]` with the reason and fail when run without what they need
 - Property tests (`proptest`) cover the MP4 and WAV parsers and the chunk merge; a failure leaves its seed in `proptest-regressions/`
-- Seams for tests without hardware or network: `State` (app decisions), `ModelLoader` (model thread), `Networks` and `WindowDecoder` (Parakeet decoding), `Library` and `test_server` (downloads), `Api::retry_delay` (retries without waiting)
+- Seams for tests without hardware or network: `State` (app decisions), `Platform` and `Background` (what `App` carries out), `ModelLoader` (model thread), `Networks` and `WindowDecoder` (Parakeet decoding), `Library` and `test_server` (downloads), `Api::retry_delay` (retries without waiting)
 - Release profile: whisper.cpp and the resampler are far too slow unoptimised (dependencies use opt-level 3 in dev too)
 
 ## Debugging

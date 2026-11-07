@@ -121,6 +121,14 @@ pub static EN: Texts = Texts {
     network_error: |message| format!("Network error: {message}"),
     key_rejected: |provider| format!("{provider} rejected the API key."),
     model_retired: |provider| format!("{provider} no longer offers the post-processing model."),
+    no_post_processing_key: |first, second| {
+        format!(
+            "Post-processing needs an API key from {first} or {second}. Set one via the menu bar."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} no longer offers {model}. Choose another model in the menu.")
+    },
     request_rejected: |provider, status| {
         format!("{provider} rejected the post-processing request ({status}).")
     },

@@ -50,7 +50,8 @@ impl Rejection {
     pub fn description(self, t: &Texts) -> String {
         match self {
             Self::NoApiKey => {
-                (t.no_api_key_error)(ApiProvider::POST_PROCESSING_PREFERENCE[0].display_name())
+                let [first, second] = ApiProvider::POST_PROCESSING_PREFERENCE;
+                (t.no_post_processing_key)(first.display_name(), second.display_name())
             }
             Self::ApiKey(provider) => (t.key_rejected)(provider.display_name()),
             Self::ModelRetired(provider) => (t.model_retired)(provider.display_name()),
@@ -349,6 +350,15 @@ fn answer(body: &[u8]) -> Result<String, PostProcessError> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_missing_key_names_both_providers_post_processing_can_use() {
+        let text = Rejection::NoApiKey.description(crate::i18n::texts(crate::models::Language::En));
+        assert_eq!(
+            text,
+            "Post-processing needs an API key from Groq or OpenAI. Set one via the menu bar."
+        );
+    }
 
     #[test]
     fn prompt_names_language_and_app_style() {

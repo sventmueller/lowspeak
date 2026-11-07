@@ -128,6 +128,14 @@ pub static FI: Texts = Texts {
     network_error: |message| format!("Verkkovirhe: {message}"),
     key_rejected: |provider| format!("{provider} hylkäsi API-avaimen."),
     model_retired: |provider| format!("{provider} ei enää tarjoa jälkikäsittelymallia."),
+    no_post_processing_key: |first, second| {
+        format!(
+            "Jälkikäsittely tarvitsee API-avaimen palvelulta {first} tai {second}. Aseta se valikkorivin kautta."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} ei enää tarjoa mallia {model}. Valitse valikosta toinen malli.")
+    },
     request_rejected: |provider, status| {
         format!("{provider} hylkäsi jälkikäsittelypyynnön ({status}).")
     },

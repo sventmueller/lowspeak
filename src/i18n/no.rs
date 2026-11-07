@@ -125,6 +125,14 @@ pub static NO: Texts = Texts {
     model_retired: |provider| {
         format!("{provider} tilbyr ikke lenger modellen for etterbehandling.")
     },
+    no_post_processing_key: |first, second| {
+        format!(
+            "Etterbehandling krever en API-nøkkel fra {first} eller {second}. Angi den via menylinjen."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} tilbyr ikke lenger {model}. Velg en annen modell i menyen.")
+    },
     request_rejected: |provider, status| {
         format!("{provider} avviste forespørselen om etterbehandling ({status}).")
     },

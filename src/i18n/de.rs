@@ -129,6 +129,14 @@ pub static DE: Texts = Texts {
     model_retired: |provider| {
         format!("{provider} bietet das Modell für die Nachbearbeitung nicht mehr an.")
     },
+    no_post_processing_key: |first, second| {
+        format!(
+            "Für die Nachbearbeitung fehlt ein API-Schlüssel von {first} oder {second}. Über die Menüleiste festlegen."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} bietet {model} nicht mehr an. Im Menü ein anderes Modell wählen.")
+    },
     request_rejected: |provider, status| {
         format!("{provider} hat die Anfrage zur Nachbearbeitung abgelehnt ({status}).")
     },

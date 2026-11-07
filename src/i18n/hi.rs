@@ -118,6 +118,12 @@ pub static HI: Texts = Texts {
     network_error: |message| format!("नेटवर्क त्रुटि: {message}"),
     key_rejected: |provider| format!("{provider} ने API कुंजी अस्वीकार कर दी।"),
     model_retired: |provider| format!("{provider} अब पोस्ट-प्रोसेसिंग मॉडल उपलब्ध नहीं कराता।"),
+    no_post_processing_key: |first, second| {
+        format!("पोस्ट-प्रोसेसिंग के लिए {first} या {second} की API कुंजी चाहिए। इसे मेनू बार से सेट करें।")
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} अब {model} उपलब्ध नहीं कराता। मेनू में कोई दूसरा मॉडल चुनें।")
+    },
     request_rejected: |provider, status| {
         format!("{provider} ने पोस्ट-प्रोसेसिंग अनुरोध अस्वीकार कर दिया ({status})।")
     },

@@ -145,6 +145,14 @@ pub static SL: Texts = Texts {
     model_retired: |provider| {
         format!("Storitev {provider} ne ponuja več modela za naknadno obdelavo.")
     },
+    no_post_processing_key: |first, second| {
+        format!(
+            "Za naknadno obdelavo potrebujete ključ API za {first} ali {second}. Nastavite ga v menijski vrstici."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("Storitev {provider} ne ponuja več modela {model}. V meniju izberite drug model.")
+    },
     request_rejected: |provider, status| {
         format!("Storitev {provider} je zavrnila zahtevo za naknadno obdelavo ({status}).")
     },

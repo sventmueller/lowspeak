@@ -345,6 +345,25 @@ fn without_a_local_model_the_online_error_reaches_the_user() {
 }
 
 #[test]
+fn a_model_the_provider_no_longer_offers_is_named() {
+    let world = World::new(
+        FakeHttp::new(|_| answer(404, "model not found")),
+        &[ApiProvider::Groq],
+        &[],
+        FakeLocal::default(),
+    );
+    let error = world
+        .run(job(settings(TranscriptionMode::Online), speech(1.5)))
+        .err()
+        .expect("expected an error");
+    assert!(
+        matches!(error, TranscriptionError::ModelRetired(model) if model.provider() == ApiProvider::Groq),
+        "{error}"
+    );
+    assert_eq!(world.http.requests.borrow().len(), 1, "404 is not retried");
+}
+
+#[test]
 fn a_missing_key_fails_before_any_request() {
     let world = World::new(
         no_requests(),

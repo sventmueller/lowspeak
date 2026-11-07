@@ -110,6 +110,12 @@ pub static ZH: Texts = Texts {
     network_error: |message| format!("网络错误：{message}"),
     key_rejected: |provider| format!("{provider} 拒绝了 API 密钥。"),
     model_retired: |provider| format!("{provider} 已不再提供后处理模型。"),
+    no_post_processing_key: |first, second| {
+        format!("后处理需要 {first} 或 {second} 的 API 密钥。请通过菜单栏设置。")
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} 已不再提供 {model}。请在菜单中选择其他模型。")
+    },
     request_rejected: |provider, status| format!("{provider} 拒绝了后处理请求（{status}）。"),
     microphone_permission_denied: "Lowspeak 无法访问麦克风。请在系统设置 → 隐私与安全 → 麦克风中允许访问。",
     no_microphone: "未连接麦克风。",

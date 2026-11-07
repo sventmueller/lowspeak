@@ -119,6 +119,12 @@ pub static HE: Texts = Texts {
     network_error: |message| format!("שגיאת רשת: {message}"),
     key_rejected: |provider| format!("השירות {provider} דחה את מפתח ה-API."),
     model_retired: |provider| format!("השירות {provider} כבר לא מציע את מודל עיבוד ההמשך."),
+    no_post_processing_key: |first, second| {
+        format!("עיבוד ההמשך דורש מפתח API של {first} או של {second}. הגדר אותו דרך שורת התפריטים.")
+    },
+    online_model_retired: |provider, model| {
+        format!("השירות {provider} כבר לא מציע את {model}. בחר מודל אחר בתפריט.")
+    },
     request_rejected: |provider, status| {
         format!("השירות {provider} דחה את בקשת עיבוד ההמשך ({status}).")
     },

@@ -134,6 +134,14 @@ pub static ES: Texts = Texts {
     network_error: |message| format!("Error de red: {message}"),
     key_rejected: |provider| format!("{provider} ha rechazado la clave de API."),
     model_retired: |provider| format!("{provider} ya no ofrece el modelo de posprocesado."),
+    no_post_processing_key: |first, second| {
+        format!(
+            "El posprocesado necesita una clave de API de {first} o {second}. Configúrala desde la barra de menús."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} ya no ofrece {model}. Elige otro modelo en el menú.")
+    },
     request_rejected: |provider, status| {
         format!("{provider} ha rechazado la solicitud de posprocesado ({status}).")
     },

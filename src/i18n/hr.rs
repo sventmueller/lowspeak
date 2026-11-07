@@ -137,6 +137,14 @@ pub static HR: Texts = Texts {
     network_error: |message| format!("Pogreška mreže: {message}"),
     key_rejected: |provider| format!("Usluga {provider} odbila je API ključ."),
     model_retired: |provider| format!("Usluga {provider} više ne nudi model za naknadnu obradu."),
+    no_post_processing_key: |first, second| {
+        format!(
+            "Za naknadnu obradu potreban je API ključ za {first} ili {second}. Postavite ga u traci s izbornicima."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("Usluga {provider} više ne nudi {model}. Odaberite drugi model u izborniku.")
+    },
     request_rejected: |provider, status| {
         format!("Usluga {provider} odbila je zahtjev za naknadnu obradu ({status}).")
     },

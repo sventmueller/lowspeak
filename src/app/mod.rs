@@ -10,6 +10,7 @@ pub mod gesture;
 pub mod menu;
 mod model_library;
 pub mod notify;
+pub mod platform;
 pub mod policy;
 mod recording;
 pub mod reference;
@@ -17,41 +18,29 @@ pub mod state;
 pub mod updates;
 
 use std::cell::RefCell;
-use std::collections::HashSet;
 use std::panic::AssertUnwindSafe;
+use std::rc::Rc;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 
-use objc2::rc::Retained;
-use objc2_app_kit::{NSApplication, NSMenu, NSSound, NSWorkspace};
-use objc2_foundation::{MainThreadMarker, ns_string};
+use objc2_app_kit::{NSApplication, NSMenu};
+use objc2_foundation::MainThreadMarker;
 
-use self::capture::Capture;
 use self::menu::{PULSE_INTERVAL, StatusUi};
-use self::policy::MAX_HANDS_FREE_RECORDING;
+use self::platform::{Background, Mac, Platform};
 use self::state::{DownloadEnd, Effect, KeyChange, Launch, State, Transcription};
 pub use self::state::{Snapshot, Status};
 use crate::audio::aac;
-use crate::audio::recorder::{self, Captured, Microphone, OnLive};
+use crate::audio::recorder::{self, Microphone, OnLive};
 use crate::config::settings::{self, Settings};
-use crate::config::{api_keys, login_item, vocabulary};
-use crate::hotkey::Hotkey;
+use crate::config::{api_keys, vocabulary};
+use crate::hotkey::{Hotkey, Key};
 use crate::models::{Language, LocalModel, OnlineModel, PostProcessingMode};
-use crate::paste;
-use crate::transcription::Api;
 use crate::transcription::error::TranscriptionError;
 use crate::transcription::hf::Cancelled;
-use crate::transcription::local::LocalTranscriber;
-use crate::transcription::model_store::{self, Disk, ModelStore};
-use crate::transcription::online;
-use crate::transcription::postprocess::ActiveApp;
-use crate::transcription::service::{self, Job, Outcome, Services};
+use crate::transcription::model_store;
 use crate::util::{filelog, main_thread};
-
-/// The recording buffer outlasts the longest time limit, whose timer may fire a little late.
-const RECORDING_CAPACITY: Duration =
-    MAX_HANDS_FREE_RECORDING.saturating_add(Duration::from_secs(10));
 
 #[derive(Clone, Debug)]
 pub enum Action {
@@ -82,10 +71,8 @@ pub enum Action {
 pub struct App {
     state: State,
     ui: StatusUi,
-    capture: Capture,
-    local: LocalTranscriber,
-    hotkey: Hotkey,
-    start_sound: Option<Retained<NSSound>>,
+    platform: Rc<dyn Platform>,
+    background: Arc<dyn Background>,
     download_cancel: Option<Arc<AtomicBool>>,
     /// A refresh of the microphones and the login item runs.
     refreshing: bool,
@@ -167,31 +154,33 @@ fn spawn_guarded<T: Send + 'static>(
 }
 
 pub fn launch(mtm: MainThreadMarker) {
-    let hotkey = Hotkey::start(|key| {
-        let at = Instant::now();
-        update(move |state| state.key(key, at));
-    });
+    let hotkey = Hotkey::start(key);
     api_keys::migrate();
-    let state = State::new(Launch {
+    let found = Launch {
         settings: Settings::load(),
         providers: api_keys::configured_providers(),
         installed: model_store::installed_models(),
         vocabulary: vocabulary::load(),
         microphone: settings::chosen_microphone(),
-    });
-    let mut app = App {
-        state,
-        ui: StatusUi::new(mtm),
-        capture: Capture::spawn(RECORDING_CAPACITY),
-        local: LocalTranscriber::spawn(),
-        hotkey,
-        start_sound: NSSound::soundNamed(ns_string!("Tink")),
-        download_cancel: None,
-        refreshing: false,
     };
     recorder::request_mic_permission();
     notify::request_permission();
     aac::warm_up();
+    start(mtm, Box::new(Mac::new(mtm, hotkey)), found);
+    updates::start(mtm);
+}
+
+/// Builds the app around `platform` from what `launch` found and runs it on the main thread.
+pub fn start(mtm: MainThreadMarker, platform: Box<dyn Platform>, launch: Launch) {
+    let background = platform.background();
+    let mut app = App {
+        state: State::new(launch),
+        ui: StatusUi::new(mtm),
+        platform: Rc::from(platform),
+        background,
+        download_cancel: None,
+        refreshing: false,
+    };
     app.update(State::launch);
     app.refresh_system();
     flog!(
@@ -206,7 +195,17 @@ pub fn launch(mtm: MainThreadMarker) {
             .collect::<Vec<_>>()
     );
     APP.with(|cell| *cell.borrow_mut() = Some(app));
-    updates::start(mtm);
+}
+
+/// A press or release of fn or Shift, as the hotkey reports it.
+pub fn key(key: Key) {
+    let at = Instant::now();
+    update(move |state| state.key(key, at));
+}
+
+/// What the menu would show now; `None` before launch.
+pub fn snapshot() -> Option<Snapshot> {
+    with_app(|app| app.snapshot())
 }
 
 pub fn shutdown() {
@@ -216,8 +215,7 @@ pub fn shutdown() {
             if let Some(cancel) = &app.download_cancel {
                 cancel.store(true, Ordering::Relaxed);
             }
-            app.hotkey.stop();
-            app.local.unload_within(Duration::from_secs(3))
+            app.platform.shut_down()
         }),
         Err(_) => false,
     });
@@ -230,7 +228,7 @@ pub fn shutdown() {
 }
 
 /// Every menu item ends here, so the compiler checks that each one does something.
-fn perform(action: Action) {
+pub fn perform(action: Action) {
     let Some(mtm) =
         MainThreadMarker::new().filter(|_| APP.with(|cell| cell.try_borrow_mut().is_ok()))
     else {
@@ -267,7 +265,7 @@ fn perform(action: Action) {
             else {
                 return;
             };
-            if let Some(key) = dialogs::prompt_api_key(mtm, has_key, texts) {
+            if let Some(key) = prompt(|platform| platform.prompt_api_key(has_key, texts)) {
                 update_now_or_later(move |state| state.enter_api_key(&key));
             }
         }
@@ -277,7 +275,7 @@ fn perform(action: Action) {
             else {
                 return;
             };
-            if let Some(input) = dialogs::prompt_vocabulary(mtm, &current, texts) {
+            if let Some(input) = prompt(|platform| platform.prompt_vocabulary(&current, texts)) {
                 update_now_or_later(move |state| state.set_vocabulary(&input));
             }
         }
@@ -286,17 +284,35 @@ fn perform(action: Action) {
                 reference::show(mtm, texts);
             }
         }
-        Action::ReportProblem => feedback::report_problem(),
-        Action::SuggestFeature => feedback::suggest_feature(),
-        Action::OpenRepository => feedback::show_repository(),
+        Action::ReportProblem => open(&feedback::problem_report()),
+        Action::SuggestFeature => open(&feedback::feature_suggestion()),
+        Action::OpenRepository => open(feedback::REPOSITORY),
         Action::About => {
             if let Some(texts) = with_app(|app| app.state.texts()) {
                 about::show(mtm, texts);
             }
         }
         // Termination runs `shutdown`, which needs the app state.
-        Action::Quit => NSApplication::sharedApplication(mtm).terminate(None),
+        Action::Quit => {
+            if let Some(platform) = platform() {
+                platform.quit();
+            }
+        }
     }
+}
+
+/// The platform outside the app state's borrow, for the calls that spin the run loop: modal dialogs and
+/// termination.
+fn platform() -> Option<Rc<dyn Platform>> {
+    with_app(|app| Rc::clone(&app.platform))
+}
+
+fn prompt(ask: impl FnOnce(&dyn Platform) -> Option<String>) -> Option<String> {
+    ask(&*platform()?)
+}
+
+fn open(address: &str) {
+    with_app(|app| app.platform.open(address));
 }
 
 fn menu_needs_update(menu: &NSMenu) {
@@ -304,57 +320,6 @@ fn menu_needs_update(menu: &NSMenu) {
         app.ui.rebuild(menu, &app.snapshot());
         app.refresh_system();
     });
-}
-
-fn active_app() -> ActiveApp {
-    let Some(app) = NSWorkspace::sharedWorkspace().frontmostApplication() else {
-        return ActiveApp::default();
-    };
-    ActiveApp {
-        bundle_id: app.bundleIdentifier().map(|id| id.to_string()),
-        name: app.localizedName().map(|name| name.to_string()),
-    }
-}
-
-struct Usable {
-    unavailable: Option<LocalModel>,
-}
-
-impl ModelStore for Usable {
-    fn installed(&self) -> HashSet<LocalModel> {
-        let mut installed = Disk.installed();
-        if let Some(model) = self.unavailable {
-            installed.remove(&model);
-        }
-        installed
-    }
-}
-
-fn transcribe(
-    captured: Captured,
-    job: Transcription,
-    active_app: ActiveApp,
-    local: &LocalTranscriber,
-) -> Result<Outcome, TranscriptionError> {
-    let samples = captured.into_16k().map_err(TranscriptionError::Audio)?;
-    let models = Usable {
-        unavailable: job.unavailable,
-    };
-    let services = Services {
-        local,
-        models: &models,
-        api: Api::SYSTEM,
-    };
-    service::run(
-        Job {
-            samples,
-            settings: job.settings,
-            active_app,
-            raw_parakeet_first: job.raw_parakeet_first,
-            vocabulary: job.vocabulary,
-        },
-        &services,
-    )
 }
 
 impl App {
@@ -392,41 +357,44 @@ impl App {
             } => {
                 let on_live: OnLive =
                     Box::new(move || update(move |state| state.microphone_live(recording)));
-                self.capture.start(microphone, on_live, move |started| {
-                    if let Err(error) = started {
-                        update(move |state| state.recorder_failed(recording, &error));
-                    }
-                });
+                self.platform.start_recorder(
+                    microphone,
+                    on_live,
+                    Box::new(move |started| {
+                        if let Err(error) = started {
+                            update(move |state| state.recorder_failed(recording, &error));
+                        }
+                    }),
+                );
             }
             Effect::Transcribe(job) => self.transcribe(job),
-            Effect::DiscardRecording => self.capture.stop(drop),
-            Effect::MeasureLevel(recording) => self.capture.level(move |level| {
-                update(move |state| state.level_measured(recording, level));
-            }),
+            Effect::DiscardRecording => self.platform.stop_recorder(Box::new(drop)),
+            Effect::MeasureLevel(recording) => {
+                self.platform.measure_level(Box::new(move |level| {
+                    update(move |state| state.level_measured(recording, level));
+                }));
+            }
             Effect::Schedule(timer, delay) => {
                 dispatch_after(delay, move |app| app.update(|state| state.timer(timer)));
             }
-            Effect::ResetHotkey => self.hotkey.reset_fn_state(),
-            Effect::WarmUp(provider) => online::warm_up(provider),
-            Effect::PlayStartSound => {
-                if let Some(sound) = &self.start_sound {
-                    sound.stop();
-                    sound.play();
-                }
-            }
+            Effect::ResetHotkey => self.platform.reset_hotkey(),
+            Effect::WarmUp(provider) => self.platform.warm_up(provider),
+            Effect::PlayStartSound => self.platform.play_start_sound(),
             Effect::Paste(text) => {
-                let pasted = paste::paste(&text, || update(State::clipboard_restored));
+                let pasted = self
+                    .platform
+                    .paste(&text, Box::new(|| update(State::clipboard_restored)));
                 self.state.pasted(pasted);
             }
-            Effect::Copy(text) => paste::copy(&text),
-            Effect::Notify { title, body } => notify::send(title, &body),
-            Effect::SaveSettings(settings) => settings.save(),
+            Effect::Copy(text) => self.platform.copy(&text),
+            Effect::Notify { title, body } => self.platform.notify(title, &body),
+            Effect::SaveSettings(settings) => self.platform.save_settings(&settings),
             Effect::SaveMicrophone(microphone) => {
-                settings::set_chosen_microphone(microphone.as_ref());
+                self.platform.save_microphone(microphone.as_ref());
             }
-            Effect::SaveVocabulary(terms) => vocabulary::save(&terms),
+            Effect::SaveVocabulary(terms) => self.platform.save_vocabulary(&terms),
             Effect::StoreApiKey(key) => {
-                let stored = match api_keys::save(&key) {
+                let stored = match self.platform.store_api_key(&key) {
                     Ok(provider) => {
                         flog!(
                             filelog::APP,
@@ -443,11 +411,11 @@ impl App {
                 self.state.api_keys_stored(
                     KeyChange::Saved,
                     stored,
-                    api_keys::configured_providers(),
+                    self.platform.configured_providers(),
                 );
             }
             Effect::RemoveApiKeys => {
-                let removed = match api_keys::delete_all() {
+                let removed = match self.platform.remove_api_keys() {
                     Ok(()) => {
                         flog!(filelog::APP, "All API keys removed");
                         true
@@ -460,32 +428,35 @@ impl App {
                 self.state.api_keys_stored(
                     KeyChange::Removed,
                     removed,
-                    api_keys::configured_providers(),
+                    self.platform.configured_providers(),
                 );
             }
             Effect::SetLoginItem(enabled) => {
-                let result = login_item::set_enabled(enabled);
+                let result = self.platform.set_login_item(enabled);
                 if let Err(error) = &result {
                     flog!(filelog::APP, "Login item update failed: {error:#}");
                     self.refresh_system();
                 }
                 self.state.login_item_set(enabled, result.is_ok());
             }
-            Effect::Preload(model) => self.local.preload(model),
-            Effect::Prime(model) => self.local.prime(model),
+            Effect::Preload(model) => self.platform.preload(model),
+            Effect::Prime(model) => self.platform.prime(model),
             Effect::Download(model) => self.download(model),
             Effect::Delete(model) => self.delete(model),
         }
     }
 
     fn transcribe(&self, job: Transcription) {
-        let active_app = active_app();
-        let local = self.local.clone();
-        self.capture.stop(move |captured| {
+        let active_app = self.platform.active_app();
+        let background = Arc::clone(&self.background);
+        self.platform.stop_recorder(Box::new(move |audio| {
             let recording = job.recording;
             spawn_guarded(
                 "lowspeak.transcription",
-                move || transcribe(captured, job, active_app, &local),
+                move || {
+                    let samples = audio().map_err(TranscriptionError::Audio)?;
+                    background.transcribe(samples, job, active_app)
+                },
                 || {
                     Err(TranscriptionError::Engine(anyhow::anyhow!(
                         "transcription panicked"
@@ -493,17 +464,18 @@ impl App {
                 },
                 move |result| update(move |state| state.transcribed(recording, result)),
             );
-        });
+        }));
     }
 
     fn download(&mut self, model: LocalModel) {
         let cancel = Arc::new(AtomicBool::new(false));
         self.download_cancel = Some(Arc::clone(&cancel));
+        let background = Arc::clone(&self.background);
         spawn_guarded(
             "lowspeak.download",
             move || {
                 let mut reported = 0.0;
-                model_store::download(model, &cancel, &mut |progress| {
+                background.download(model, &cancel, &mut |progress| {
                     if progress - reported >= 0.01 || progress >= 1.0 {
                         reported = progress;
                         update(move |state| state.download_progressed(progress));
@@ -525,19 +497,15 @@ impl App {
                 DownloadEnd::Failed
             }
         };
-        let installed = model_store::installed_models();
+        let installed = self.background.installed();
         self.update(|state| state.download_finished(model, end, installed));
     }
 
     fn delete(&self, model: LocalModel) {
-        let local = self.local.clone();
+        let background = Arc::clone(&self.background);
         spawn_guarded(
             "lowspeak.delete",
-            move || {
-                // Waits for a model that is still loading, so its files are not deleted underneath it.
-                local.unload();
-                model_store::delete(model)
-            },
+            move || background.delete(model),
             || Err(anyhow::anyhow!("deleting panicked")),
             move |result| {
                 dispatch(move |app| {
@@ -548,7 +516,7 @@ impl App {
                             model.raw_value()
                         );
                     }
-                    let installed = model_store::installed_models();
+                    let installed = app.background.installed();
                     app.update(|state| state.deleted(model, result.is_ok(), installed));
                 });
             },
@@ -562,9 +530,10 @@ impl App {
             return;
         }
         self.refreshing = true;
+        let background = Arc::clone(&self.background);
         spawn_guarded(
             "lowspeak.system",
-            || Some((recorder::microphones(), login_item::is_enabled())),
+            move || Some((background.microphones(), background.login_item())),
             || None,
             |found| dispatch(move |app| app.system_refreshed(found)),
         );

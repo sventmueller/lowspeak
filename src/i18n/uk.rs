@@ -135,6 +135,14 @@ pub static UK: Texts = Texts {
     network_error: |message| format!("Помилка мережі: {message}"),
     key_rejected: |provider| format!("Сервіс {provider} відхилив ключ API."),
     model_retired: |provider| format!("Сервіс {provider} більше не надає модель для постобробки."),
+    no_post_processing_key: |first, second| {
+        format!(
+            "Для постобробки потрібен ключ API {first} або {second}. Задайте його через смугу меню."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("Сервіс {provider} більше не надає {model}. Виберіть іншу модель у меню.")
+    },
     request_rejected: |provider, status| {
         format!("Сервіс {provider} відхилив запит на постобробку ({status}).")
     },

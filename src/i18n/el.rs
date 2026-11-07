@@ -134,6 +134,14 @@ pub static EL: Texts = Texts {
     model_retired: |provider| {
         format!("Το {provider} δεν προσφέρει πλέον το μοντέλο μετεπεξεργασίας.")
     },
+    no_post_processing_key: |first, second| {
+        format!(
+            "Η μετεπεξεργασία χρειάζεται κλειδί API από το {first} ή το {second}. Ορίστε το από τη γραμμή μενού."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("Το {provider} δεν προσφέρει πλέον το {model}. Επιλέξτε άλλο μοντέλο από το μενού.")
+    },
     request_rejected: |provider, status| {
         format!("Το {provider} απέρριψε το αίτημα μετεπεξεργασίας ({status}).")
     },

@@ -5,7 +5,7 @@ use std::sync::Mutex;
 use std::time::{Duration, Instant};
 
 use super::Api;
-use super::error::TranscriptionError;
+use super::error::{StatusClass, TranscriptionError};
 use crate::config::vocabulary;
 use crate::models::{ApiProvider, Language, OnlineModel};
 use crate::util::retry::{self, Backoff};
@@ -186,6 +186,9 @@ fn send(
         Some(status) => {
             let message = http::redact_api_keys(&response.text());
             flog!(filelog::APP, "API error {status}: {message}");
+            if StatusClass::of(status) == StatusClass::ModelRetired {
+                return Err(TranscriptionError::ModelRetired(model));
+            }
             Err(TranscriptionError::Api { status, message })
         }
     }

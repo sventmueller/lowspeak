@@ -227,29 +227,69 @@ impl WindowDecoder for Parakeet {
         if request.samples.is_empty() {
             return Ok(Vec::new());
         }
-        let actual_samples = request
-            .samples
-            .len()
-            .checked_sub(request.context_samples)
-            .context("window context is longer than the window")?;
-        self.infer(
-            request.samples,
-            request.samples.len(),
-            Placement {
-                actual_audio_frames: actual_samples.div_ceil(SAMPLES_PER_FRAME),
-                context_frame_adjustment: request.context_samples / SAMPLES_PER_FRAME,
-                is_last_chunk: request.is_last_chunk,
-                global_frame_offset: i64::try_from(request.chunk_start / SAMPLES_PER_FRAME)?,
-                emit_tokens_after_global_frame: request.emit_tokens_after_frame,
-                initial_time_index_override: request.initial_time_index_override,
-            },
-        )
+        self.infer(request.samples, request.samples.len(), placement(&request)?)
     }
+}
+
+/// Where a window's encoder frames sit in the recording. Its first frame is the mel context, if any,
+/// so a token's frame counts from there; FluidAudio 0.17.7 counts from after it and stamps v2 tokens
+/// one frame late.
+fn placement(request: &WindowRequest) -> Result<Placement> {
+    let actual_samples = request
+        .samples
+        .len()
+        .checked_sub(request.context_samples)
+        .context("window context is longer than the window")?;
+    let first_sample = request
+        .chunk_start
+        .checked_sub(request.context_samples)
+        .context("window context reaches before the recording")?;
+    Ok(Placement {
+        actual_audio_frames: actual_samples.div_ceil(SAMPLES_PER_FRAME),
+        context_frame_adjustment: request.context_samples / SAMPLES_PER_FRAME,
+        is_last_chunk: request.is_last_chunk,
+        global_frame_offset: i64::try_from(first_sample / SAMPLES_PER_FRAME)?,
+        emit_tokens_after_global_frame: request.emit_tokens_after_frame,
+        initial_time_index_override: request.initial_time_index_override,
+    })
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_window_with_mel_context_counts_its_frames_from_the_context() {
+        let samples = vec![0.0; 11 * SAMPLES_PER_FRAME];
+        let request = WindowRequest {
+            samples: &samples,
+            context_samples: SAMPLES_PER_FRAME,
+            chunk_start: 100 * SAMPLES_PER_FRAME,
+            is_last_chunk: true,
+            emit_tokens_after_frame: None,
+            initial_time_index_override: None,
+        };
+        let at = placement(&request).unwrap();
+        assert_eq!(
+            (
+                at.global_frame_offset,
+                at.context_frame_adjustment,
+                at.actual_audio_frames
+            ),
+            (99, 1, 10)
+        );
+        let first = WindowRequest {
+            context_samples: 0,
+            chunk_start: 0,
+            ..request
+        };
+        assert_eq!(placement(&first).unwrap().global_frame_offset, 0);
+        let impossible = WindowRequest {
+            chunk_start: 0,
+            ..request
+        };
+        assert!(placement(&impossible).is_err());
+    }
 
     #[test]
     fn an_encoder_frame_is_80_ms() {

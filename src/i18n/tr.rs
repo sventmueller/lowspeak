@@ -122,6 +122,14 @@ pub static TR: Texts = Texts {
     network_error: |message| format!("Ağ hatası: {message}"),
     key_rejected: |provider| format!("{provider} API anahtarını reddetti."),
     model_retired: |provider| format!("{provider} artık son işleme modelini sunmuyor."),
+    no_post_processing_key: |first, second| {
+        format!(
+            "Son işleme için {first} veya {second} API anahtarı gerekiyor. Menü çubuğundan ayarlayın."
+        )
+    },
+    online_model_retired: |provider, model| {
+        format!("{provider} artık {model} modelini sunmuyor. Menüden başka bir model seçin.")
+    },
     request_rejected: |provider, status| {
         format!("{provider} son işleme isteğini reddetti ({status}).")
     },
