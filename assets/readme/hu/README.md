@@ -2,9 +2,17 @@
 
 # Lowspeak
 
-**Diktálás Macre, amely oda gépel, ahol a kurzor áll: tartsa lenyomva az fn billentyűt, beszéljen, majd engedje fel.**
+**Tartsa lenyomva az fn billentyűt, beszéljen, engedje fel. A szavai már ott is vannak.**
 
-A Lowspeak a menüsorban él. Tartsa lenyomva az fn (Földgömb) billentyűt, és beszéljen; amikor felengedi, a szavai abban az appban jelennek meg, amelyben éppen gépel, mintha saját maga írta volna be őket. Online az OpenAI vagy a Groq segítségével ír át, vagy teljes egészében a saját Macén a Whisperrel vagy az NVIDIA Parakeettel, amely 40 másodpercnyi beszédet nagyjából a másodperc harmada alatt alakít szöveggé. Ha a hálózat vagy az online szolgáltatás nem működik, egy telepített helyi modell veszi át a feladatot, így egyetlen diktálás sem vész el. Tanítsa meg neki a használt neveket és kifejezéseket, ha szeretné, egy nyelvi modellel távolíttassa el a töltelékszavakat, és zárolja a felvételt a Shift billentyűvel, hogy hosszabb szövegeket kéz nélkül diktálhasson. Rustban íródott, valódi AppKit-vezérlőkre épül, 35 nyelven szól, és a hangját csak az Ön által választott szolgáltatónak küldi el.
+A Lowspeak a menüsorban lakik, és csak addig figyel, amíg Ön lenyomva tartja az fn billentyűt. Mondja el, mit szeretne leírni, engedje fel a billentyűt, és a szöveg megjelenik abban az appban, amelyben éppen dolgozik: levelezőben, csevegőben, kódszerkesztőben, terminálban.
+
+Valódi Mac-app: Rustban íródott, AppKitre épül, és nincs alatta böngészőmotor. Azonnal elindul, és csendben a háttérben marad. Sőt, már beszéd közben megnyitja a kapcsolatot, így az online szöveg nagyjából 0,4 másodperccel a billentyű felengedése után megérkezik.
+
+Tizenkét beszédfelismerő modell közül választhat. Saját Groq-kulccsal az online átírás a Groq napi keretén belül semmibe sem kerül, a nehéz felvételekkel pedig az OpenAI GPT Transcribe modellje birkózik meg. A Lowspeak közvetlenül velük beszél, nincs közöttük sem fiók, sem saját szerver.
+
+Vagy maradjon minden a saját Macén. A Whisper és az NVIDIA Parakeet offline működik, ezért a hangja sosem hagyja el a gépet, a Parakeet pedig 40 másodpercnyi beszédet nagyjából a másodperc harmada alatt alakít szöveggé. Ha online dolgozik, és megszakad a hálózat, egy telepített helyi modell ugrik be, így egyetlen diktálás sem vész el.
+
+A Lowspeak 35 nyelven beszél. Megtanulja az Ön által használt neveket és kifejezéseket, képes kigyomlálni a töltelékszavakat és rendbe tenni a nyelvtant, az utolsó tíz diktálást pedig a menüben őrzi, ha valamelyikre újra szüksége lenne.
 
 [![A Lowspeak letöltése macOS-re](https://img.shields.io/badge/Download-Lowspeak_for_macOS-0A84FF?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg)
 
@@ -100,24 +108,24 @@ A Lowspeak a menüsorban él. Tartsa lenyomva az fn (Földgömb) billentyűt, é
 
 ## A funkciók áttekintése
 
-- **Tartsa lenyomva az fn billentyűt, beszéljen, engedje fel.** A szöveg az előtérben lévő appba kerül, oda, ahol a kurzor áll: levélbe, csevegésbe, szerkesztőbe, terminálba vagy böngészőbe. Nincs ablak, amelyre át kellene váltani, és nincs gomb, amelyre kattintani kellene.
-- **Hosszabb szövegekhez zárolja.** Nyomja meg a Shiftet, miközben az fn billentyűt lenyomva tartja, vagy nyomja meg kétszer az fn billentyűt, és a felvétel billentyű lenyomva tartása nélkül folytatódik, legfeljebb öt percig. Az fn vagy a Shift egyetlen lenyomása befejezi.
+- **Tősgyökeresen natív.** Valódi menüsorelem AppKit-menüvel, szabványos figyelmeztetésekkel és értesítésekkel. Nincs Electron, nincs ablak, nincs Dock-ikon.
 - **A feladathoz illő modell.** A Groq a sebességért, a Mac memóriájának igénybevétele nélkül, az OpenAI GPT Transcribe modellje a legjobb eredményért, a Whisper vagy az NVIDIA Parakeet a saját Macén az offline munkához és ahhoz, hogy a hangja az Öné maradjon. Egy kattintással válthat.
+- **Diszkrét.** Nincs fiók, nincs telemetria. A hang csak az Ön által választott szolgáltatóhoz jut el, helyi módban pedig sehová.
 - **Egyetlen diktálás sem vész el.** Ha a hálózat vagy az online szolgáltatás nem működik, egy telepített helyi modell ugyanazt a felvételt írja át a Macen.
+- **Az Ön nyelvén.** A diktálás több tucat nyelven működik, a menü, a párbeszédablakok és az értesítések pedig 35 nyelven érhetők el.
 - **Az Ön szavai, helyesen leírva.** A nevekből és szakkifejezésekből álló szókincs az OpenAI-t, a Groqot, a Whispert és az utófeldolgozást is irányítja.
 - **Tiszta szöveg, ha szeretné.** Az opcionális utófeldolgozás eltávolítja a töltelékszavakat, kijavítja a nyelvtant, és ha menet közben helyesbít, csak a helyesbítést tartja meg, vagy a szöveget annak az appnak a típusához is igazítja, amelybe diktál.
-- **Beszéljen tovább.** Indítsa el a következő diktálást, miközben az előző átírása még tart; a szövegek abban a sorrendben érkeznek, ahogy elmondta őket.
 - **A vágólap az Öné marad.** A Lowspeak a vágólapon keresztül illeszt be, és egy pillanattal később visszateszi, ami előtte rajta volt. Az utolsó tíz diktálás a menüben marad, hogy újra kimásolhassa.
-- **Tősgyökeresen natív.** Valódi menüsorelem AppKit-menüvel, szabványos figyelmeztetésekkel és értesítésekkel. Nincs Electron, nincs ablak, nincs Dock-ikon.
-- **Diszkrét.** Nincs fiók, nincs telemetria. A hang csak az Ön által választott szolgáltatóhoz jut el, helyi módban pedig sehová.
-- **Az Ön nyelvén.** A diktálás több tucat nyelven működik, a menü, a párbeszédablakok és az értesítések pedig 35 nyelven érhetők el.
+- **Tartsa lenyomva az fn billentyűt, beszéljen, engedje fel.** A szöveg az előtérben lévő appba kerül, oda, ahol a kurzor áll: levélbe, csevegésbe, szerkesztőbe, terminálba vagy böngészőbe. Nincs ablak, amelyre át kellene váltani, és nincs gomb, amelyre kattintani kellene.
+- **Hosszabb szövegekhez zárolja.** Nyomja meg a Shiftet, miközben az fn billentyűt lenyomva tartja, vagy nyomja meg kétszer az fn billentyűt, és a felvétel billentyű lenyomva tartása nélkül folytatódik, legfeljebb öt percig. Az fn vagy a Shift egyetlen lenyomása befejezi.
+- **Beszéljen tovább.** Indítsa el a következő diktálást, miközben az előző átírása még tart; a szövegek abban a sorrendben érkeznek, ahogy elmondta őket.
 
 ## Rendszerkövetelmények
 
 - macOS 14 Sonoma vagy újabb. A Lowspeaket macOS 27 alatt fejlesztik és tesztelik.
 - Apple Silicon vagy Intel processzoros Mac. A helyi átírás Apple Siliconra készült, ahol a Whisper a GPU-n, a Parakeet pedig a Neural Engine-en fut; Intel-alapú Maceken mindkettő a processzoron fut, jóval lassabban, lásd: [Intel-alapú Macek](#intel-alapú-macek).
 - Körülbelül 17 MB az appnak, továbbá 75 MB és 3 GB között minden letöltött helyi modellnek.
-- Online átíráshoz API-kulcs az [OpenAI](https://platform.openai.com/api-keys) vagy a [Groq](https://console.groq.com/keys) szolgáltatótól; mindkettő díjat számít fel azért, amit átír. A helyi átíráshoz nem kell fiók.
+- Online átíráshoz API-kulcs az [OpenAI](https://platform.openai.com/api-keys) vagy a [Groq](https://console.groq.com/keys) szolgáltatótól. Az OpenAI díjat számít fel azért, amit átír; a Groq ingyenes csomagja a napi korlátain belül semmibe sem kerül, a korlátokat a Groq-konzolon láthatja. A helyi átíráshoz nem kell fiók.
 
 ## Telepítés
 
@@ -242,6 +250,7 @@ A menü **Legutóbbi diktálások** pontja az utolsó tíz szöveget sorolja fel
 | **A legjobb eredmény** | **OpenAI › GPT Transcribe** (alapértelmezett) | a Lowspeak által kínált modellek közül a legpontosabb; kulcsszavakként kapja meg a szókincset |
 | **Offline és diszkréten** | **Helyi › Parakeet Ultra** európai nyelvekhez, **Helyi › Whisper Large v3 Turbo** minden más nyelvhez | hálózat nélkül működik, és a hangja sosem hagyja el a Macet; a Parakeet a leggyorsabb mind közül |
 | **Fiók és költség nélkül** | bármelyik **Helyi** modell | a Macen fut; semmit sem számláznak |
+| **Online, de ingyen** | **Groq**, ingyenes csomaggal | Groq-fiók fizetési mód nélkül; az átírás a Groq napi korlátain belül semmibe sem kerül |
 | **Megbízhatóság és sebesség egyszerre** | egy online modell, mellé telepítve a Parakeet Ultra vagy egy Whisper-modell | a helyi modell beugrik, ha az online szolgáltatás nem működik |
 | **Intel-alapú Mac** | **Groq** vagy **OpenAI** | a helyi modellek ott a processzoron futnak, lásd: [Intel-alapú Macek](#intel-alapú-macek) |
 

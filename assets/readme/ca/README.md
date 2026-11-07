@@ -2,9 +2,17 @@
 
 # Lowspeak
 
-**Dictat per al Mac que escriu allà on tens el cursor: mantén premuda la tecla fn, parla i deixa-la anar.**
+**Mantén premuda la tecla fn, parla i deixa-la anar. Les teves paraules ja hi són.**
 
-El Lowspeak viu a la barra de menús. Mantén premuda la tecla fn (globus terraqüi) i parla; quan la deixes anar, les teves paraules apareixen a l’app on estiguis escrivint, com si les haguessis teclejat tu mateix. Transcriu en línia amb OpenAI o Groq, o completament al teu Mac amb Whisper o NVIDIA Parakeet, que converteix 40 segons de veu en text en aproximadament un terç de segon. Si la xarxa o el servei en línia fallen, un model local instal·lat pren el relleu, de manera que no es perd cap dictat. Ensenya-li els noms i els termes que fas servir, deixa que un model de llenguatge elimini les crosses si vols, i bloqueja un enregistrament amb Shift per dictar textos més llargs amb mans lliures. Està escrit en Rust amb controls AppKit autèntics, parla 35 idiomes i només envia la teva veu al proveïdor que has triat.
+El Lowspeak viu a la teva barra de menús i només escolta mentre mantens premuda la tecla fn. Digues el que vols escriure, deixa-la anar i el text apareix a l’app on estiguis: correu, xat, editor de codi, terminal.
+
+És una app de Mac de debò, escrita en Rust sobre AppKit, sense cap motor de navegador a sota. Arrenca a l’instant i no fa nosa. Fins i tot obre la connexió mentre encara parles, i així el text en línia arriba uns 0,4 segons després de deixar anar la tecla.
+
+Tria entre dotze models de reconeixement de veu. Amb la teva pròpia clau de Groq, la transcripció en línia no costa res dins de la quota diària de Groq; GPT Transcribe d’OpenAI s’encarrega dels enregistraments difícils. El Lowspeak parla directament amb ells, sense compte ni servidor propi pel mig.
+
+O guarda-ho tot al teu Mac. Whisper i NVIDIA Parakeet funcionen sense connexió, així que la teva veu no surt mai de l’ordinador, i Parakeet converteix 40 segons de veu en text en aproximadament un terç de segon. Si treballes en línia, un model local instal·lat pren el relleu quan cau la xarxa, de manera que no es perd cap dictat.
+
+El Lowspeak parla 35 idiomes. Aprèn els noms i els termes que fas servir, pot eliminar les crosses i polir la gramàtica, i guarda els teus deu últims dictats al menú per si en tornes a necessitar algun.
 
 [![Descarrega el Lowspeak per a macOS](https://img.shields.io/badge/Download-Lowspeak_for_macOS-0A84FF?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg)
 
@@ -100,24 +108,24 @@ El Lowspeak viu a la barra de menús. Mantén premuda la tecla fn (globus terraq
 
 ## Resum de les funcions
 
-- **Mantén premuda la tecla fn, parla i deixa-la anar.** El text s’escriu a l’app que tens al davant, allà on sigui el cursor: correu, xat, editor, terminal o navegador. Cap finestra a la qual canviar, cap botó on fer clic.
-- **Bloqueja’l per a textos més llargs.** Prem Shift mentre mantens premuda la tecla fn, o prem fn dues vegades, i l’enregistrament continua sense haver de mantenir cap tecla premuda, fins a cinc minuts. Una pulsació de fn o Shift l’acaba.
+- **Natiu fins al moll de l’os.** Un ítem real de la barra de menús amb un menú d’AppKit, alertes i notificacions estàndard. Sense Electron, sense finestra, sense icona al Dock.
 - **El model adequat per a cada feina.** Groq per a la velocitat sense ocupar la memòria del teu Mac, GPT Transcribe d’OpenAI per al millor resultat, Whisper o NVIDIA Parakeet al teu Mac per treballar sense connexió i mantenir la teva veu en privat. Canvia d’un a l’altre amb un sol clic.
+- **Privat.** Sense compte ni telemetria. L’àudio només va al proveïdor que has triat, o enlloc en el mode local.
 - **Cap dictat perdut.** Si la xarxa o el servei en línia fallen, un model local instal·lat transcriu el mateix enregistrament al teu Mac.
+- **En el teu idioma.** El dictat funciona en desenes d’idiomes, i el menú, els diàlegs i les notificacions estan disponibles en 35.
 - **Les teves paraules, ben escrites.** Un vocabulari de noms i termes tècnics guia OpenAI, Groq, Whisper i el postprocessament.
 - **Text net, si el vols.** El postprocessament opcional elimina les crosses, corregeix la gramàtica i, quan et corregeixes a tu mateix, només en conserva la correcció; o, a més, dona format al text segons el tipus d’app en què dictes.
-- **Continua parlant.** Comença el dictat següent mentre l’anterior encara s’està transcrivint; els textos arriben en l’ordre en què els vas dir.
 - **El teu porta-retalls continua sent teu.** El Lowspeak enganxa a través del porta-retalls i, un moment després, hi torna a posar el que hi havia. Els deu últims dictats es queden al menú per tornar-los a copiar.
-- **Natiu fins al moll de l’os.** Un ítem real de la barra de menús amb un menú d’AppKit, alertes i notificacions estàndard. Sense Electron, sense finestra, sense icona al Dock.
-- **Privat.** Sense compte ni telemetria. L’àudio només va al proveïdor que has triat, o enlloc en el mode local.
-- **En el teu idioma.** El dictat funciona en desenes d’idiomes, i el menú, els diàlegs i les notificacions estan disponibles en 35.
+- **Mantén premuda la tecla fn, parla i deixa-la anar.** El text s’escriu a l’app que tens al davant, allà on sigui el cursor: correu, xat, editor, terminal o navegador. Cap finestra a la qual canviar, cap botó on fer clic.
+- **Bloqueja’l per a textos més llargs.** Prem Shift mentre mantens premuda la tecla fn, o prem fn dues vegades, i l’enregistrament continua sense haver de mantenir cap tecla premuda, fins a cinc minuts. Una pulsació de fn o Shift l’acaba.
+- **Continua parlant.** Comença el dictat següent mentre l’anterior encara s’està transcrivint; els textos arriben en l’ordre en què els vas dir.
 
 ## Requisits
 
 - macOS 14 Sonoma o posterior. El Lowspeak es desenvolupa i es prova amb macOS 27.
 - Un Mac amb Apple Silicon o amb processador Intel. La transcripció local està pensada per a Apple Silicon, on Whisper s’executa a la GPU i Parakeet al Neural Engine; als Mac amb Intel, tots dos s’executen al processador, molt més lentament; consulta [Mac amb Intel](#mac-amb-intel).
 - Uns 17 MB per a l’app, més de 75 MB a 3 GB per cada model local que descarreguis.
-- Per a la transcripció en línia, una clau d’API d’[OpenAI](https://platform.openai.com/api-keys) o de [Groq](https://console.groq.com/keys); tots dos cobren pel que transcrius. La transcripció local no necessita cap compte.
+- Per a la transcripció en línia, una clau d’API d’[OpenAI](https://platform.openai.com/api-keys) o de [Groq](https://console.groq.com/keys). OpenAI cobra pel que transcrius; el pla gratuït de Groq no costa res dins dels seus límits diaris, que pots consultar a la consola de Groq. La transcripció local no necessita cap compte.
 
 ## Instal·lació
 
@@ -242,6 +250,7 @@ Sense el permís d’accessibilitat, o si no es pot enviar el ⌘V simulat, el t
 | **El millor resultat** | **OpenAI › GPT Transcribe** (per omissió) | el més precís dels models que ofereix el Lowspeak; rep el teu vocabulari com a paraules clau |
 | **Sense connexió i en privat** | **Local › Parakeet Ultra** per als idiomes europeus, **Local › Whisper Large v3 Turbo** per a tots els altres | funciona sense xarxa, i la teva veu no surt mai del teu Mac; Parakeet és el més ràpid de tots |
 | **Sense compte ni costos** | qualsevol model **Local** | s’executa al teu Mac; no es factura res |
+| **En línia, però gratis** | **Groq**, amb el pla gratuït | un compte de Groq sense mètode de pagament; la transcripció no costa res dins dels límits diaris de Groq |
 | **Fiabilitat i velocitat alhora** | un model en línia, més Parakeet Ultra o un model Whisper instal·lat | el model local entra en joc quan falla el servei en línia |
 | **Un Mac amb Intel** | **Groq** o **OpenAI** | allà els models locals s’executen al processador; consulta [Mac amb Intel](#mac-amb-intel) |
 

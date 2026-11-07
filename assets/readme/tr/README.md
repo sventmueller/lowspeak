@@ -2,9 +2,17 @@
 
 # Lowspeak
 
-**İmlecin olduğu yere yazan Mac dikte uygulaması: fn tuşunu basılı tutun, konuşun, bırakın.**
+**fn tuşunu basılı tutun, konuşun, bırakın. Sözleriniz çoktan orada.**
 
-Lowspeak menü çubuğunda yaşar. fn (Dünya) tuşunu basılı tutun ve konuşun; tuşu bıraktığınızda sözleriniz, o anda hangi uygulamada yazıyorsanız orada, sanki kendiniz yazmışsınız gibi belirir. Metne dönüştürmeyi çevrimiçi olarak OpenAI ya da Groq ile veya tamamen Mac’inizde Whisper ya da NVIDIA Parakeet ile yapar; Parakeet 40 saniyelik konuşmayı yaklaşık üçte bir saniyede metne çevirir. Ağ ya da çevrimiçi hizmet başarısız olduğunda yüklü bir yerel model devreye girer, böylece hiçbir dikte kaybolmaz. Kullandığınız adları ve terimleri ona öğretin, isterseniz dolgu sözcüklerini bir dil modeline temizletin ve daha uzun metinleri eller serbest dikte etmek için kaydı Shift ile kilitleyin. Rust ile gerçek AppKit denetimleri üzerine yazılmıştır, 35 dilde kullanılabilir ve sesinizi yalnızca seçtiğiniz sağlayıcıya gönderir.
+Lowspeak menü çubuğunda yaşar ve yalnızca fn tuşunu basılı tuttuğunuz sürece dinler. Yazmak istediğinizi söyleyin, tuşu bırakın; metin o an hangi uygulamadaysanız orada belirir: e-posta, sohbet, kod düzenleyici, terminal.
+
+Gerçek bir Mac uygulamasıdır: Rust ile AppKit üzerine yazılmıştır ve altında bir tarayıcı motoru yoktur. Anında açılır ve ayağınıza dolanmaz. Hatta siz daha konuşurken bağlantıyı açar; böylece çevrimiçi metin, tuşu bıraktıktan yaklaşık 0,4 saniye sonra gelir.
+
+On iki konuşma tanıma modeli arasından dilediğinizi seçin. Kendi Groq anahtarınızla çevrimiçi metne dönüştürme, Groq’un günlük kotası içinde ücretsizdir; zorlu kayıtları ise OpenAI’ın GPT Transcribe modeli üstlenir. Lowspeak onlarla doğrudan konuşur; arada ne bir hesap ne de kendine ait bir sunucu vardır.
+
+Ya da her şeyi Mac’inizde tutun. Whisper ve NVIDIA Parakeet çevrimdışı çalışır, yani sesiniz bilgisayardan hiç çıkmaz; Parakeet ise 40 saniyelik konuşmayı yaklaşık üçte bir saniyede metne çevirir. Çevrimiçi çalışırken ağ koparsa yüklü bir yerel model devreye girer, böylece hiçbir dikte kaybolmaz.
+
+Lowspeak 35 dil konuşur. Kullandığınız adları ve terimleri öğrenir, dolgu sözcüklerini ayıklayıp dil bilgisini toparlayabilir ve son on dikteyi, birine yeniden ihtiyacınız olursa diye menüde saklar.
 
 [![Lowspeak’i macOS için indirin](https://img.shields.io/badge/Download-Lowspeak_for_macOS-0A84FF?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg)
 
@@ -100,24 +108,24 @@ Lowspeak menü çubuğunda yaşar. fn (Dünya) tuşunu basılı tutun ve konuşu
 
 ## Bir bakışta özellikler
 
-- **fn tuşunu basılı tutun, konuşun, bırakın.** Metin, öndeki uygulamaya, imleç neredeyse oraya yazılır: e-posta, sohbet, düzenleyici, terminal ya da tarayıcı. Geçiş yapılacak bir pencere, tıklanacak bir düğme yok.
-- **Uzun metinler için kilitleyin.** fn tuşunu basılı tutarken Shift tuşuna basın ya da fn tuşuna iki kez basın; kayıt, hiçbir tuş basılı tutulmadan beş dakikaya kadar sürer. fn ya da Shift tuşuna bir kez basmak kaydı bitirir.
+- **Tepeden tırnağa yerel.** AppKit menüsüyle gerçek bir menü çubuğu öğesi, standart uyarılar ve bildirimler. Electron yok, pencere yok, Dock simgesi yok.
 - **İşe uygun model.** Mac’inizin belleğini kullanmadan hız için Groq, en iyi sonuç için OpenAI’ın GPT Transcribe modeli, çevrimdışı çalışmak ve sesinizi kendinize saklamak için Mac’inizde Whisper ya da NVIDIA Parakeet. Tek tıkla geçiş yapın.
+- **Gizliliğe saygılı.** Hesap yok, telemetri yok. Ses yalnızca seçtiğiniz sağlayıcıya gider, yerel modda ise hiçbir yere gitmez.
 - **Hiçbir dikte kaybolmaz.** Ağ ya da çevrimiçi hizmet başarısız olduğunda yüklü bir yerel model aynı kaydı Mac’inizde metne dönüştürür.
+- **Kendi dilinizde.** Dikte onlarca dilde çalışır; menü, iletişim kutuları ve bildirimler 35 dilde gelir.
 - **Sözcükleriniz, doğru yazılmış.** Adlardan ve teknik terimlerden oluşan bir sözlük OpenAI, Groq, Whisper ve son işleme için yol gösterir.
 - **İsterseniz temiz metin.** İsteğe bağlı son işleme dolgu sözcüklerini kaldırır, dil bilgisini düzeltir ve kendinizi düzelttiğinizde yalnızca düzeltmenizi tutar ya da metni ayrıca dikte ettiğiniz uygulamanın türüne göre biçimlendirir.
-- **Konuşmaya devam edin.** Önceki dikte hâlâ metne dönüştürülürken bir sonrakini başlatın; metinler söylediğiniz sırayla gelir.
 - **Panonuz sizin kalır.** Lowspeak pano üzerinden yapıştırır ve panoda önceden ne varsa bir an sonra geri koyar. Son on dikte yeniden kopyalamak için menüde kalır.
-- **Tepeden tırnağa yerel.** AppKit menüsüyle gerçek bir menü çubuğu öğesi, standart uyarılar ve bildirimler. Electron yok, pencere yok, Dock simgesi yok.
-- **Gizliliğe saygılı.** Hesap yok, telemetri yok. Ses yalnızca seçtiğiniz sağlayıcıya gider, yerel modda ise hiçbir yere gitmez.
-- **Kendi dilinizde.** Dikte onlarca dilde çalışır; menü, iletişim kutuları ve bildirimler 35 dilde gelir.
+- **fn tuşunu basılı tutun, konuşun, bırakın.** Metin, öndeki uygulamaya, imleç neredeyse oraya yazılır: e-posta, sohbet, düzenleyici, terminal ya da tarayıcı. Geçiş yapılacak bir pencere, tıklanacak bir düğme yok.
+- **Uzun metinler için kilitleyin.** fn tuşunu basılı tutarken Shift tuşuna basın ya da fn tuşuna iki kez basın; kayıt, hiçbir tuş basılı tutulmadan beş dakikaya kadar sürer. fn ya da Shift tuşuna bir kez basmak kaydı bitirir.
+- **Konuşmaya devam edin.** Önceki dikte hâlâ metne dönüştürülürken bir sonrakini başlatın; metinler söylediğiniz sırayla gelir.
 
 ## Gereksinimler
 
 - macOS 14 Sonoma veya üstü. Lowspeak macOS 27’de geliştirilir ve test edilir.
 - Apple Silicon veya Intel işlemcili bir Mac. Yerel metne dönüştürme Apple Silicon için tasarlanmıştır; orada Whisper GPU’da, Parakeet ise Neural Engine’de çalışır. Intel Mac’lerde ikisi de işlemcide ve çok daha yavaş çalışır; bkz. [Intel Mac’ler](#intel-macler).
 - Uygulama için yaklaşık 17 MB, ayrıca indirdiğiniz her yerel model için 75 MB ile 3 GB arası.
-- Çevrimiçi metne dönüştürme için [OpenAI](https://platform.openai.com/api-keys) ya da [Groq](https://console.groq.com/keys) API anahtarı; ikisi de metne dönüştürdüğünüz kadar ücret alır. Yerel metne dönüştürme için hesap gerekmez.
+- Çevrimiçi metne dönüştürme için [OpenAI](https://platform.openai.com/api-keys) ya da [Groq](https://console.groq.com/keys) API anahtarı. OpenAI, metne dönüştürdüğünüz kadar ücret alır; Groq’un ücretsiz planı ise günlük sınırları içinde size hiçbir şey ödetmez, bu sınırları Groq konsolunda görebilirsiniz. Yerel metne dönüştürme için hesap gerekmez.
 
 ## Kurulum
 
@@ -242,6 +250,7 @@ Menüdeki **Son dikteler**, son on metni en yenisi başta olmak üzere, her biri
 | **En iyi sonuç** | **OpenAI › GPT Transcribe** (varsayılan) | Lowspeak’in sunduğu modellerin en isabetlisi; sözlüğünüzü anahtar sözcük olarak alır |
 | **Çevrimdışı ve gizli** | Avrupa dilleri için **Yerel › Parakeet Ultra**, diğer tüm diller için **Yerel › Whisper Large v3 Turbo** | ağ olmadan çalışır ve sesiniz Mac’inizden asla çıkmaz; Parakeet hepsinin en hızlısıdır |
 | **Hesap yok, maliyet yok** | herhangi bir **Yerel** model | Mac’inizde çalışır; hiçbir şey faturalandırılmaz |
+| **Çevrimiçi ama ücretsiz** | **Groq**, ücretsiz planıyla | ödeme yöntemi eklenmemiş bir Groq hesabı; metne dönüştürme, Groq’un günlük sınırları içinde ücretsizdir |
 | **Hem güvenilirlik hem hız** | bir çevrimiçi model, yanında yüklü Parakeet Ultra ya da bir Whisper modeli | çevrimiçi hizmet başarısız olduğunda yerel model devreye girer |
 | **Bir Intel Mac** | **Groq** ya da **OpenAI** | yerel modeller orada işlemcide çalışır; bkz. [Intel Mac’ler](#intel-macler) |
 

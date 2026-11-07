@@ -2,9 +2,17 @@
 
 # Lowspeak
 
-**Dikte untuk Mac yang mengetik tepat di posisi kursor Anda: tahan fn, bicara, lepaskan.**
+**Tahan fn, bicara, lepaskan. Kata-kata Anda sudah tertulis.**
 
-Lowspeak tinggal di bar menu. Tahan tombol fn (Globe) dan bicaralah; begitu Anda melepaskannya, kata-kata Anda muncul di app mana pun tempat Anda sedang mengetik, seolah-olah Anda mengetiknya sendiri. Lowspeak mentranskripsi secara online dengan OpenAI atau Groq, atau sepenuhnya di Mac Anda dengan Whisper atau NVIDIA Parakeet, yang mengubah 40 detik ucapan menjadi teks dalam sekitar sepertiga detik. Saat jaringan atau layanan online gagal, model lokal yang terinstal mengambil alih, sehingga dikte tidak hilang. Ajarkan nama dan istilah yang Anda gunakan, biarkan model bahasa menghapus kata pengisi jika Anda mau, dan kunci rekaman dengan Shift untuk mendikte teks yang lebih panjang tanpa tangan. Lowspeak ditulis dalam Rust dengan kontrol AppKit asli, tersedia dalam 35 bahasa, dan mengirim suara Anda hanya ke penyedia yang Anda pilih.
+Lowspeak tinggal di bar menu dan hanya mendengarkan selama Anda menahan tombol fn. Ucapkan apa yang ingin Anda tulis, lepaskan, dan teksnya muncul di app mana pun yang sedang Anda pakai: email, chat, editor kode, terminal.
+
+Lowspeak adalah app Mac sungguhan, ditulis dalam Rust di atas AppKit, tanpa mesin browser di baliknya. App ini langsung siap dan tidak mengganggu pekerjaan Anda. Bahkan, koneksi sudah dibuka selagi Anda masih bicara, sehingga teks online tiba sekitar 0,4 detik setelah Anda melepas tombol.
+
+Pilih dari dua belas model pengenalan ucapan. Dengan kunci Groq milik Anda sendiri, transkripsi online gratis selama masih dalam jatah harian Groq, sementara GPT Transcribe dari OpenAI menangani rekaman yang sulit. Lowspeak terhubung langsung ke layanan tersebut, tanpa akun dan tanpa server milik sendiri di tengahnya.
+
+Atau simpan semuanya di Mac Anda. Whisper dan NVIDIA Parakeet bekerja offline, jadi suara Anda tidak pernah meninggalkan komputer, dan Parakeet mengubah 40 detik ucapan menjadi teks dalam sekitar sepertiga detik. Jika Anda bekerja online, model lokal yang terinstal akan mengambil alih saat jaringan putus, sehingga tidak ada dikte yang hilang.
+
+Lowspeak berbicara dalam 35 bahasa. Nama dan istilah yang Anda gunakan akan dipelajarinya, kata pengisi bisa dibuang dan tata bahasa dirapikan, dan sepuluh dikte terakhir tetap tersimpan di menu, siapa tahu Anda memerlukannya lagi.
 
 [![Unduh Lowspeak untuk macOS](https://img.shields.io/badge/Download-Lowspeak_for_macOS-0A84FF?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg)
 
@@ -100,24 +108,24 @@ Lowspeak tinggal di bar menu. Tahan tombol fn (Globe) dan bicaralah; begitu Anda
 
 ## Sekilas fitur
 
-- **Tahan fn, bicara, lepaskan.** Teks diketik ke app yang sedang berada di depan, di mana pun kursornya: email, chat, editor, terminal, atau browser. Tanpa jendela yang perlu dibuka, tanpa tombol yang perlu diklik.
-- **Kunci untuk teks yang lebih panjang.** Tekan Shift sambil menahan fn, atau tekan fn dua kali, dan rekaman terus berjalan tanpa tombol yang ditahan, hingga lima menit. Satu tekanan pada fn atau Shift mengakhirinya.
+- **Asli sepenuhnya.** Item bar menu sungguhan dengan menu AppKit, peringatan dan notifikasi standar. Tanpa Electron, tanpa jendela, tanpa ikon Dock.
 - **Model yang tepat untuk setiap keperluan.** Groq untuk kecepatan tanpa memakai memori Mac Anda, GPT Transcribe dari OpenAI untuk hasil terbaik, Whisper atau NVIDIA Parakeet di Mac Anda untuk bekerja offline dan menjaga suara Anda tetap privat. Beralih dengan satu klik.
+- **Privat.** Tanpa akun, tanpa telemetri. Audio hanya dikirim ke penyedia yang Anda pilih, atau tidak ke mana pun dalam mode lokal.
 - **Tidak ada dikte yang hilang.** Saat jaringan atau layanan online gagal, model lokal yang terinstal mentranskripsi rekaman yang sama di Mac Anda.
+- **Dalam bahasa Anda.** Dikte berfungsi dalam puluhan bahasa, dan menu, dialog, serta notifikasi tersedia dalam 35 bahasa.
 - **Kata-kata Anda, dieja dengan benar.** Kosakata berisi nama dan istilah teknis memandu OpenAI, Groq, Whisper, dan pascapemrosesan.
 - **Teks yang rapi jika Anda mau.** Pascapemrosesan opsional menghapus kata pengisi, memperbaiki tata bahasa, dan hanya menyimpan koreksi Anda saat Anda meralat diri sendiri, atau sekaligus memformat teks sesuai jenis app tempat Anda mendikte.
-- **Terus saja bicara.** Mulai dikte berikutnya selagi dikte sebelumnya masih ditranskripsi; teks-teksnya tiba sesuai urutan Anda mengucapkannya.
 - **Papan klip Anda tetap milik Anda.** Lowspeak menempel melalui papan klip dan mengembalikan isi sebelumnya sesaat kemudian. Sepuluh dikte terakhir tetap ada di menu untuk disalin lagi.
-- **Asli sepenuhnya.** Item bar menu sungguhan dengan menu AppKit, peringatan dan notifikasi standar. Tanpa Electron, tanpa jendela, tanpa ikon Dock.
-- **Privat.** Tanpa akun, tanpa telemetri. Audio hanya dikirim ke penyedia yang Anda pilih, atau tidak ke mana pun dalam mode lokal.
-- **Dalam bahasa Anda.** Dikte berfungsi dalam puluhan bahasa, dan menu, dialog, serta notifikasi tersedia dalam 35 bahasa.
+- **Tahan fn, bicara, lepaskan.** Teks diketik ke app yang sedang berada di depan, di mana pun kursornya: email, chat, editor, terminal, atau browser. Tanpa jendela yang perlu dibuka, tanpa tombol yang perlu diklik.
+- **Kunci untuk teks yang lebih panjang.** Tekan Shift sambil menahan fn, atau tekan fn dua kali, dan rekaman terus berjalan tanpa tombol yang ditahan, hingga lima menit. Satu tekanan pada fn atau Shift mengakhirinya.
+- **Terus saja bicara.** Mulai dikte berikutnya selagi dikte sebelumnya masih ditranskripsi; teks-teksnya tiba sesuai urutan Anda mengucapkannya.
 
 ## Persyaratan
 
 - macOS 14 Sonoma atau yang lebih baru. Lowspeak dikembangkan dan diuji di macOS 27.
 - Mac dengan Apple Silicon atau prosesor Intel. Transkripsi lokal dibuat untuk Apple Silicon, tempat Whisper berjalan di GPU dan Parakeet di Neural Engine; di Mac Intel keduanya berjalan di prosesor dan jauh lebih lambat, lihat [Mac Intel](#mac-intel).
 - Sekitar 17 MB untuk app, ditambah 75 MB hingga 3 GB untuk setiap model lokal yang Anda unduh.
-- Untuk transkripsi online, kunci API dari [OpenAI](https://platform.openai.com/api-keys) atau [Groq](https://console.groq.com/keys); keduanya mengenakan biaya untuk apa yang Anda transkripsi. Transkripsi lokal tidak memerlukan akun.
+- Untuk transkripsi online, kunci API dari [OpenAI](https://platform.openai.com/api-keys) atau [Groq](https://console.groq.com/keys). OpenAI mengenakan biaya untuk apa yang Anda transkripsi; paket gratis Groq tidak dikenai biaya apa pun selama masih dalam batas hariannya, yang ditampilkan di konsol Groq. Transkripsi lokal tidak memerlukan akun.
 
 ## Instalasi
 
@@ -242,6 +250,7 @@ Tanpa izin Aksesibilitas, atau saat ⌘V simulasi tidak dapat dikirim, teks teta
 | **Hasil terbaik** | **OpenAI › GPT Transcribe** (default) | yang paling akurat di antara model yang ditawarkan Lowspeak; menerima kosakata Anda sebagai kata kunci |
 | **Offline dan privat** | **Lokal › Parakeet Ultra** untuk bahasa Eropa, **Lokal › Whisper Large v3 Turbo** untuk semua bahasa lainnya | berfungsi tanpa jaringan, dan suara Anda tidak pernah meninggalkan Mac Anda; Parakeet adalah yang tercepat dari semuanya |
 | **Tanpa akun, tanpa biaya** | model **Lokal** mana pun | berjalan di Mac Anda; tidak ada yang ditagih |
+| **Online, tetapi gratis** | **Groq**, dengan paket gratisnya | akun Groq tanpa metode pembayaran; transkripsi tidak dikenai biaya selama masih dalam batas harian Groq |
 | **Keandalan sekaligus kecepatan** | model online, ditambah Parakeet Ultra atau model Whisper yang terinstal | model lokal mengambil alih saat layanan online gagal |
 | **Mac Intel** | **Groq** atau **OpenAI** | model lokal berjalan di prosesor di sana, lihat [Mac Intel](#mac-intel) |
 

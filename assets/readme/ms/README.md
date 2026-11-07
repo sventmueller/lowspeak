@@ -2,9 +2,17 @@
 
 # Lowspeak
 
-**Perencanaan untuk Mac yang menaip tepat di tempat kursor anda berada: tahan fn, bercakap, lepaskan.**
+**Tahan fn, bercakap, lepaskan. Perkataan anda sudah pun tertulis.**
 
-Lowspeak tinggal dalam bar menu. Tahan kekunci fn (Glob) dan bercakap; apabila anda melepaskannya, perkataan anda muncul dalam mana-mana app yang sedang anda gunakan untuk menaip, seolah-olah anda menaipnya sendiri. Ia mentranskripsi dalam talian dengan OpenAI atau Groq, atau sepenuhnya pada Mac anda dengan Whisper atau NVIDIA Parakeet, yang menukar 40 saat pertuturan kepada teks dalam kira-kira satu pertiga saat. Apabila rangkaian atau perkhidmatan dalam talian gagal, model setempat yang dipasang mengambil alih, jadi perencanaan anda tidak hilang. Ajarkan nama dan istilah yang anda gunakan, biarkan model bahasa membuang kata pengisi jika anda mahu, dan kunci rakaman dengan Shift untuk perencanaan teks yang lebih panjang secara bebas tangan. Ia ditulis dalam Rust dengan kawalan AppKit tulen, tersedia dalam 35 bahasa dan menghantar suara anda hanya kepada penyedia yang anda pilih.
+Lowspeak tinggal dalam bar menu anda dan hanya mendengar semasa anda menahan kekunci fn. Sebut apa yang anda mahu tulis, lepaskan, dan teksnya muncul dalam apa jua app yang sedang anda gunakan: e-mel, sembang, penyunting kod, terminal.
+
+Ini app Mac yang sebenar, ditulis dalam Rust di atas AppKit, tanpa enjin pelayar di sebaliknya. Ia bermula serta-merta dan tidak mengganggu kerja anda. Malah, ia sudah membuka sambungan semasa anda masih bercakap, jadi teks dalam talian tiba kira-kira 0.4 saat selepas anda melepaskan kekunci.
+
+Pilih daripada dua belas model pengecaman pertuturan. Dengan kunci Groq anda sendiri, transkripsi dalam talian tidak dikenakan sebarang bayaran selagi dalam kuota harian Groq, manakala GPT Transcribe daripada OpenAI menangani rakaman yang sukar. Lowspeak berhubung terus dengan perkhidmatan tersebut, tanpa akaun dan tanpa pelayan sendiri di tengah-tengah.
+
+Atau simpan semuanya pada Mac anda. Whisper dan NVIDIA Parakeet berfungsi di luar talian, jadi suara anda tidak pernah meninggalkan komputer, dan Parakeet menukar 40 saat pertuturan kepada teks dalam kira-kira satu pertiga saat. Jika anda bekerja dalam talian, model setempat yang dipasang akan mengambil alih apabila rangkaian terputus, supaya tiada perencanaan yang hilang.
+
+Lowspeak bertutur dalam 35 bahasa. Ia mempelajari nama dan istilah yang anda gunakan, boleh membuang kata pengisi dan mengemaskan tatabahasa, serta menyimpan sepuluh perencanaan terakhir anda dalam menu sekiranya anda memerlukannya lagi.
 
 [![Muat turun Lowspeak untuk macOS](https://img.shields.io/badge/Download-Lowspeak_for_macOS-0A84FF?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg)
 
@@ -100,24 +108,24 @@ Lowspeak tinggal dalam bar menu. Tahan kekunci fn (Glob) dan bercakap; apabila a
 
 ## Ciri-ciri sepintas lalu
 
-- **Tahan fn, bercakap, lepaskan.** Teks ditaip ke dalam app di hadapan, di mana-mana sahaja kursor berada: e-mel, sembang, penyunting, terminal atau pelayar. Tiada tetingkap untuk ditukar, tiada butang untuk diklik.
-- **Kunci untuk teks yang lebih panjang.** Tekan Shift semasa menahan fn, atau tekan fn dua kali, dan rakaman terus berjalan tanpa kekunci ditahan, sehingga lima minit. Satu tekanan pada fn atau Shift menamatkannya.
+- **Natif sepenuhnya.** Item bar menu sebenar dengan menu AppKit, amaran dan pemberitahuan standard. Tiada Electron, tiada tetingkap, tiada ikon Dock.
 - **Model yang sesuai untuk setiap tugas.** Groq untuk kelajuan tanpa menggunakan memori Mac anda, GPT Transcribe daripada OpenAI untuk hasil terbaik, Whisper atau NVIDIA Parakeet pada Mac anda untuk bekerja di luar talian dan memastikan suara anda kekal peribadi. Tukar dengan satu klik.
+- **Peribadi.** Tiada akaun, tiada telemetri. Audio hanya dihantar kepada penyedia yang anda pilih, atau tidak ke mana-mana langsung dalam mod setempat.
 - **Tiada perencanaan yang hilang.** Apabila rangkaian atau perkhidmatan dalam talian gagal, model setempat yang dipasang mentranskripsi rakaman yang sama pada Mac anda.
+- **Dalam bahasa anda.** Perencanaan berfungsi dalam berpuluh-puluh bahasa, dan menu, dialog serta pemberitahuan tersedia dalam 35 bahasa.
 - **Perkataan anda, dieja dengan betul.** Kosa kata nama dan istilah teknikal membimbing OpenAI, Groq, Whisper dan pascapemprosesan.
 - **Teks yang kemas jika anda mahu.** Pascapemprosesan pilihan membuang kata pengisi, membetulkan tatabahasa dan hanya mengekalkan pembetulan anda apabila anda membetulkan diri sendiri, atau turut memformat teks mengikut jenis app tempat anda membuat perencanaan.
-- **Teruskan bercakap.** Mulakan perencanaan seterusnya semasa yang terakhir masih ditranskripsi; teks tiba mengikut susunan anda menuturkannya.
 - **Papan klip anda kekal milik anda.** Lowspeak menampal melalui papan klip dan memulangkan kandungan asalnya sejurus kemudian. Sepuluh perencanaan terakhir kekal dalam menu untuk disalin semula.
-- **Natif sepenuhnya.** Item bar menu sebenar dengan menu AppKit, amaran dan pemberitahuan standard. Tiada Electron, tiada tetingkap, tiada ikon Dock.
-- **Peribadi.** Tiada akaun, tiada telemetri. Audio hanya dihantar kepada penyedia yang anda pilih, atau tidak ke mana-mana langsung dalam mod setempat.
-- **Dalam bahasa anda.** Perencanaan berfungsi dalam berpuluh-puluh bahasa, dan menu, dialog serta pemberitahuan tersedia dalam 35 bahasa.
+- **Tahan fn, bercakap, lepaskan.** Teks ditaip ke dalam app di hadapan, di mana-mana sahaja kursor berada: e-mel, sembang, penyunting, terminal atau pelayar. Tiada tetingkap untuk ditukar, tiada butang untuk diklik.
+- **Kunci untuk teks yang lebih panjang.** Tekan Shift semasa menahan fn, atau tekan fn dua kali, dan rakaman terus berjalan tanpa kekunci ditahan, sehingga lima minit. Satu tekanan pada fn atau Shift menamatkannya.
+- **Teruskan bercakap.** Mulakan perencanaan seterusnya semasa yang terakhir masih ditranskripsi; teks tiba mengikut susunan anda menuturkannya.
 
 ## Keperluan
 
 - macOS 14 Sonoma atau lebih baharu. Lowspeak dibangunkan dan diuji pada macOS 27.
 - Mac dengan Apple Silicon atau pemproses Intel. Transkripsi setempat dibina untuk Apple Silicon, tempat Whisper berjalan pada GPU dan Parakeet pada Neural Engine; pada Mac Intel kedua-duanya berjalan pada pemproses dan jauh lebih perlahan, lihat [Mac Intel](#mac-intel).
 - Kira-kira 17 MB untuk app, ditambah 75 MB hingga 3 GB bagi setiap model setempat yang anda muat turun.
-- Untuk transkripsi dalam talian, kunci API daripada [OpenAI](https://platform.openai.com/api-keys) atau [Groq](https://console.groq.com/keys); kedua-duanya mengenakan bayaran untuk apa yang anda transkripsi. Transkripsi setempat tidak memerlukan akaun.
+- Untuk transkripsi dalam talian, kunci API daripada [OpenAI](https://platform.openai.com/api-keys) atau [Groq](https://console.groq.com/keys). OpenAI mengenakan bayaran untuk apa yang anda transkripsi; pelan percuma Groq tidak dikenakan sebarang bayaran dalam had hariannya, yang ditunjukkan dalam konsol Groq. Transkripsi setempat tidak memerlukan akaun.
 
 ## Pemasangan
 
@@ -242,6 +250,7 @@ Tanpa keizinan Kebolehcapaian, atau apabila ⌘V simulasi tidak dapat dihantar, 
 | **Hasil terbaik** | **OpenAI › GPT Transcribe** (lalai) | paling tepat antara model yang ditawarkan Lowspeak; menerima kosa kata anda sebagai kata kunci |
 | **Luar talian dan peribadi** | **Setempat › Parakeet Ultra** untuk bahasa Eropah, **Setempat › Whisper Large v3 Turbo** untuk semua bahasa lain | berfungsi tanpa rangkaian, dan suara anda tidak pernah meninggalkan Mac anda; Parakeet paling pantas antara semuanya |
 | **Tiada akaun, tiada kos** | mana-mana model **Setempat** | berjalan pada Mac anda; tiada apa yang dikenakan bayaran |
+| **Dalam talian, tetapi percuma** | **Groq**, dengan pelan percumanya | akaun Groq tanpa kaedah pembayaran; transkripsi tidak dikenakan sebarang bayaran dalam had harian Groq |
 | **Kebolehpercayaan dan kelajuan sekali gus** | model dalam talian, ditambah Parakeet Ultra atau model Whisper yang dipasang | model setempat mengambil alih apabila perkhidmatan dalam talian gagal |
 | **Mac Intel** | **Groq** atau **OpenAI** | model setempat berjalan pada pemproses di sana, lihat [Mac Intel](#mac-intel) |
 

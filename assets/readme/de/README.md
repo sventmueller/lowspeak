@@ -2,9 +2,17 @@
 
 # Lowspeak
 
-**Diktieren auf dem Mac, genau dort, wo dein Cursor steht: fn halten, sprechen, loslassen.**
+**fn halten, sprechen, loslassen. Deine Worte stehen schon da.**
 
-Lowspeak wohnt in der Menüleiste. Halte die fn-Taste (Globus) gedrückt und sprich; sobald du loslässt, erscheinen deine Worte in der App, in der du gerade schreibst, als hättest du sie selbst getippt. Es transkribiert online mit OpenAI oder Groq oder ganz auf deinem Mac mit Whisper oder NVIDIA Parakeet, das 40 Sekunden Sprache in etwa einer Drittelsekunde in Text verwandelt. Fallen das Netzwerk oder der Onlinedienst aus, übernimmt ein installiertes lokales Modell, sodass kein Diktat verloren geht. Bring ihm die Namen und Begriffe bei, die du verwendest, lass auf Wunsch ein Sprachmodell Füllwörter entfernen, und stell eine Aufnahme mit Shift fest, um längere Texte freihändig zu diktieren. Lowspeak ist in Rust auf echten AppKit-Steuerelementen geschrieben, spricht 35 Sprachen und sendet deine Stimme nur an den Anbieter, den du gewählt hast.
+Lowspeak wohnt in deiner Menüleiste und hört nur zu, solange du die fn-Taste hältst. Sag, was du schreiben willst, lass los, und der Text erscheint in der App, in der du gerade bist: Mail, Chat, Code-Editor, Terminal.
+
+Das ist eine echte Mac-App, in Rust auf AppKit geschrieben, ohne Browser-Engine darunter. Sie startet sofort und drängt sich nie auf. Die Verbindung öffnet sie sogar schon, während du noch sprichst, und so steht der Text online etwa 0,4 Sekunden nach dem Loslassen da.
+
+Zwölf Spracherkennungsmodelle stehen zur Wahl. Mit deinem eigenen Groq-Schlüssel kostet die Onlinetranskription nichts, solange du im Tageskontingent von Groq bleibst; GPT Transcribe von OpenAI übernimmt die schwierigen Aufnahmen. Lowspeak redet direkt mit ihnen, ohne eigenes Konto und ohne eigenen Server dazwischen.
+
+Oder du behältst alles auf deinem Mac. Whisper und NVIDIA Parakeet laufen offline, deine Stimme verlässt das Gerät also nie, und Parakeet verwandelt 40 Sekunden Sprache in etwa einer Drittelsekunde in Text. Arbeitest du online, springt ein installiertes lokales Modell ein, wenn das Netzwerk ausfällt, und kein Diktat geht verloren.
+
+Lowspeak spricht 35 Sprachen. Es lernt die Namen und Begriffe, die du verwendest, streicht auf Wunsch Füllwörter und glättet die Grammatik. Deine letzten zehn Diktate behält es im Menü, falls du eines noch einmal brauchst.
 
 [![Lowspeak für macOS laden](https://img.shields.io/badge/Download-Lowspeak_for_macOS-0A84FF?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg)
 
@@ -100,24 +108,24 @@ Lowspeak wohnt in der Menüleiste. Halte die fn-Taste (Globus) gedrückt und spr
 
 ## Funktionen im Überblick
 
-- **fn halten, sprechen, loslassen.** Der Text wird in die App im Vordergrund getippt, dort, wo der Cursor steht: Mail, Chat, Editor, Terminal oder Browser. Kein Fenster, zu dem du wechseln musst, keine Schaltfläche, die du anklicken musst.
-- **Feststellen für längere Texte.** Drück Shift, während du fn hältst, oder drück zweimal fn, und die Aufnahme läuft ohne gehaltene Taste weiter, bis zu fünf Minuten lang. Ein Druck auf fn oder Shift beendet sie.
+- **Durch und durch nativ.** Ein echtes Objekt in der Menüleiste mit einem AppKit-Menü, Standarddialogen und -mitteilungen. Kein Electron, kein Fenster, kein Dock-Symbol.
 - **Das richtige Modell für jeden Zweck.** Groq für Tempo, ohne den Arbeitsspeicher deines Mac zu belegen, GPT Transcribe von OpenAI für das beste Ergebnis, Whisper oder NVIDIA Parakeet auf deinem Mac, um offline zu arbeiten und deine Stimme für dich zu behalten. Gewechselt wird mit einem Klick.
+- **Privat.** Kein Konto, keine Telemetrie. Audio geht nur an den Anbieter, den du gewählt hast, und im lokalen Modus nirgendwohin.
 - **Kein Diktat geht verloren.** Fallen das Netzwerk oder der Onlinedienst aus, transkribiert ein installiertes lokales Modell dieselbe Aufnahme auf deinem Mac.
+- **In deiner Sprache.** Diktieren funktioniert in Dutzenden Sprachen, und Menü, Dialoge und Mitteilungen gibt es in 35.
 - **Deine Wörter, richtig geschrieben.** Ein Vokabular aus Namen und Fachbegriffen leitet OpenAI, Groq, Whisper und die Nachbearbeitung.
 - **Sauberer Text, wenn du willst.** Die optionale Nachbearbeitung entfernt Füllwörter, korrigiert die Grammatik und behält nur deine Korrektur, wenn du dich selbst verbesserst, oder formatiert den Text zusätzlich passend zur Art der App, in die du diktierst.
-- **Sprich einfach weiter.** Starte das nächste Diktat, während das letzte noch transkribiert wird; die Texte kommen in der Reihenfolge an, in der du sie gesprochen hast.
 - **Deine Zwischenablage bleibt deine.** Lowspeak fügt über die Zwischenablage ein und legt einen Moment später zurück, was vorher darin lag. Die letzten zehn Diktate bleiben im Menü, damit du sie erneut kopieren kannst.
-- **Durch und durch nativ.** Ein echtes Objekt in der Menüleiste mit einem AppKit-Menü, Standarddialogen und -mitteilungen. Kein Electron, kein Fenster, kein Dock-Symbol.
-- **Privat.** Kein Konto, keine Telemetrie. Audio geht nur an den Anbieter, den du gewählt hast, und im lokalen Modus nirgendwohin.
-- **In deiner Sprache.** Diktieren funktioniert in Dutzenden Sprachen, und Menü, Dialoge und Mitteilungen gibt es in 35.
+- **fn halten, sprechen, loslassen.** Der Text wird in die App im Vordergrund getippt, dort, wo der Cursor steht: Mail, Chat, Editor, Terminal oder Browser. Kein Fenster, zu dem du wechseln musst, keine Schaltfläche, die du anklicken musst.
+- **Feststellen für längere Texte.** Drück Shift, während du fn hältst, oder drück zweimal fn, und die Aufnahme läuft ohne gehaltene Taste weiter, bis zu fünf Minuten lang. Ein Druck auf fn oder Shift beendet sie.
+- **Sprich einfach weiter.** Starte das nächste Diktat, während das letzte noch transkribiert wird; die Texte kommen in der Reihenfolge an, in der du sie gesprochen hast.
 
 ## Voraussetzungen
 
 - macOS 14 Sonoma oder neuer. Lowspeak wird auf macOS 27 entwickelt und getestet.
 - Ein Mac mit Apple Silicon oder einem Intel-Prozessor. Die lokale Transkription ist für Apple Silicon gebaut, wo Whisper auf der GPU und Parakeet auf der Neural Engine läuft; auf Intel-Macs laufen beide auf dem Prozessor, viel langsamer, siehe [Intel-Macs](#intel-macs).
 - Etwa 17 MB für die App, dazu 75 MB bis 3 GB für jedes lokale Modell, das du lädst.
-- Für die Onlinetranskription einen API-Schlüssel von [OpenAI](https://platform.openai.com/api-keys) oder [Groq](https://console.groq.com/keys); beide berechnen, was du transkribierst. Die lokale Transkription braucht kein Konto.
+- Für die Onlinetranskription einen API-Schlüssel von [OpenAI](https://platform.openai.com/api-keys) oder [Groq](https://console.groq.com/keys). OpenAI berechnet, was du transkribierst; der kostenlose Plan von Groq kostet nichts, solange du unter seinen Tageslimits bleibst, und die Groq-Konsole zeigt sie dir an. Die lokale Transkription braucht kein Konto.
 
 ## Installation
 
@@ -242,6 +250,7 @@ Ohne die Berechtigung für Bedienungshilfen, oder wenn das simulierte ⌘V nicht
 | **Das beste Ergebnis** | **OpenAI › GPT Transcribe** (Standard) | das genaueste der Modelle, die Lowspeak anbietet; nimmt dein Vokabular als Schlüsselwörter |
 | **Offline und privat** | **Lokal › Parakeet Ultra** für europäische Sprachen, **Lokal › Whisper Large v3 Turbo** für alle anderen | funktioniert ohne Netzwerk, und deine Stimme verlässt nie deinen Mac; Parakeet ist das schnellste von allen |
 | **Kein Konto, keine Kosten** | ein beliebiges Modell unter **Lokal** | läuft auf deinem Mac; nichts wird berechnet |
+| **Online, aber kostenlos** | **Groq** im kostenlosen Plan | ein Groq-Konto ohne Zahlungsmethode; die Transkription kostet innerhalb der Tageslimits von Groq nichts |
 | **Zuverlässigkeit und Tempo zugleich** | ein Onlinemodell, dazu Parakeet Ultra oder ein Whisper-Modell installiert | das lokale Modell springt ein, wenn der Onlinedienst ausfällt |
 | **Auf einem Intel-Mac diktieren** | **Groq** oder **OpenAI** | lokale Modelle laufen dort auf dem Prozessor, siehe [Intel-Macs](#intel-macs) |
 

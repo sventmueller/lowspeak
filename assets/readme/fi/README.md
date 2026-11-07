@@ -2,9 +2,17 @@
 
 # Lowspeak
 
-**Sanelu Macille, joka kirjoittaa sinne, missä kohdistin on: pidä fn painettuna, puhu, päästä irti.**
+**Pidä fn painettuna, puhu, päästä irti. Sanasi ovat jo perillä.**
 
-Lowspeak asuu valikkorivillä. Pidä fn-näppäintä (Maapallo) painettuna ja puhu; kun päästät irti, sanasi ilmestyvät siihen appiin, jossa kirjoitat, ikään kuin olisit kirjoittanut ne itse. Se litteroi verkossa OpenAI:n tai Groqin avulla tai kokonaan Macillasi Whisperillä tai NVIDIA Parakeetilla, joka muuttaa 40 sekuntia puhetta tekstiksi noin kolmasosasekunnissa. Jos verkko tai verkkopalvelu pettää, asennettu paikallinen malli ottaa ohjat, joten sanelu ei katoa. Opeta sille käyttämäsi nimet ja termit, anna halutessasi kielimallin poistaa täytesanat ja lukitse äänitys Shiftillä, kun haluat sanella pidempiä tekstejä handsfree-tilassa. Se on kirjoitettu Rustilla aitojen AppKit-ohjainten päälle, puhuu 35 kieltä ja lähettää äänesi vain valitsemallesi palveluntarjoajalle.
+Lowspeak asuu valikkorivillä ja kuuntelee vain silloin, kun pidät fn-näppäintä painettuna. Sano, mitä haluat kirjoittaa, päästä irti, ja teksti ilmestyy siihen appiin, jossa olet: sähköpostiin, chattiin, koodieditoriin, päätteeseen.
+
+Se on aito Mac-sovellus, kirjoitettu Rustilla AppKitin päälle, eikä sen alla pyöri selainmoottoria. Se käynnistyy heti eikä ole tielläsi. Yhteydenkin se avaa jo puhuessasi, joten verkkomallin teksti saapuu noin 0,4 sekuntia sen jälkeen, kun päästät irti.
+
+Valittavanasi on kaksitoista puheentunnistusmallia. Omalla Groq-avaimellasi verkkolitterointi ei maksa mitään Groqin päivittäisen kiintiön rajoissa; OpenAI:n GPT Transcribe hoitaa vaikeat äänitykset. Lowspeak on yhteydessä niihin suoraan, ilman tiliä ja ilman omaa palvelinta välissä.
+
+Tai pidä kaikki Macillasi. Whisper ja NVIDIA Parakeet toimivat offline, joten äänesi ei koskaan poistu koneelta, ja Parakeet muuttaa 40 sekuntia puhetta tekstiksi noin kolmasosasekunnissa. Jos työskentelet verkossa, asennettu paikallinen malli ottaa ohjat, kun verkko katkeaa, joten yksikään sanelu ei katoa.
+
+Lowspeak puhuu 35 kieltä. Se oppii käyttämäsi nimet ja termit sekä osaa poistaa täytesanat ja hioa kielioppia. Kymmenen viimeisintä saneluasi pysyvät valikossa siltä varalta, että tarvitset jotain niistä uudelleen.
 
 [![Lataa Lowspeak macOS:lle](https://img.shields.io/badge/Download-Lowspeak_for_macOS-0A84FF?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg)
 
@@ -100,24 +108,24 @@ Lowspeak asuu valikkorivillä. Pidä fn-näppäintä (Maapallo) painettuna ja pu
 
 ## Pähkinänkuoressa
 
-- **Pidä fn painettuna, puhu, päästä irti.** Teksti kirjoitetaan edessä olevaan appiin, kohdistimen kohdalle: sähköpostiin, chattiin, editoriin, päätteeseen tai selaimeen. Ei ikkunaa, johon vaihtaa, ei painiketta, jota napsauttaa.
-- **Lukitse pidempiä tekstejä varten.** Paina Shiftiä pitäessäsi fn:ää painettuna tai paina fn:ää kahdesti, niin äänitys jatkuu ilman, että pidät mitään näppäintä painettuna, enintään viisi minuuttia. Yksi fn- tai Shift-painallus lopettaa sen.
+- **Natiivi läpikotaisin.** Aito valikkorivin kohde AppKit-valikolla, vakiomuotoiset valintaikkunat ja ilmoitukset. Ei Electronia, ei ikkunaa, ei Dock-kuvaketta.
 - **Oikea malli oikeaan tehtävään.** Groq nopeuteen kuluttamatta Macisi muistia, OpenAI:n GPT Transcribe parhaaseen tulokseen, Whisper tai NVIDIA Parakeet Macillasi offline-työskentelyyn ja äänesi pitämiseen yksityisenä. Vaihda yhdellä napsautuksella.
+- **Yksityinen.** Ei tiliä, ei telemetriaa. Ääni menee vain valitsemallesi palveluntarjoajalle, tai paikallisessa tilassa ei minnekään.
 - **Yksikään sanelu ei katoa.** Jos verkko tai verkkopalvelu pettää, asennettu paikallinen malli litteroi saman äänityksen Macillasi.
+- **Omalla kielelläsi.** Sanelu toimii kymmenillä kielillä, ja valikko, valintaikkunat ja ilmoitukset ovat saatavilla 35 kielellä.
 - **Sanasi oikein kirjoitettuina.** Nimien ja erikoistermien sanasto ohjaa OpenAI:ta, Groqia, Whisperiä ja jälkikäsittelyä.
 - **Siisti teksti, jos haluat.** Valinnainen jälkikäsittely poistaa täytesanat, korjaa kieliopin ja säilyttää vain korjauksen, kun korjaat itseäsi, tai muotoilee tekstin lisäksi sen mukaan, millaiseen appiin sanelet.
-- **Jatka puhumista.** Aloita seuraava sanelu, vaikka edellistä vielä litteroidaan; tekstit saapuvat siinä järjestyksessä, jossa sanoit ne.
 - **Leikepöytäsi pysyy omanasi.** Lowspeak sijoittaa tekstin leikepöydän kautta ja palauttaa hetkeä myöhemmin sen, mitä leikepöydällä oli. Kymmenen viimeisintä sanelua jää valikkoon uudelleen kopioitaviksi.
-- **Natiivi läpikotaisin.** Aito valikkorivin kohde AppKit-valikolla, vakiomuotoiset valintaikkunat ja ilmoitukset. Ei Electronia, ei ikkunaa, ei Dock-kuvaketta.
-- **Yksityinen.** Ei tiliä, ei telemetriaa. Ääni menee vain valitsemallesi palveluntarjoajalle, tai paikallisessa tilassa ei minnekään.
-- **Omalla kielelläsi.** Sanelu toimii kymmenillä kielillä, ja valikko, valintaikkunat ja ilmoitukset ovat saatavilla 35 kielellä.
+- **Pidä fn painettuna, puhu, päästä irti.** Teksti kirjoitetaan edessä olevaan appiin, kohdistimen kohdalle: sähköpostiin, chattiin, editoriin, päätteeseen tai selaimeen. Ei ikkunaa, johon vaihtaa, ei painiketta, jota napsauttaa.
+- **Lukitse pidempiä tekstejä varten.** Paina Shiftiä pitäessäsi fn:ää painettuna tai paina fn:ää kahdesti, niin äänitys jatkuu ilman, että pidät mitään näppäintä painettuna, enintään viisi minuuttia. Yksi fn- tai Shift-painallus lopettaa sen.
+- **Jatka puhumista.** Aloita seuraava sanelu, vaikka edellistä vielä litteroidaan; tekstit saapuvat siinä järjestyksessä, jossa sanoit ne.
 
 ## Vaatimukset
 
 - macOS 14 Sonoma tai uudempi. Lowspeakia kehitetään ja testataan macOS 27:llä.
 - Mac, jossa on Apple Silicon tai Intel-suoritin. Paikallinen litterointi on tehty Apple Siliconille, jossa Whisper toimii grafiikkasuorittimella ja Parakeet Neural Enginellä; Intel-Maceissa molemmat toimivat suorittimella ja paljon hitaammin, katso [Intel-Macit](#intel-macit).
 - Noin 17 Mt appia varten sekä 75 Mt:stä 3 Gt:hen jokaista lataamaasi paikallista mallia kohden.
-- Verkkolitterointiin API-avain palvelusta [OpenAI](https://platform.openai.com/api-keys) tai [Groq](https://console.groq.com/keys); molemmat laskuttavat litteroimastasi määrästä. Paikallinen litterointi ei vaadi tiliä.
+- Verkkolitterointiin API-avain palvelusta [OpenAI](https://platform.openai.com/api-keys) tai [Groq](https://console.groq.com/keys). OpenAI laskuttaa litteroimastasi määrästä; Groqin ilmaisella paketilla et maksa mitään, kunhan pysyt päivittäisissä rajoissa, jotka näet Groq-konsolista. Paikallinen litterointi ei vaadi tiliä.
 
 ## Asennus
 
@@ -242,6 +250,7 @@ Valikon **Viimeaikaiset sanelut** luetteloi kymmenen viimeisintä tekstiä uusin
 | **Paras tulos** | **OpenAI › GPT Transcribe** (oletus) | Lowspeakin tarjoamista malleista tarkin; ottaa sanastosi vastaan avainsanoina |
 | **Offline ja yksityisesti** | **Paikallinen › Parakeet Ultra** eurooppalaisille kielille, **Paikallinen › Whisper Large v3 Turbo** kaikille muille | toimii ilman verkkoa, eikä äänesi koskaan poistu Macistasi; Parakeet on kaikista nopein |
 | **Ei tiliä, ei kuluja** | mikä tahansa malli kohdasta **Paikallinen** | toimii Macillasi; mitään ei laskuteta |
+| **Verkossa, mutta ilmaiseksi** | **Groq** ilmaisella paketilla | Groq-tili ilman maksutapaa; litterointi ei maksa mitään Groqin päivittäisten rajojen puitteissa |
 | **Sekä luotettavuus että nopeus** | verkkomalli sekä asennettu Parakeet Ultra tai Whisper-malli | paikallinen malli astuu esiin, kun verkkopalvelu pettää |
 | **Intel-Mac** | **Groq** tai **OpenAI** | paikalliset mallit toimivat siellä suorittimella, katso [Intel-Macit](#intel-macit) |
 

@@ -2,9 +2,17 @@
 
 # Lowspeak
 
-**Narekovanje za Mac, ki piše tam, kjer je vaša kazalka: pridržite fn, govorite, spustite.**
+**Pridržite fn, govorite, spustite. Vaše besede so že tam.**
 
-Lowspeak živi v menijski vrstici. Pridržite tipko fn (Globus) in govorite; ko jo spustite, se vaše besede pojavijo v aplikaciji, v kateri pravkar pišete, kot da bi jih natipkali sami. Prepisuje na spletu prek storitev OpenAI ali Groq ali v celoti na vašem Macu z Whisperjem ali NVIDIA Parakeetom, ki 40 sekund govora spremeni v besedilo v približno tretjini sekunde. Ko omrežje ali spletna storitev odpove, prevzame nameščeni lokalni model, zato se narek ne izgubi. Naučite ga imen in izrazov, ki jih uporabljate, po želji naj jezikovni model odstrani mašila, posnetek pa zaklenite s tipko Shift, da daljša besedila narekujete prostoročno. Napisan je v jeziku Rust na pravih kontrolnikih AppKit, govori 35 jezikov in vaš glas pošilja samo ponudniku, ki ste ga izbrali.
+Lowspeak živi v menijski vrstici in posluša samo, dokler držite tipko fn. Povejte, kar želite napisati, spustite jo in besedilo se pojavi v aplikaciji, v kateri ste: v pošti, klepetu, urejevalniku kode, terminalu.
+
+To je prava aplikacija za Mac, napisana v jeziku Rust na AppKitu, brez brskalniškega pogona pod pokrovom. Zažene se takoj in vam ne hodi v napoto. Povezavo odpre celo že, ko še govorite, zato besedilo s spletnega modela prispe približno 0,4 sekunde po tem, ko spustite tipko.
+
+Izbirate lahko med dvanajstimi modeli za prepoznavanje govora. Z lastnim ključem Groq vas spletni prepis v okviru dnevne kvote pri Groqu ne stane nič; zahtevne posnetke prevzame GPT Transcribe podjetja OpenAI. Lowspeak se z njimi poveže neposredno, brez računa in brez lastnega strežnika vmes.
+
+Ali pa vse obdržite na svojem Macu. Whisper in NVIDIA Parakeet delujeta brez povezave, zato vaš glas nikoli ne zapusti računalnika, Parakeet pa 40 sekund govora spremeni v besedilo v približno tretjini sekunde. Če delate na spletu in omrežje odpove, na pomoč priskoči nameščeni lokalni model, zato se noben narek ne izgubi.
+
+Lowspeak govori 35 jezikov. Nauči se imen in izrazov, ki jih uporabljate, zna odstraniti mašila in zgladiti slovnico. Zadnjih deset narekov hrani v meniju, če bi katerega spet potrebovali.
 
 [![Prenesite Lowspeak za macOS](https://img.shields.io/badge/Download-Lowspeak_for_macOS-0A84FF?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg)
 
@@ -100,24 +108,24 @@ Lowspeak živi v menijski vrstici. Pridržite tipko fn (Globus) in govorite; ko 
 
 ## Zmožnosti na prvi pogled
 
-- **Pridržite fn, govorite, spustite.** Besedilo se natipka v aplikacijo v ospredju, kjer koli je kazalka: pošta, klepet, urejevalnik, terminal ali brskalnik. Nobenega okna, na katero bi morali preklopiti, nobenega gumba, ki bi ga morali klikniti.
-- **Zaklenite ga za daljša besedila.** Pritisnite Shift, medtem ko držite fn, ali dvakrat pritisnite fn in snemanje teče naprej brez pridržane tipke, do pet minut. En pritisk na fn ali Shift ga konča.
+- **Domač na Macu skozi in skozi.** Pravi element menijske vrstice z menijem AppKit, standardnimi opozorili in obvestili. Brez Electrona, brez okna, brez ikone v Docku.
 - **Pravi model za vsako nalogo.** Groq za hitrost brez porabe pomnilnika vašega Maca, GPT Transcribe podjetja OpenAI za najboljši rezultat, Whisper ali NVIDIA Parakeet na vašem Macu za delo brez povezave in glas, ki ostane zaseben. Preklop z enim klikom.
+- **Zasebno.** Brez računa, brez telemetrije. Zvok gre samo k ponudniku, ki ste ga izbrali, v lokalnem načinu pa nikamor.
 - **Noben narek se ne izgubi.** Ko omrežje ali spletna storitev odpove, nameščeni lokalni model isti posnetek prepiše na vašem Macu.
+- **V vašem jeziku.** Narekovanje deluje v desetinah jezikov, meni, pogovorna okna in obvestila pa so na voljo v 35 jezikih.
 - **Vaše besede, pravilno zapisane.** Besedišče imen in strokovnih izrazov usmerja OpenAI, Groq, Whisper in naknadno obdelavo.
 - **Čisto besedilo, če ga želite.** Izbirna naknadna obdelava odstrani mašila, popravi slovnico in, ko se popravite, obdrži samo popravek ali pa besedilo dodatno oblikuje glede na vrsto aplikacije, v katero narekujete.
-- **Kar govorite naprej.** Naslednji narek začnite, medtem ko se prejšnji še prepisuje; besedila prispejo v vrstnem redu, v katerem ste jih izgovorili.
 - **Vaše odložišče ostane vaše.** Lowspeak lepi prek odložišča in trenutek pozneje vrne, kar je bilo v njem. Zadnjih deset narekov ostane v meniju, da jih lahko znova kopirate.
-- **Domač na Macu skozi in skozi.** Pravi element menijske vrstice z menijem AppKit, standardnimi opozorili in obvestili. Brez Electrona, brez okna, brez ikone v Docku.
-- **Zasebno.** Brez računa, brez telemetrije. Zvok gre samo k ponudniku, ki ste ga izbrali, v lokalnem načinu pa nikamor.
-- **V vašem jeziku.** Narekovanje deluje v desetinah jezikov, meni, pogovorna okna in obvestila pa so na voljo v 35 jezikih.
+- **Pridržite fn, govorite, spustite.** Besedilo se natipka v aplikacijo v ospredju, kjer koli je kazalka: pošta, klepet, urejevalnik, terminal ali brskalnik. Nobenega okna, na katero bi morali preklopiti, nobenega gumba, ki bi ga morali klikniti.
+- **Zaklenite ga za daljša besedila.** Pritisnite Shift, medtem ko držite fn, ali dvakrat pritisnite fn in snemanje teče naprej brez pridržane tipke, do pet minut. En pritisk na fn ali Shift ga konča.
+- **Kar govorite naprej.** Naslednji narek začnite, medtem ko se prejšnji še prepisuje; besedila prispejo v vrstnem redu, v katerem ste jih izgovorili.
 
 ## Zahteve
 
 - macOS 14 Sonoma ali novejši. Lowspeak je razvit in preizkušen v macOS 27.
 - Mac z Applovim čipom ali procesorjem Intel. Lokalni prepis je zasnovan za Applove čipe, kjer Whisper teče na grafičnem procesorju, Parakeet pa na enoti Neural Engine; na Macih s procesorjem Intel oba tečeta na procesorju, precej počasneje, glejte [Maci s procesorjem Intel](#maci-s-procesorjem-intel).
 - Približno 17 MB za aplikacijo ter od 75 MB do 3 GB za vsak lokalni model, ki ga prenesete.
-- Za spletni prepis ključ API pri [OpenAI](https://platform.openai.com/api-keys) ali [Groq](https://console.groq.com/keys); oba zaračunavata, kar prepišete. Lokalni prepis ne potrebuje računa.
+- Za spletni prepis ključ API pri [OpenAI](https://platform.openai.com/api-keys) ali [Groq](https://console.groq.com/keys). OpenAI zaračunava, kar prepišete; brezplačni paket Groq v okviru dnevnih omejitev ne stane nič, omejitve pa vidite v konzoli Groq. Lokalni prepis ne potrebuje računa.
 
 ## Namestitev
 
@@ -242,6 +250,7 @@ Brez dovoljenja za dostopnost ali ko simuliranega ⌘V ni mogoče poslati, besed
 | **Najboljši rezultat** | **OpenAI › GPT Transcribe** (privzeto) | najnatančnejši od modelov, ki jih ponuja Lowspeak; vaše besedišče sprejme kot ključne besede |
 | **Brez povezave in zasebno** | **Lokalno › Parakeet Ultra** za evropske jezike, **Lokalno › Whisper Large v3 Turbo** za vse druge | deluje brez omrežja, vaš glas pa nikoli ne zapusti vašega Maca; Parakeet je najhitrejši od vseh |
 | **Brez računa, brez stroškov** | kateri koli model pod **Lokalno** | teče na vašem Macu; nič se ne zaračuna |
+| **Na spletu, a brezplačno** | **Groq** z brezplačnim paketom | račun Groq brez plačilnega sredstva; prepis v okviru dnevnih omejitev Groq ne stane nič |
 | **Zanesljivost in hitrost hkrati** | spletni model, poleg tega pa nameščen Parakeet Ultra ali model Whisper | lokalni model priskoči na pomoč, ko spletna storitev odpove |
 | **Mac s procesorjem Intel** | **Groq** ali **OpenAI** | lokalni modeli tam tečejo na procesorju, glejte [Maci s procesorjem Intel](#maci-s-procesorjem-intel) |
 

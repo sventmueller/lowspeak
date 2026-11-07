@@ -2,9 +2,17 @@
 
 # Lowspeak
 
-**Diktiranje za Mac koje piše ondje gdje je vaš kursor: držite fn, govorite, otpustite.**
+**Držite fn, govorite, otpustite. Vaše su riječi već ondje.**
 
-Lowspeak živi u traci s izbornicima. Držite tipku fn (globus) i govorite; kad je otpustite, vaše se riječi pojavljuju u aplikaciji u kojoj upravo pišete, kao da ste ih sami utipkali. Transkribira online putem OpenAI-ja ili Groqa ili u potpunosti na vašem Macu s Whisperom ili NVIDIA Parakeetom, koji 40 sekundi govora pretvara u tekst za otprilike trećinu sekunde. Kad mreža ili online usluga zakaže, preuzima instalirani lokalni model, pa se diktat ne gubi. Naučite ga imenima i pojmovima koje koristite, ako želite, prepustite jezičnom modelu da ukloni poštapalice, a snimanje zaključajte tipkom Shift kako biste dulje tekstove diktirali bez ruku. Napisan je u Rustu na pravim AppKit kontrolama, govori 35 jezika i vaš glas šalje samo pružatelju usluge kojeg ste odabrali.
+Lowspeak živi u traci s izbornicima i sluša samo dok držite tipku fn. Recite što želite napisati, otpustite tipku i tekst se pojavi u aplikaciji u kojoj se upravo nalazite: u e-pošti, chatu, uređivaču koda, terminalu.
+
+To je prava aplikacija za Mac, napisana u Rustu na AppKitu, bez pogona web-preglednika ispod haube. Pokreće se odmah i ne smeta vam u radu. Vezu čak otvara dok još govorite, pa tekst s online modela stiže otprilike 0,4 sekunde nakon što otpustite tipku.
+
+Birajte između dvanaest modela za prepoznavanje govora. S vlastitim Groq ključem online transkripcija ne stoji ništa unutar Groqove dnevne kvote; zahtjevne snimke preuzima OpenAI-jev GPT Transcribe. Lowspeak s njima razgovara izravno, bez računa i bez vlastitog poslužitelja kao posrednika.
+
+Ili sve zadržite na svom Macu. Whisper i NVIDIA Parakeet rade izvan mreže, pa vaš glas nikad ne napušta računalo, a Parakeet 40 sekundi govora pretvara u tekst za otprilike trećinu sekunde. Ako radite online, a mreža zakaže, uskače instalirani lokalni model, pa se nijedan diktat ne gubi.
+
+Lowspeak govori 35 jezika. Nauči imena i pojmove koje koristite, može ukloniti poštapalice i dotjerati gramatiku. Posljednjih deset diktata čuva u izborniku, za slučaj da vam neki ponovno zatreba.
 
 [![Preuzmite Lowspeak za macOS](https://img.shields.io/badge/Download-Lowspeak_for_macOS-0A84FF?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg)
 
@@ -100,24 +108,24 @@ Lowspeak živi u traci s izbornicima. Držite tipku fn (globus) i govorite; kad 
 
 ## Značajke ukratko
 
-- **Držite fn, govorite, otpustite.** Tekst se upisuje u aplikaciju u prvom planu, ondje gdje je kursor: e-pošta, chat, uređivač, terminal ili preglednik. Nema prozora na koji treba prijeći ni gumba koji treba kliknuti.
-- **Zaključajte ga za dulje tekstove.** Pritisnite Shift dok držite fn ili dvaput pritisnite fn i snimanje se nastavlja bez držanja tipke, do pet minuta. Jedan pritisak na fn ili Shift završava ga.
+- **Izvorno do srži.** Prava stavka u traci s izbornicima s AppKit izbornikom, standardnim upozorenjima i obavijestima. Bez Electrona, bez prozora, bez ikone u Docku.
 - **Pravi model za svaki posao.** Groq za brzinu bez trošenja memorije vašeg Maca, OpenAI-jev GPT Transcribe za najbolji rezultat, Whisper ili NVIDIA Parakeet na vašem Macu za rad izvan mreže i glas koji ostaje privatan. Prebacivanje jednim klikom.
+- **Privatno.** Bez računa, bez telemetrije. Zvuk ide samo pružatelju usluge kojeg ste odabrali, a u lokalnom načinu rada nikamo.
 - **Nijedan diktat se ne gubi.** Kad mreža ili online usluga zakaže, instalirani lokalni model transkribira istu snimku na vašem Macu.
+- **Na vašem jeziku.** Diktiranje radi na desecima jezika, a izbornik, dijalozi i obavijesti dostupni su na 35 jezika.
 - **Vaše riječi, ispravno napisane.** Rječnik imena i stručnih pojmova usmjerava OpenAI, Groq, Whisper i naknadnu obradu.
 - **Čist tekst ako ga želite.** Neobavezna naknadna obrada uklanja poštapalice, ispravlja gramatiku i, kad se ispravite, zadržava samo ispravak ili tekst dodatno oblikuje prema vrsti aplikacije u koju diktirate.
-- **Samo nastavite govoriti.** Započnite sljedeći diktat dok se prethodni još transkribira; tekstovi stižu redoslijedom kojim ste ih izgovorili.
 - **Vaš međuspremnik ostaje vaš.** Lowspeak lijepi putem međuspremnika i trenutak kasnije vraća ono što je bilo u njemu. Posljednjih deset diktata ostaje u izborniku da ih ponovno kopirate.
-- **Izvorno do srži.** Prava stavka u traci s izbornicima s AppKit izbornikom, standardnim upozorenjima i obavijestima. Bez Electrona, bez prozora, bez ikone u Docku.
-- **Privatno.** Bez računa, bez telemetrije. Zvuk ide samo pružatelju usluge kojeg ste odabrali, a u lokalnom načinu rada nikamo.
-- **Na vašem jeziku.** Diktiranje radi na desecima jezika, a izbornik, dijalozi i obavijesti dostupni su na 35 jezika.
+- **Držite fn, govorite, otpustite.** Tekst se upisuje u aplikaciju u prvom planu, ondje gdje je kursor: e-pošta, chat, uređivač, terminal ili preglednik. Nema prozora na koji treba prijeći ni gumba koji treba kliknuti.
+- **Zaključajte ga za dulje tekstove.** Pritisnite Shift dok držite fn ili dvaput pritisnite fn i snimanje se nastavlja bez držanja tipke, do pet minuta. Jedan pritisak na fn ili Shift završava ga.
+- **Samo nastavite govoriti.** Započnite sljedeći diktat dok se prethodni još transkribira; tekstovi stižu redoslijedom kojim ste ih izgovorili.
 
 ## Zahtjevi
 
 - macOS 14 Sonoma ili noviji. Lowspeak se razvija i testira na macOSu 27.
 - Mac s Apple Silicon ili Intelovim procesorom. Lokalna transkripcija izrađena je za Apple Silicon, gdje Whisper radi na GPU-u, a Parakeet na Neural Engineu; na Macovima s Intelom oba rade na procesoru, znatno sporije, vidi [Macovi s Intelom](#macovi-s-intelom).
 - Oko 17 MB za aplikaciju, plus od 75 MB do 3 GB za svaki lokalni model koji preuzmete.
-- Za online transkripciju API ključ od [OpenAI-ja](https://platform.openai.com/api-keys) ili [Groqa](https://console.groq.com/keys); oba naplaćuju ono što transkribirate. Lokalnoj transkripciji ne treba račun.
+- Za online transkripciju API ključ od [OpenAI-ja](https://platform.openai.com/api-keys) ili [Groqa](https://console.groq.com/keys). OpenAI naplaćuje ono što transkribirate; Groqov besplatni paket ne stoji ništa unutar dnevnih ograničenja koja prikazuje Groqova konzola. Lokalnoj transkripciji ne treba račun.
 
 ## Instalacija
 
@@ -242,6 +250,7 @@ Bez dozvole za pristupačnost ili kad se simulirani ⌘V ne može poslati, tekst
 | **Najbolji rezultat** | **OpenAI › GPT Transcribe** (zadano) | najtočniji od modela koje Lowspeak nudi; vaš rječnik prima kao ključne riječi |
 | **Izvan mreže i privatno** | **Lokalno › Parakeet Ultra** za europske jezike, **Lokalno › Whisper Large v3 Turbo** za sve ostale | radi bez mreže, a vaš glas nikad ne napušta vaš Mac; Parakeet je najbrži od svih |
 | **Bez računa, bez troškova** | bilo koji model pod **Lokalno** | radi na vašem Macu; ništa se ne naplaćuje |
+| **Online, ali besplatno** | **Groq** s besplatnim paketom | Groq račun bez načina plaćanja; transkripcija ne stoji ništa unutar Groqovih dnevnih ograničenja |
 | **I pouzdanost i brzinu** | online model, uz instaliran Parakeet Ultra ili neki Whisper model | lokalni model uskače kad online usluga zakaže |
 | **Mac s Intelom** | **Groq** ili **OpenAI** | lokalni modeli ondje rade na procesoru, vidi [Macovi s Intelom](#macovi-s-intelom) |
 

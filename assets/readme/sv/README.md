@@ -2,9 +2,17 @@
 
 # Lowspeak
 
-**Diktering för Mac som skriver där markören står: håll ned fn, tala, släpp.**
+**Håll ned fn, prata, släpp. Dina ord finns redan där.**
 
-Lowspeak finns i menyraden. Håll ned fn-tangenten (Glob) och tala; när du släpper den dyker dina ord upp i den app du skriver i, som om du hade skrivit dem själv. Lowspeak transkriberar online med OpenAI eller Groq, eller helt på din Mac med Whisper eller NVIDIA Parakeet, som gör om 40 sekunders tal till text på ungefär en tredjedels sekund. Om nätverket eller onlinetjänsten slutar fungera tar en installerad lokal modell över, så att ingen diktering går förlorad. Lär appen de namn och termer du använder, låt en språkmodell ta bort fyllnadsord om du vill, och lås en inspelning med Shift för att diktera längre texter handsfree. Lowspeak är skrivet i Rust med äkta AppKit-kontroller, finns på 35 språk och skickar din röst bara till den leverantör du har valt.
+Lowspeak bor i menyraden och lyssnar bara medan du håller ned fn-tangenten. Säg det du vill skriva, släpp, så dyker texten upp i den app du är i: mejl, chatt, kodredigerare, terminal.
+
+Det är en riktig Mac-app, skriven i Rust på AppKit, utan någon webbläsarmotor under huven. Den startar direkt och står inte i vägen. Den öppnar till och med anslutningen medan du fortfarande pratar, så texten från en onlinemodell kommer cirka 0,4 sekunder efter att du släppt.
+
+Välj bland tolv modeller för taligenkänning. Med din egen Groq-nyckel kostar onlinetranskribering ingenting inom Groqs dagliga kvot; OpenAIs GPT Transcribe tar hand om de svåra inspelningarna. Lowspeak pratar direkt med dem, utan konto och utan någon egen server emellan.
+
+Eller behåll allt på din Mac. Whisper och NVIDIA Parakeet fungerar offline, så att din röst aldrig lämnar datorn, och Parakeet gör om 40 sekunders tal till text på ungefär en tredjedels sekund. Om du arbetar online hoppar en installerad lokal modell in när nätverket försvinner, så att ingen diktering går förlorad.
+
+Lowspeak talar 35 språk. Den lär sig de namn och termer du använder, kan ta bort fyllnadsord och snygga till grammatiken, och sparar dina tio senaste dikteringar i menyn ifall du behöver någon av dem igen.
 
 [![Ladda ner Lowspeak för macOS](https://img.shields.io/badge/Download-Lowspeak_for_macOS-0A84FF?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg)
 
@@ -100,24 +108,24 @@ Lowspeak finns i menyraden. Håll ned fn-tangenten (Glob) och tala; när du slä
 
 ## Funktioner i korthet
 
-- **Håll ned fn, tala, släpp.** Texten skrivs in i appen längst fram, där markören står: mejl, chatt, redigerare, terminal eller webbläsare. Inget fönster att byta till, ingen knapp att klicka på.
-- **Lås den för längre texter.** Tryck på Shift medan du håller ned fn, eller tryck två gånger på fn, så fortsätter inspelningen utan att du håller ned någon tangent, i upp till fem minuter. Ett tryck på fn eller Shift avslutar den.
+- **Native in i märgen.** Ett riktigt menyradsobjekt med en AppKit-meny, vanliga varningsrutor och notiser. Inget Electron, inget fönster, ingen symbol i Dock.
 - **Rätt modell för uppgiften.** Groq för snabbhet utan att ta din Macs minne i anspråk, OpenAIs GPT Transcribe för bästa resultat, Whisper eller NVIDIA Parakeet på din Mac för att arbeta offline och hålla din röst privat. Byt med ett klick.
+- **Privat.** Inget konto, ingen telemetri. Ljudet går bara till den leverantör du har valt, eller ingenstans alls i lokalt läge.
 - **Ingen diktering går förlorad.** Om nätverket eller onlinetjänsten slutar fungera transkriberar en installerad lokal modell samma inspelning på din Mac.
+- **På ditt språk.** Diktering fungerar på dussintals språk, och menyn, dialogrutorna och notiserna finns på 35.
 - **Dina ord, rätt stavade.** En ordlista med namn och facktermer vägleder OpenAI, Groq, Whisper och efterbearbetningen.
 - **Ren text om du vill.** Valfri efterbearbetning tar bort fyllnadsord, rättar grammatiken och behåller bara rättelsen när du rättar dig själv, eller formaterar dessutom texten efter den typ av app du dikterar i.
-- **Fortsätt prata.** Starta nästa diktering medan den förra fortfarande transkriberas; texterna kommer i den ordning du sa dem.
 - **Ditt urklipp förblir ditt.** Lowspeak klistrar in via urklippet och lägger tillbaka det som fanns där en stund senare. De tio senaste dikteringarna ligger kvar i menyn så att du kan kopiera dem igen.
-- **Native in i märgen.** Ett riktigt menyradsobjekt med en AppKit-meny, vanliga varningsrutor och notiser. Inget Electron, inget fönster, ingen symbol i Dock.
-- **Privat.** Inget konto, ingen telemetri. Ljudet går bara till den leverantör du har valt, eller ingenstans alls i lokalt läge.
-- **På ditt språk.** Diktering fungerar på dussintals språk, och menyn, dialogrutorna och notiserna finns på 35.
+- **Håll ned fn, tala, släpp.** Texten skrivs in i appen längst fram, där markören står: mejl, chatt, redigerare, terminal eller webbläsare. Inget fönster att byta till, ingen knapp att klicka på.
+- **Lås den för längre texter.** Tryck på Shift medan du håller ned fn, eller tryck två gånger på fn, så fortsätter inspelningen utan att du håller ned någon tangent, i upp till fem minuter. Ett tryck på fn eller Shift avslutar den.
+- **Fortsätt prata.** Starta nästa diktering medan den förra fortfarande transkriberas; texterna kommer i den ordning du sa dem.
 
 ## Krav
 
 - macOS 14 Sonoma eller senare. Lowspeak utvecklas och testas på macOS 27.
 - En Mac med Apple Silicon eller en Intel-processor. Lokal transkribering är byggd för Apple Silicon, där Whisper körs på GPU:n och Parakeet på Neural Engine; på Mac-datorer med Intel körs båda på processorn, mycket långsammare, se [Mac-datorer med Intel](#mac-datorer-med-intel).
 - Cirka 17 MB för appen, plus 75 MB till 3 GB för varje lokal modell du hämtar.
-- För onlinetranskribering en API-nyckel från [OpenAI](https://platform.openai.com/api-keys) eller [Groq](https://console.groq.com/keys); båda tar betalt för det du transkriberar. Lokal transkribering kräver inget konto.
+- För onlinetranskribering en API-nyckel från [OpenAI](https://platform.openai.com/api-keys) eller [Groq](https://console.groq.com/keys). OpenAI tar betalt för det du transkriberar; Groqs gratisplan kostar ingenting inom de dagliga gränserna, som du ser i Groq-konsolen. Lokal transkribering kräver inget konto.
 
 ## Installation
 
@@ -242,6 +250,7 @@ Utan behörighet för Hjälpmedel, eller om det simulerade ⌘V inte kan skickas
 | **Bästa resultat** | **OpenAI › GPT Transcribe** (standard) | den mest exakta av de modeller Lowspeak erbjuder; tar emot din ordlista som nyckelord |
 | **Offline och privat** | **Lokalt › Parakeet Ultra** för europeiska språk, **Lokalt › Whisper Large v3 Turbo** för alla andra | fungerar utan nätverk, och din röst lämnar aldrig din Mac; Parakeet är snabbast av alla |
 | **Inget konto, inga kostnader** | valfri modell under **Lokalt** | körs på din Mac; ingenting faktureras |
+| **Online, men gratis** | **Groq** med gratisplanen | ett Groq-konto utan betalningsmetod; transkriberingen kostar ingenting inom Groqs dagliga gränser |
 | **Både tillförlitlighet och snabbhet** | en onlinemodell, plus Parakeet Ultra eller en Whisper-modell installerad | den lokala modellen hoppar in när onlinetjänsten slutar fungera |
 | **En Mac med Intel** | **Groq** eller **OpenAI** | lokala modeller körs där på processorn, se [Mac-datorer med Intel](#mac-datorer-med-intel) |
 

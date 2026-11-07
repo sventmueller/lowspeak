@@ -2,9 +2,17 @@
 
 # Lowspeak
 
-**Đọc chính tả cho máy Mac, gõ ngay tại vị trí con trỏ của bạn: giữ fn, nói, thả ra.**
+**Giữ fn, nói, thả ra. Lời bạn nói đã nằm sẵn ở đó.**
 
-Lowspeak nằm trên thanh menu. Giữ phím fn (địa cầu) và nói; khi bạn thả ra, lời bạn nói xuất hiện trong bất kỳ ứng dụng nào bạn đang gõ, như thể chính bạn đã gõ. Lowspeak chép lại trực tuyến bằng OpenAI hoặc Groq, hoặc hoàn toàn trên máy Mac của bạn bằng Whisper hoặc NVIDIA Parakeet, mô hình biến 40 giây lời nói thành văn bản trong khoảng một phần ba giây. Khi mạng hoặc dịch vụ trực tuyến gặp sự cố, một mô hình cục bộ đã cài sẽ thay thế, nên không bản đọc chính tả nào bị mất. Hãy dạy nó những tên riêng và thuật ngữ bạn dùng, để một mô hình ngôn ngữ loại bỏ từ đệm nếu bạn muốn, và khóa bản ghi âm bằng Shift để đọc chính tả rảnh tay những văn bản dài hơn. Lowspeak được viết bằng Rust trên các điều khiển AppKit thực thụ, có 35 ngôn ngữ và chỉ gửi giọng nói của bạn tới nhà cung cấp bạn đã chọn.
+Lowspeak nằm trên thanh menu và chỉ lắng nghe khi bạn giữ phím fn. Hãy nói điều bạn muốn viết, thả phím ra, và văn bản hiện ngay trong ứng dụng bạn đang dùng: thư, trò chuyện, trình soạn thảo mã, terminal.
+
+Đây là một ứng dụng Mac thực thụ, viết bằng Rust trên AppKit, không có nhân trình duyệt nào bên dưới. Ứng dụng khởi động tức thì và không làm phiền bạn. Lowspeak còn mở kết nối ngay khi bạn vẫn đang nói, nên văn bản trực tuyến đến khoảng 0,4 giây sau khi bạn thả phím.
+
+Bạn có thể chọn trong số mười hai mô hình nhận dạng giọng nói. Với khóa Groq của riêng bạn, việc chép lại trực tuyến không tốn đồng nào trong hạn mức hằng ngày của Groq, còn GPT Transcribe của OpenAI xử lý những bản ghi âm khó. Lowspeak kết nối thẳng tới các dịch vụ này, không cần tài khoản và không có máy chủ riêng nào đứng giữa.
+
+Hoặc giữ mọi thứ ngay trên máy Mac của bạn. Whisper và NVIDIA Parakeet hoạt động ngoại tuyến, nên giọng nói của bạn không bao giờ rời khỏi máy, và Parakeet biến 40 giây lời nói thành văn bản trong khoảng một phần ba giây. Nếu bạn làm việc trực tuyến, một mô hình cục bộ đã cài sẽ vào thay khi mất mạng, để không bản đọc chính tả nào bị mất.
+
+Lowspeak nói được 35 ngôn ngữ. Ứng dụng học những tên riêng và thuật ngữ bạn dùng, có thể lọc bỏ từ đệm và chỉnh lại ngữ pháp, đồng thời giữ mười bản đọc chính tả gần nhất trong menu phòng khi bạn cần dùng lại.
 
 [![Tải Lowspeak cho macOS](https://img.shields.io/badge/Download-Lowspeak_for_macOS-0A84FF?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg)
 
@@ -100,24 +108,24 @@ Lowspeak nằm trên thanh menu. Giữ phím fn (địa cầu) và nói; khi b�
 
 ## Tính năng nổi bật
 
-- **Giữ fn, nói, thả ra.** Văn bản được gõ vào ứng dụng đang ở phía trước, ngay tại con trỏ: thư, trò chuyện, trình soạn thảo, terminal hay trình duyệt. Không phải chuyển sang cửa sổ nào, không phải bấm nút nào.
-- **Khóa lại cho văn bản dài.** Nhấn Shift trong khi giữ fn, hoặc nhấn fn hai lần, và bản ghi âm tiếp tục chạy mà không cần giữ phím, tối đa năm phút. Nhấn fn hoặc Shift một lần để kết thúc.
+- **Chính gốc từ trong ra ngoài.** Một mục thanh menu thật với menu AppKit, cảnh báo và thông báo tiêu chuẩn. Không Electron, không cửa sổ, không biểu tượng trên Dock.
 - **Mô hình phù hợp cho từng việc.** Groq cho tốc độ mà không tốn bộ nhớ của máy Mac, GPT Transcribe của OpenAI cho kết quả tốt nhất, Whisper hoặc NVIDIA Parakeet trên máy Mac để làm việc ngoại tuyến và giữ giọng nói của bạn riêng tư. Chuyển đổi chỉ bằng một cú nhấp.
+- **Riêng tư.** Không tài khoản, không telemetry. Âm thanh chỉ được gửi tới nhà cung cấp bạn chọn, hoặc không đi đâu cả ở chế độ cục bộ.
 - **Không mất bản đọc chính tả nào.** Khi mạng hoặc dịch vụ trực tuyến gặp sự cố, một mô hình cục bộ đã cài sẽ chép lại chính bản ghi âm đó trên máy Mac của bạn.
+- **Bằng ngôn ngữ của bạn.** Đọc chính tả hoạt động với hàng chục ngôn ngữ, còn menu, hộp thoại và thông báo có 35 ngôn ngữ.
 - **Từ ngữ của bạn, đúng chính tả.** Một bộ từ vựng gồm tên riêng và thuật ngữ chuyên môn định hướng cho OpenAI, Groq, Whisper và hậu xử lý.
 - **Văn bản gọn gàng nếu bạn muốn.** Hậu xử lý tùy chọn loại bỏ từ đệm, sửa ngữ pháp và chỉ giữ lại phần đã sửa khi bạn tự đính chính, hoặc định dạng luôn văn bản theo loại ứng dụng bạn đang đọc chính tả vào.
-- **Cứ tiếp tục nói.** Bắt đầu lần đọc chính tả tiếp theo trong khi lần trước vẫn đang được chép lại; các văn bản đến theo đúng thứ tự bạn nói.
 - **Bảng nhớ tạm vẫn là của bạn.** Lowspeak dán qua bảng nhớ tạm và trả lại nội dung cũ ngay sau đó. Mười bản đọc chính tả gần nhất vẫn nằm trong menu để sao chép lại.
-- **Chính gốc từ trong ra ngoài.** Một mục thanh menu thật với menu AppKit, cảnh báo và thông báo tiêu chuẩn. Không Electron, không cửa sổ, không biểu tượng trên Dock.
-- **Riêng tư.** Không tài khoản, không telemetry. Âm thanh chỉ được gửi tới nhà cung cấp bạn chọn, hoặc không đi đâu cả ở chế độ cục bộ.
-- **Bằng ngôn ngữ của bạn.** Đọc chính tả hoạt động với hàng chục ngôn ngữ, còn menu, hộp thoại và thông báo có 35 ngôn ngữ.
+- **Giữ fn, nói, thả ra.** Văn bản được gõ vào ứng dụng đang ở phía trước, ngay tại con trỏ: thư, trò chuyện, trình soạn thảo, terminal hay trình duyệt. Không phải chuyển sang cửa sổ nào, không phải bấm nút nào.
+- **Khóa lại cho văn bản dài.** Nhấn Shift trong khi giữ fn, hoặc nhấn fn hai lần, và bản ghi âm tiếp tục chạy mà không cần giữ phím, tối đa năm phút. Nhấn fn hoặc Shift một lần để kết thúc.
+- **Cứ tiếp tục nói.** Bắt đầu lần đọc chính tả tiếp theo trong khi lần trước vẫn đang được chép lại; các văn bản đến theo đúng thứ tự bạn nói.
 
 ## Yêu cầu
 
 - macOS 14 Sonoma trở lên. Lowspeak được phát triển và thử nghiệm trên macOS 27.
 - Máy Mac dùng Apple Silicon hoặc bộ xử lý Intel. Chép lại cục bộ được xây dựng cho Apple Silicon, nơi Whisper chạy trên GPU và Parakeet trên Neural Engine; trên máy Mac Intel, cả hai chạy trên bộ xử lý và chậm hơn nhiều, xem [Máy Mac Intel](#máy-mac-intel).
 - Khoảng 17 MB cho ứng dụng, cộng thêm 75 MB đến 3 GB cho mỗi mô hình cục bộ bạn tải về.
-- Để chép lại trực tuyến, cần một khóa API từ [OpenAI](https://platform.openai.com/api-keys) hoặc [Groq](https://console.groq.com/keys); cả hai đều tính phí theo lượng bạn chép lại. Chép lại cục bộ không cần tài khoản.
+- Để chép lại trực tuyến, cần một khóa API từ [OpenAI](https://platform.openai.com/api-keys) hoặc [Groq](https://console.groq.com/keys). OpenAI tính phí theo lượng bạn chép lại; gói miễn phí của Groq không tốn đồng nào trong giới hạn hằng ngày mà bảng điều khiển của Groq hiển thị. Chép lại cục bộ không cần tài khoản.
 
 ## Cài đặt
 
@@ -242,6 +250,7 @@ Khi không có quyền Trợ năng, hoặc khi không gửi được ⌘V mô ph
 | **Kết quả tốt nhất** | **OpenAI › GPT Transcribe** (mặc định) | chính xác nhất trong các mô hình Lowspeak cung cấp; nhận từ vựng của bạn làm từ khóa |
 | **Ngoại tuyến và riêng tư** | **Cục bộ › Parakeet Ultra** cho các ngôn ngữ châu Âu, **Cục bộ › Whisper Large v3 Turbo** cho mọi ngôn ngữ khác | hoạt động không cần mạng, và giọng nói của bạn không bao giờ rời khỏi máy Mac; Parakeet nhanh nhất trong tất cả |
 | **Không tài khoản, không chi phí** | bất kỳ mô hình **Cục bộ** nào | chạy trên máy Mac của bạn; không bị tính phí gì |
+| **Trực tuyến mà vẫn miễn phí** | **Groq**, với gói miễn phí | một tài khoản Groq không có phương thức thanh toán; chép lại không tốn phí trong giới hạn hằng ngày của Groq |
 | **Vừa ổn định vừa nhanh** | một mô hình trực tuyến, cộng với Parakeet Ultra hoặc một mô hình Whisper đã cài | mô hình cục bộ thay thế khi dịch vụ trực tuyến gặp sự cố |
 | **Máy Mac Intel** | **Groq** hoặc **OpenAI** | trên những máy đó, mô hình cục bộ chạy bằng bộ xử lý, xem [Máy Mac Intel](#máy-mac-intel) |
 
