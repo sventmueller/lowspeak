@@ -41,7 +41,7 @@ Xcode.
 | `assets/readme/` | the README in the other 34 interface languages |
 | `.github/` | issue, discussion and pull request templates, CI |
 | root | `VERSION`, `Makefile` (entry points), `rust-toolchain.toml`, `LICENSE-MIT`, `LICENSE-APACHE`, `CONTRIBUTING.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, `ACCESSIBILITY.md` |
-| `assets/` | `icon.svg` (source of the app icon, splat's colours) and its render `icon-1024.png`, `AppIcon.icns`, `Lowspeak.entitlements`, DMG background |
+| `assets/` | `icon.svg` (source of the app icon, splat's colours) and its render `icon-1024.png`, `AppIcon.icns`, `Lowspeak.entitlements`, `dmg-background.svg` (source of the disk image background) and its render `dmg-background.tiff` at 1× and 2× |
 | `examples/transcribe.rs` | transcribe a WAV with a local model from the command line |
 
 ### Threads and state
@@ -271,7 +271,9 @@ run leaves `dist/` and `VERSION` as they were. It needs:
 - `RELEASE_NOTES.md` with what this release brings; `dmg` stops if it is empty or still holds the notes in `dist/`
 
 If one of them is missing, `dmg` stops before building. On the first run, macOS asks whether Terminal may control the
-Finder; without that permission the disk image shows neither its background nor the icon arrangement.
+Finder, which lays out the disk image window. `dmg` then reads the icon positions Finder stored in the image and stops
+if they are not the intended ones, as when Finder shows hidden files (⇧⌘. hides them) or lacks the permission;
+`deploy` packs its image with Finder's default window instead.
 
 The images are not committed (`.gitignore`); the notes are. The download link in the README points at `Lowspeak.dmg`
 in the latest GitHub release, so each release carries a copy under that name:

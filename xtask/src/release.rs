@@ -3,7 +3,7 @@
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 
-use anyhow::{Result, bail};
+use anyhow::{Result, anyhow, bail, ensure};
 
 use crate::*;
 
@@ -54,7 +54,7 @@ pub(crate) fn release() -> Result<PathBuf> {
     std::fs::remove_file(&archive)?;
     run(Command::new("xcrun").args(["stapler", "staple"]).arg(&app))?;
 
-    let image = disk_image(&app)?;
+    let image = disk_image(&app, Layout::Required)?;
     run(Command::new("codesign")
         .args(["--force", "--sign", &identity.hash, "--timestamp"])
         .arg(&image))?;
@@ -129,8 +129,15 @@ pub(crate) fn released_version(file: &str) -> Option<&str> {
     is_version(version).then_some(version)
 }
 
+/// Whether a disk image may go out with Finder's default window when the layout fails.
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub(crate) enum Layout {
+    Required,
+    Optional,
+}
+
 /// Packs the app with a link to /Applications into a compressed, read-only `Lowspeak.dmg` next to it.
-pub(crate) fn disk_image(app: &Path) -> Result<PathBuf> {
+pub(crate) fn disk_image(app: &Path, layout: Layout) -> Result<PathBuf> {
     let out = app.parent().context("the app has no parent directory")?;
     let staging = out.join("dmg-staging");
     let writable = out.join(format!("{APP_NAME}-writable.dmg"));
@@ -187,6 +194,9 @@ pub(crate) fn disk_image(app: &Path) -> Result<PathBuf> {
             .stdout(Stdio::null()))?;
     }
     if let Err(error) = laid_out {
+        if layout == Layout::Required {
+            return Err(error.context("laying out the disk image window"));
+        }
         println!("Finder layout skipped, the image opens with default icon positions: {error:#}");
     }
     run(Command::new("hdiutil")
@@ -206,12 +216,20 @@ pub(crate) fn disk_image(app: &Path) -> Result<PathBuf> {
     Ok(image)
 }
 
+/// The centres of the two icons in points from the top left of the window's content, either side of the arrow in
+/// the background.
+const APP_ICON_AT: (u32, u32) = (120, 150);
+const APPLICATIONS_ICON_AT: (u32, u32) = (380, 150);
+
 /// Finder keeps window size, icon positions and background in the image's .DS_Store, so only Finder itself can
 /// write them, on the mounted image. Needs the Automation permission for Finder.
+///
+/// `assets/dmg-background.tiff` holds `assets/dmg-background.svg` rendered by resvg at 500 × 300 and 1000 × 600
+/// pixels, joined with `tiffutil -cathidpicheck`; with a single 500 × 300 image, Retina screens show it blurred.
 fn lay_out(mount: &Path) -> Result<()> {
-    let background = root().join("assets").join("dmg-background.png");
+    let background = root().join("assets").join("dmg-background.tiff");
     std::fs::create_dir_all(mount.join(".background"))?;
-    std::fs::copy(&background, mount.join(".background/background.png"))
+    std::fs::copy(&background, mount.join(".background/background.tiff"))
         .with_context(|| format!("copying {}", background.display()))?;
     let disk = mount
         .file_name()
@@ -228,18 +246,70 @@ fn lay_out(mount: &Path) -> Result<()> {
     set viewOptions to the icon view options of container window
     set arrangement of viewOptions to not arranged
     set icon size of viewOptions to 96
-    set background picture of viewOptions to file ".background:background.png"
-    set position of item "{APP_NAME}.app" of container window to {{120, 150}}
-    set position of item "Applications" of container window to {{380, 150}}
+    set background picture of viewOptions to file ".background:background.tiff"
+    set position of item "{APP_NAME}.app" of container window to {{{app_x}, {app_y}}}
+    set position of item "Applications" of container window to {{{applications_x}, {applications_y}}}
     close
     open
     update without registering applications
     delay 1
     close
   end tell
-end tell"#
+end tell"#,
+        app_x = APP_ICON_AT.0,
+        app_y = APP_ICON_AT.1,
+        applications_x = APPLICATIONS_ICON_AT.0,
+        applications_y = APPLICATIONS_ICON_AT.1,
     );
-    run(Command::new("osascript").args(["-e", &script]))
+    run(Command::new("osascript").args(["-e", &script]))?;
+    // Finder saves the .DS_Store in the background once the window has closed.
+    let store = mount.join(".DS_Store");
+    let mut checked = Err(anyhow!("Finder wrote no {}", store.display()));
+    for _ in 0..20 {
+        if let Ok(bytes) = std::fs::read(&store) {
+            checked = check_layout(&bytes);
+            if checked.is_ok() {
+                break;
+            }
+        }
+        std::thread::sleep(std::time::Duration::from_millis(250));
+    }
+    checked
+}
+
+/// Checks the layout Finder stored, which is what every Mac opening the image shows.
+fn check_layout(store: &[u8]) -> Result<()> {
+    for hidden in [".background", ".fseventsd"] {
+        ensure!(
+            icon_position(store, hidden).is_none(),
+            "Finder placed the hidden {hidden} in the window, which it does only while it shows hidden files; hide \
+             them with ⇧⌘. in a Finder window and build again"
+        );
+    }
+    for (name, expected) in [
+        (format!("{APP_NAME}.app"), APP_ICON_AT),
+        ("Applications".to_owned(), APPLICATIONS_ICON_AT),
+    ] {
+        let found = icon_position(store, &name);
+        ensure!(
+            found == Some(expected),
+            "Finder placed {name} at {found:?} instead of {expected:?}"
+        );
+    }
+    Ok(())
+}
+
+/// An icon's place in a .DS_Store: an `Iloc` record after the file name in UTF-16, holding a 16-byte `blob` that
+/// starts with x and y as big-endian integers.
+fn icon_position(store: &[u8], name: &str) -> Option<(u32, u32)> {
+    let mut key: Vec<u8> = name.encode_utf16().flat_map(u16::to_be_bytes).collect();
+    key.extend_from_slice(b"Ilocblob");
+    let start = store.windows(key.len()).position(|window| window == key)? + key.len() + 4;
+    let coordinate = |at: usize| {
+        let bytes = store.get(at..at + 4)?;
+        Some(u32::from_be_bytes(bytes.try_into().ok()?))
+    };
+    Some((coordinate(start)?, coordinate(start + 4)?))
 }
 
 /// Uploads a disk image or zip archive to Apple's notary service and waits for the verdict; on a rejection it prints
@@ -314,6 +384,51 @@ mod tests {
         assert!(release_notes(" \n", None).is_err());
         assert!(release_notes("- New.\n", Some(&notes)).is_err());
         assert!(release_notes("- Newer.\n", Some(&notes)).is_ok());
+    }
+
+    fn placed(name: &str, (x, y): (u32, u32)) -> Vec<u8> {
+        let mut record = u32::try_from(name.encode_utf16().count())
+            .unwrap()
+            .to_be_bytes()
+            .to_vec();
+        record.extend(name.encode_utf16().flat_map(u16::to_be_bytes));
+        record.extend_from_slice(b"Ilocblob");
+        record.extend_from_slice(&16u32.to_be_bytes());
+        record.extend_from_slice(&x.to_be_bytes());
+        record.extend_from_slice(&y.to_be_bytes());
+        record.extend_from_slice(&[0xff; 8]);
+        record
+    }
+
+    #[test]
+    fn the_stored_layout_must_match_the_background() {
+        let app = format!("{APP_NAME}.app");
+        let intended = [
+            placed(&app, APP_ICON_AT),
+            placed("Applications", APPLICATIONS_ICON_AT),
+        ]
+        .concat();
+        assert_eq!(icon_position(&intended, &app), Some(APP_ICON_AT));
+        assert_eq!(icon_position(&intended, "Lowspeak"), None);
+        assert!(check_layout(&intended).is_ok());
+
+        // The window of Lowspeak 1.0.0 as first released: labels below the visible area.
+        let released = [
+            placed(".background", (95, 64)),
+            placed(".fseventsd", (265, 64)),
+            placed("Applications", (380, 177)),
+            placed(&app, (120, 177)),
+        ]
+        .concat();
+        let error = check_layout(&released).unwrap_err().to_string();
+        assert!(error.contains("hidden .background"), "{error}");
+        let moved = [
+            placed(&app, (120, 177)),
+            placed("Applications", APPLICATIONS_ICON_AT),
+        ]
+        .concat();
+        assert!(check_layout(&moved).is_err());
+        assert!(check_layout(&placed("Applications", APPLICATIONS_ICON_AT)).is_err());
     }
 
     #[test]

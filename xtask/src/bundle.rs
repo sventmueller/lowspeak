@@ -265,7 +265,7 @@ pub(crate) fn installed_location() -> PathBuf {
 pub(crate) fn deploy(build: Build) -> Result<()> {
     let (app, version) = bundle(build)?;
     install(&app)?;
-    let image = disk_image(&app)?;
+    let image = disk_image(&app, Layout::Optional)?;
     let named = image.with_file_name(format!("{APP_NAME}-{version}.dmg"));
     std::fs::rename(&image, &named)?;
     println!("DMG: {}", named.display());
