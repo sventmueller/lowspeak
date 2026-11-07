@@ -3,19 +3,292 @@
   <channel>
     <title>Lowspeak</title>
     <item>
-      <title>Lowspeak 1.0.1</title>
-      <pubDate>Sat, 07 Nov 2026 11:08:33 +0000</pubDate>
-      <sparkle:version>1.0.1</sparkle:version>
-      <sparkle:shortVersionString>1.0.1</sparkle:shortVersionString>
+      <title>Lowspeak 1.0.3</title>
+      <pubDate>Sat, 07 Nov 2026 13:26:13 +0000</pubDate>
+      <sparkle:version>1.0.3</sparkle:version>
+      <sparkle:shortVersionString>1.0.3</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-      <description sparkle:format="markdown"><![CDATA[Lowspeak now keeps itself up to date.
+      <description sparkle:format="markdown" xml:lang="en"><![CDATA[Lowspeak now speaks your language in more places.
 
-- **Updates:** on the second launch, Lowspeak asks whether it may look for a new version once a day. **Check for Updates…** in the menu looks right away; the two items below it turn the daily check and automatic installs on or off. When an update is waiting, a dot appears on the ring in the menu bar.
-- **Coming from 1.0.0?** It has no updater yet, so install this version over it once. Your settings, keys and models stay.
-- **The disk image window** shows both icons with their names, on a background that stays sharp on Retina screens.
+- **Updates and the microphone prompt in your language:** the update windows and Lowspeak's words in macOS's microphone prompt follow your Mac's language, in all 35 languages Lowspeak speaks. From the next update on, these notes come in your language too.
+- **Install with Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Clearer messages:** when post-processing has no key, Lowspeak tells you that a key from Groq or OpenAI will do. When a provider retires an online model, the message names the model and points you to the menu.
+- **Parakeet v2** now places words at the edges of its 15-second windows exactly and also hears the last moment of each window.
 
 Something wrong or missing? [Report it on GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <enclosure url="https://github.com/sventmueller/lowspeak/releases/download/v1.0.1/Lowspeak-1.0.1.dmg" sparkle:edSignature="bP+9WxKoOBAHHpcSavHvHtHgRn/ujix3OidZ3GoFF1P+AlLKESuKyIA8VvT9Ivqy2cLyIT0UBYLDTddj00yfDw==" length="6963371" type="application/octet-stream"/>
+      <description sparkle:format="markdown" xml:lang="ar"><![CDATA[أصبح Lowspeak يتحدث لغتك في أماكن أكثر.
+
+- **التحديثات وطلب الوصول إلى الميكروفون بلغتك:** تظهر نوافذ التحديث، ونصّ Lowspeak في طلب macOS للوصول إلى الميكروفون، بلغة جهاز Mac لديك، وذلك في كل اللغات الـ35 التي يتحدثها Lowspeak. وبدءًا من التحديث القادم، ستصلك ملاحظات التحديث بلغتك أيضًا.
+- **التثبيت عبر Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **رسائل أوضح:** عندما لا يتوفر مفتاح للمعالجة اللاحقة، يخبرك Lowspeak بأن مفتاحًا من Groq أو OpenAI يفي بالغرض. وعندما يتوقف مزوّد عن توفير نموذج يعمل عبر الإنترنت، تذكر الرسالة اسم النموذج وترشدك إلى القائمة.
+- **نموذج Parakeet v2** يحدد الآن بدقة مواضع الكلمات الواقعة عند أطراف نوافذه البالغة 15 ثانية، ويسمع أيضًا اللحظة الأخيرة من كل نافذة.
+
+هل هناك خطأ أو شيء ناقص؟ [أبلغ عنه على GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="ca"><![CDATA[El Lowspeak ara parla el teu idioma en més llocs.
+
+- **Actualitzacions i permís del micròfon en el teu idioma:** les finestres d’actualització i el text que mostra el Lowspeak quan el macOS demana accés al micròfon segueixen l’idioma del teu Mac, en els 35 idiomes que parla el Lowspeak. A partir de la propera actualització, aquestes notes també t’arribaran en el teu idioma.
+- **Instal·lació amb Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Missatges més clars:** quan falta una clau per al postprocessament, el Lowspeak t’explica que n’hi ha prou amb una de Groq o d’OpenAI. Quan un proveïdor retira un model en línia, el missatge diu quin és i et remet al menú.
+- **Parakeet v2** ara col·loca amb exactitud les paraules a les vores de les seves finestres de 15 segons i també capta l’últim instant de cada finestra.
+
+Alguna cosa falla o hi falta? [Comunica-ho a GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="cs"><![CDATA[Lowspeak teď mluví vaším jazykem na více místech.
+
+- **Aktualizace a žádost o přístup k mikrofonu ve vašem jazyce:** okna aktualizací i to, co Lowspeak píše v žádosti systému macOS o přístup k mikrofonu, se řídí jazykem vašeho Macu – ve všech 35 jazycích, které Lowspeak umí. Od příští aktualizace budou ve vašem jazyce i tyto poznámky k vydání.
+- **Instalace přes Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Srozumitelnější hlášení:** když pro následné zpracování chybí klíč, Lowspeak vám řekne, že stačí klíč od Groq nebo OpenAI. Když služba přestane nabízet některý online model, hlášení uvede jeho název a odkáže vás do nabídky.
+- **Parakeet v2** teď přesně umisťuje slova na hranicích svých 15sekundových oken a slyší i poslední okamžik každého okna.
+
+Něco nefunguje nebo chybí? [Nahlaste to na GitHubu](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="da"><![CDATA[Lowspeak taler nu dit sprog flere steder.
+
+- **Opdateringer og mikrofondialogen på dit sprog:** Opdateringsvinduerne og Lowspeaks forklaring, når macOS beder om adgang til mikrofonen, følger sproget på din Mac – på alle de 35 sprog, Lowspeak kan. Fra og med næste opdatering kommer også disse noter på dit sprog.
+- **Installer med Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Tydeligere meddelelser:** Når efterbehandlingen mangler en nøgle, fortæller Lowspeak dig, at en nøgle fra Groq eller OpenAI er nok. Når en udbyder udfaser en onlinemodel, nævner meddelelsen modellen og henviser dig til menuen.
+- **Parakeet v2** placerer nu ord præcist ved kanterne af sine vinduer på 15 sekunder og hører også det sidste øjeblik af hvert vindue.
+
+Er noget forkert, eller mangler noget? [Rapportér det på GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="de"><![CDATA[Lowspeak spricht jetzt an mehr Stellen deine Sprache.
+
+- **Updates und Mikrofonabfrage in deiner Sprache:** Die Update-Fenster und das, was Lowspeak in der Mikrofonabfrage von macOS sagt, richten sich nach der Sprache deines Macs, in allen 35 Sprachen, die Lowspeak spricht. Ab dem nächsten Update bekommst du auch diese Versionshinweise in deiner Sprache.
+- **Installation mit Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Klarere Meldungen:** Fehlt für die Nachbearbeitung ein Schlüssel, sagt dir Lowspeak, dass einer von Groq oder OpenAI genügt. Zieht ein Anbieter ein Onlinemodell zurück, nennt die Meldung das Modell und schickt dich ins Menü.
+- **Parakeet v2** setzt Wörter an den Rändern seiner 15-Sekunden-Fenster jetzt genau richtig und hört auch den letzten Moment jedes Fensters.
+
+Fehlt etwas oder stimmt etwas nicht? [Melde es auf GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="el"><![CDATA[Το Lowspeak μιλά πλέον τη γλώσσα σας σε περισσότερα σημεία.
+
+- **Ενημερώσεις και αίτημα για το μικρόφωνο στη γλώσσα σας:** τα παράθυρα των ενημερώσεων και η εξήγηση του Lowspeak στο αίτημα του macOS για πρόσβαση στο μικρόφωνο ακολουθούν τη γλώσσα του Mac σας, σε όλες τις 35 γλώσσες που μιλά το Lowspeak. Από την επόμενη ενημέρωση, και αυτές οι σημειώσεις θα είναι στη γλώσσα σας.
+- **Εγκατάσταση μέσω Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Πιο σαφή μηνύματα:** όταν λείπει κλειδί για τη μετεπεξεργασία, το Lowspeak σάς λέει ότι αρκεί ένα κλειδί από το Groq ή το OpenAI. Όταν ένας πάροχος αποσύρει ένα διαδικτυακό μοντέλο, το μήνυμα αναφέρει ποιο μοντέλο είναι και σας παραπέμπει στο μενού.
+- **Το Parakeet v2** τοποθετεί πλέον με ακρίβεια τις λέξεις στις άκρες των παραθύρων 15 δευτερολέπτων που επεξεργάζεται και ακούει επίσης την τελευταία στιγμή κάθε παραθύρου.
+
+Κάτι δεν λειτουργεί ή λείπει; [Αναφέρετέ το στο GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="es"><![CDATA[Lowspeak ahora habla tu idioma en más sitios.
+
+- **Actualizaciones y permiso del micrófono en tu idioma:** las ventanas de actualización y lo que dice Lowspeak cuando macOS pide permiso para el micrófono siguen el idioma de tu Mac, en los 35 idiomas que habla Lowspeak. A partir de la próxima actualización, estas notas también te llegarán en tu idioma.
+- **Instalación con Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Mensajes más claros:** si falta la clave para el posprocesado, Lowspeak te avisa de que basta con una de Groq o de OpenAI. Si un proveedor retira un modelo en línea, el mensaje dice cuál es y te remite al menú.
+- **Parakeet v2** ahora coloca con exactitud las palabras en los bordes de sus ventanas de 15 segundos y capta también el último instante de cada ventana.
+
+¿Algo falla o falta? [Avísanos en GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="fi"><![CDATA[Lowspeak puhuu nyt kieltäsi entistä useammassa paikassa.
+
+- **Päivitykset ja mikrofoniluvan pyyntö omalla kielelläsi:** päivitysikkunat ja Lowspeakin teksti ikkunassa, jossa macOS pyytää lupaa mikrofonin käyttöön, noudattavat Macisi kieliasetusta kaikilla 35 kielellä, joita Lowspeak osaa. Seuraavasta päivityksestä alkaen näet myös nämä päivitystiedot omalla kielelläsi.
+- **Asenna Homebrew’lla:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Selkeämmät ilmoitukset:** kun jälkikäsittelylle ei ole asetettu avainta, Lowspeak kertoo, että Groqin tai OpenAI:n avain riittää. Kun palveluntarjoaja lopettaa online-mallin tarjoamisen, ilmoitus mainitsee mallin nimen ja ohjaa sinut valikkoon.
+- **Parakeet v2** sijoittaa nyt 15 sekunnin ikkunoidensa reunoilla olevat sanat tarkalleen oikeille paikoilleen ja kuulee myös jokaisen ikkunan viimeisen hetken.
+
+Onko jokin vialla tai puuttuuko jotain? [Ilmoita siitä GitHubissa](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="fr"><![CDATA[Lowspeak parle désormais votre langue à davantage d’endroits.
+
+- **Mises à jour et accès au micro dans votre langue :** les fenêtres de mise à jour et le texte de Lowspeak dans la demande d’accès au micro de macOS suivent la langue de votre Mac, dans les 35 langues que parle Lowspeak. Dès la prochaine mise à jour, ces notes de version seront elles aussi dans votre langue.
+- **Installation avec Homebrew :** `brew install --cask sventmueller/tap/lowspeak`.
+- **Messages plus clairs :** s’il manque une clé pour le post-traitement, Lowspeak vous indique qu’une clé Groq ou OpenAI suffit. Si un fournisseur retire un modèle en ligne, le message précise de quel modèle il s’agit et vous renvoie au menu.
+- **Parakeet v2** place maintenant avec précision les mots situés aux bords de ses fenêtres de 15 secondes et entend aussi le tout dernier instant de chaque fenêtre.
+
+Quelque chose ne va pas ou manque ? [Signalez-le sur GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="he"><![CDATA[עכשיו Lowspeak מדבר בשפה שלך במקומות נוספים.
+
+- **עדכונים ובקשת הגישה למיקרופון בשפה שלך:** חלונות העדכון וההסבר של Lowspeak בבקשת הגישה למיקרופון של macOS מוצגים בשפה של ה-Mac שלך, בכל 35 השפות ש-Lowspeak מדבר. החל מהעדכון הבא, גם הערות העדכון יגיעו בשפה שלך.
+- **התקנה דרך Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **הודעות ברורות יותר:** כשאין מפתח לעיבוד ההמשך, Lowspeak אומר לך שמפתח של Groq או של OpenAI יספיק. כשספק מפסיק להציע מודל מקוון, ההודעה מציינת את שם המודל ומפנה אותך לתפריט.
+- **המודל Parakeet v2** ממקם עכשיו במדויק מילים שנופלות בקצוות של חלונות ה-15 שניות שלו, וגם שומע את הרגע האחרון של כל חלון.
+
+משהו לא תקין או חסר? [דווחו על כך ב-GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="hi"><![CDATA[Lowspeak अब और भी जगहों पर आपकी भाषा बोलता है।
+
+- **अपडेट और माइक्रोफ़ोन अनुमति भी आपकी भाषा में:** अपडेट विंडो और macOS के माइक्रोफ़ोन अनुमति संदेश में Lowspeak के शब्द, दोनों अब आपके Mac की भाषा में दिखते हैं, Lowspeak की सभी 35 भाषाओं में। अगले अपडेट से ये नोट्स भी आपकी भाषा में आएँगे।
+- **Homebrew से इंस्टॉल करें:** `brew install --cask sventmueller/tap/lowspeak`।
+- **ज़्यादा स्पष्ट संदेश:** अगर पोस्ट-प्रोसेसिंग के लिए कोई कुंजी नहीं है, तो Lowspeak आपको बताता है कि Groq या OpenAI में से किसी की भी कुंजी चल जाएगी। जब कोई प्रदाता किसी ऑनलाइन मॉडल को उपलब्ध कराना बंद कर देता है, तो संदेश उस मॉडल का नाम बताता है और आपको मेनू की राह दिखाता है।
+- **Parakeet v2** अब अपनी 15 सेकंड की विंडो के किनारों पर पड़ने वाले शब्दों को बिल्कुल सही जगह पर रखता है, और हर विंडो का आख़िरी पल भी सुनता है।
+
+कुछ गलत है या कुछ छूट गया है? [GitHub पर बताएँ](https://github.com/sventmueller/lowspeak/issues/new/choose)।]]></description>
+      <description sparkle:format="markdown" xml:lang="hr"><![CDATA[Lowspeak sada na više mjesta govori vašim jezikom.
+
+- **Ažuriranja i zahtjev za pristup mikrofonu na vašem jeziku:** prozori za ažuriranje i Lowspeakov tekst u zahtjevu macOS-a za pristup mikrofonu prate jezik vašeg Maca – na svih 35 jezika kojima Lowspeak govori. Od sljedećeg ažuriranja i ove će bilješke o izdanju biti na vašem jeziku.
+- **Instalacija putem Homebrewa:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Jasnije poruke:** kad za naknadnu obradu nema ključa, Lowspeak vam javlja da je dovoljan ključ za Groq ili OpenAI. Kad pružatelj usluge povuče online model, poruka navodi naziv modela i upućuje vas na izbornik.
+- **Parakeet v2** sada točno smješta riječi na rubovima svojih 15-sekundnih prozora te čuje i posljednji trenutak svakog prozora.
+
+Nešto ne radi ili nedostaje? [Prijavite to na GitHubu](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="hu"><![CDATA[A Lowspeak mostantól még több helyen beszéli az Ön nyelvét.
+
+- **Frissítések és mikrofonengedély-kérés az Ön nyelvén:** a frissítési ablakok és a Lowspeak magyarázata a macOS mikrofonengedély-kérésében a Mac nyelvét követik, a Lowspeak mind a 35 nyelvén. A következő frissítéstől ezeket a kiadási megjegyzéseket is az Ön nyelvén olvashatja.
+- **Telepítés Homebrew-val:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Érthetőbb üzenetek:** ha az utófeldolgozáshoz nincs kulcs megadva, a Lowspeak jelzi, hogy elég egy Groq- vagy egy OpenAI-kulcs. Ha egy szolgáltató kivezet egy online modellt, az üzenet megnevezi a modellt, és a menübe irányítja Önt.
+- **A Parakeet v2** mostantól pontosan a helyükre teszi a szavakat a 15 másodperces ablakai szélén, és minden ablak utolsó pillanatát is hallja.
+
+Valami nem működik vagy hiányzik? [Jelezze a GitHubon](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="id"><![CDATA[Lowspeak kini berbicara dalam bahasa Anda di lebih banyak tempat.
+
+- **Pembaruan dan permintaan akses mikrofon dalam bahasa Anda:** jendela pembaruan dan penjelasan Lowspeak di permintaan akses mikrofon macOS kini mengikuti bahasa Mac Anda, dalam semua 35 bahasa yang dikuasai Lowspeak. Mulai pembaruan berikutnya, catatan rilis ini juga hadir dalam bahasa Anda.
+- **Instal dengan Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Pesan yang lebih jelas:** jika belum ada kunci untuk pascapemrosesan, Lowspeak memberi tahu Anda bahwa kunci dari Groq atau OpenAI sudah cukup. Jika penyedia menghentikan model online, pesannya menyebutkan nama model tersebut dan mengarahkan Anda ke menu.
+- **Parakeet v2** kini menempatkan kata-kata di tepi jendela 15 detiknya dengan tepat dan juga mendengar bagian paling akhir setiap jendela.
+
+Ada yang salah atau kurang? [Laporkan di GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="it"><![CDATA[Lowspeak ora parla la tua lingua in più punti.
+
+- **Aggiornamenti e permesso del microfono nella tua lingua:** le finestre di aggiornamento e il testo che Lowspeak mostra quando macOS chiede l’accesso al microfono seguono la lingua del tuo Mac, in tutte le 35 lingue che parla Lowspeak. Dal prossimo aggiornamento anche queste note saranno nella tua lingua.
+- **Installazione con Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Messaggi più chiari:** se manca la chiave per la post-elaborazione, Lowspeak ti dice che basta una chiave di Groq o di OpenAI. Se un fornitore ritira un modello online, il messaggio indica quale e ti rimanda al menu.
+- **Parakeet v2** ora colloca con precisione le parole ai bordi delle sue finestre di 15 secondi e coglie anche l’ultimo istante di ogni finestra.
+
+Qualcosa non va o manca? [Segnalalo su GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="ja"><![CDATA[Lowspeakが、さらに多くの場面でお使いの言語に対応しました。
+
+- **アップデートとマイクのアクセス許可もお使いの言語で：** アップデートのウインドウと、macOSがマイクへのアクセス許可を求める画面にあるLowspeakの説明文が、Macの言語で表示されるようになりました。対象はLowspeakが対応する35言語すべてです。次回のアップデートからは、このリリースノートもお使いの言語でお届けします。
+- **Homebrewでインストール：** `brew install --cask sventmueller/tap/lowspeak`。
+- **よりわかりやすいメッセージ：** 後処理用のキーがない場合は、GroqとOpenAIのどちらのキーでも使えることをLowspeakがお知らせします。プロバイダがオンラインモデルの提供を終了したときは、メッセージでそのモデル名を示し、メニューへ案内します。
+- **Parakeet v2** は、15秒ごとの区間の端にある単語を正確な位置に置き、各区間の最後の一瞬まで聞き取るようになりました。
+
+不具合や足りない点がありましたら、[GitHubで報告してください](https://github.com/sventmueller/lowspeak/issues/new/choose)。]]></description>
+      <description sparkle:format="markdown" xml:lang="ko"><![CDATA[Lowspeak가 이제 더 많은 곳에서 사용자의 언어로 말합니다.
+
+- **업데이트와 마이크 권한 요청도 사용자의 언어로:** 업데이트 창과 macOS의 마이크 접근 권한 요청에 나오는 Lowspeak의 문구가 Mac의 언어를 따르며, Lowspeak가 구사하는 35개 언어 모두에 적용됩니다. 다음 업데이트부터는 이 릴리스 노트도 사용자의 언어로 제공됩니다.
+- **Homebrew로 설치:** `brew install --cask sventmueller/tap/lowspeak`.
+- **더 명확해진 메시지:** 후처리에 사용할 키가 없으면 Groq 또는 OpenAI 중 한 곳의 키만 있으면 된다고 Lowspeak가 알려 줍니다. 제공업체가 온라인 모델 제공을 중단하면 메시지에 해당 모델 이름과 함께 메뉴를 확인하라는 안내가 표시됩니다.
+- **Parakeet v2** 모델은 이제 15초 구간의 경계에 있는 단어도 정확한 위치에 놓고, 각 구간의 마지막 순간까지 듣습니다.
+
+문제가 있거나 빠진 것이 있나요? [GitHub에 알려 주세요](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="ms"><![CDATA[Lowspeak kini bertutur dalam bahasa anda di lebih banyak tempat.
+
+- **Kemas kini dan permintaan akses mikrofon dalam bahasa anda:** tetingkap kemas kini dan penerangan Lowspeak dalam permintaan akses mikrofon macOS kini mengikut bahasa Mac anda, dalam kesemua 35 bahasa yang dituturkan Lowspeak. Mulai kemas kini seterusnya, nota keluaran ini juga akan tersedia dalam bahasa anda.
+- **Pasang dengan Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Mesej yang lebih jelas:** apabila tiada kunci untuk pascapemprosesan, Lowspeak memberitahu anda bahawa kunci daripada Groq atau OpenAI sudah memadai. Apabila penyedia menamatkan model dalam talian, mesej itu menyebut nama model tersebut dan mengarahkan anda ke menu.
+- **Parakeet v2** kini meletakkan perkataan di pinggir tetingkap 15 saatnya dengan tepat dan turut mendengar bahagian penghujung setiap tetingkap.
+
+Ada yang salah atau tiada? [Laporkan di GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="nl"><![CDATA[Lowspeak spreekt nu op meer plekken jouw taal.
+
+- **Updates en de vraag om microfoontoegang in jouw taal:** de updatevensters en wat Lowspeak zegt als macOS om toegang tot de microfoon vraagt, volgen de taal van je Mac, in alle 35 talen die Lowspeak spreekt. Vanaf de volgende update lees je ook deze notities in jouw taal.
+- **Installeren met Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Duidelijkere meldingen:** ontbreekt er een sleutel voor de nabewerking, dan laat Lowspeak je weten dat een sleutel van Groq of OpenAI volstaat. Stopt een aanbieder met een onlinemodel, dan noemt de melding het model en verwijst ze je naar het menu.
+- **Parakeet v2** plaatst woorden aan de randen van zijn vensters van 15 seconden nu precies goed en hoort ook het laatste moment van elk venster.
+
+Klopt er iets niet of mist er iets? [Meld het op GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="no"><![CDATA[Lowspeak snakker nå språket ditt flere steder.
+
+- **Oppdateringer og mikrofondialogen på ditt språk:** Oppdateringsvinduene og Lowspeaks forklaring når macOS ber om tilgang til mikrofonen, følger språket på Macen din – på alle de 35 språkene Lowspeak kan. Fra og med neste oppdatering kommer også disse merknadene på ditt språk.
+- **Installer med Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Tydeligere meldinger:** Når etterbehandlingen mangler en nøkkel, forteller Lowspeak deg at det holder med en nøkkel fra Groq eller OpenAI. Når en leverandør faser ut en nettbasert modell, nevner meldingen modellen og henviser deg til menyen.
+- **Parakeet v2** plasserer nå ord nøyaktig i kantene av vinduene sine på 15 sekunder og hører også det siste øyeblikket av hvert vindu.
+
+Er noe feil, eller mangler noe? [Rapporter det på GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="pl"><![CDATA[Lowspeak mówi teraz w Twoim języku w kolejnych miejscach.
+
+- **Uaktualnienia i prośba o dostęp do mikrofonu w Twoim języku:** okna uaktualnień i to, co Lowspeak pisze w prośbie systemu macOS o dostęp do mikrofonu, dostosowują się do języka Twojego Maca – we wszystkich 35 językach, którymi mówi Lowspeak. Od następnego uaktualnienia także te informacje o wydaniu będą w Twoim języku.
+- **Instalacja przez Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Jaśniejsze komunikaty:** gdy do przetwarzania końcowego brakuje klucza, Lowspeak informuje, że wystarczy klucz od Groq lub OpenAI. Gdy usługa wycofuje model online, komunikat podaje jego nazwę i odsyła Cię do menu.
+- **Parakeet v2** umieszcza teraz słowa na granicach swoich 15-sekundowych okien dokładnie tam, gdzie trzeba, i słyszy też ostatnią chwilę każdego okna.
+
+Coś nie działa lub czegoś brakuje? [Zgłoś to na GitHubie](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="pt_BR"><![CDATA[O Lowspeak agora fala seu idioma em mais lugares.
+
+- **Atualizações e permissão do microfone no seu idioma:** as janelas de atualização e o texto que o Lowspeak mostra quando o macOS pede acesso ao microfone seguem o idioma do seu Mac, em todos os 35 idiomas que o Lowspeak fala. A partir da próxima atualização, estas notas também virão no seu idioma.
+- **Instalação com o Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Mensagens mais claras:** quando falta uma chave para o pós-processamento, o Lowspeak avisa que basta uma chave do Groq ou do OpenAI. Quando um provedor deixa de oferecer um modelo online, a mensagem diz qual é o modelo e aponta para o menu.
+- **Parakeet v2** agora posiciona com exatidão as palavras nas bordas das suas janelas de 15 segundos e também capta o último instante de cada janela.
+
+Algo errado ou faltando? [Informe no GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="pt_PT"><![CDATA[O Lowspeak fala agora o seu idioma em mais sítios.
+
+- **Atualizações e permissão do microfone no seu idioma:** as janelas de atualização e o texto que o Lowspeak apresenta quando o macOS pede acesso ao microfone seguem o idioma do seu Mac, em todos os 35 idiomas que o Lowspeak fala. A partir da próxima atualização, também estas notas passam a estar no seu idioma.
+- **Instalação com o Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Mensagens mais claras:** quando falta uma chave para o pós-processamento, o Lowspeak avisa que basta uma chave do Groq ou do OpenAI. Quando um fornecedor deixa de disponibilizar um modelo online, a mensagem indica qual é e encaminha-o para o menu.
+- **Parakeet v2** posiciona agora com exatidão as palavras nos limites das suas janelas de 15 segundos e capta também o último instante de cada janela.
+
+Algo errado ou em falta? [Comunique-o no GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="ro"><![CDATA[Lowspeak vorbește acum limba dumneavoastră în mai multe locuri.
+
+- **Actualizările și permisiunea pentru microfon, în limba dumneavoastră:** ferestrele de actualizare și textul afișat de Lowspeak când macOS cere acces la microfon urmează limba Mac-ului dumneavoastră, în toate cele 35 de limbi pe care le vorbește Lowspeak. De la următoarea actualizare, și aceste note vor apărea în limba dumneavoastră.
+- **Instalare cu Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Mesaje mai clare:** când lipsește cheia pentru postprocesare, Lowspeak vă spune că este de ajuns o cheie de la Groq sau OpenAI. Când un furnizor retrage un model online, mesajul numește modelul și vă îndrumă spre meniu.
+- **Parakeet v2** plasează acum exact cuvintele de la marginile ferestrelor sale de 15 secunde și prinde inclusiv ultima clipă a fiecărei ferestre.
+
+Ceva nu funcționează sau lipsește? [Raportați pe GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="ru"><![CDATA[Lowspeak теперь говорит на вашем языке ещё в нескольких местах.
+
+- **Обновления и запрос доступа к микрофону на вашем языке:** окна обновлений и пояснение Lowspeak в запросе macOS на доступ к микрофону подстраиваются под язык вашего Mac — на всех 35 языках, которые знает Lowspeak. Со следующего обновления и эти примечания к выпуску будут на вашем языке.
+- **Установка через Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Более понятные сообщения:** если для постобработки нет ключа, Lowspeak подскажет, что подойдёт ключ Groq или OpenAI. Если сервис больше не предоставляет онлайн-модель, сообщение назовёт её и предложит выбрать другую в меню.
+- **Parakeet v2** теперь точно расставляет слова на границах своих 15-секундных окон, а также слышит самый конец каждого окна.
+
+Что-то не так или чего-то не хватает? [Сообщите на GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="sk"><![CDATA[Lowspeak teraz hovorí vaším jazykom na viacerých miestach.
+
+- **Aktualizácie a žiadosť o prístup k mikrofónu vo vašom jazyku:** okná aktualizácií aj to, čo Lowspeak píše v žiadosti systému macOS o prístup k mikrofónu, sa riadia jazykom vášho Macu – vo všetkých 35 jazykoch, ktorými Lowspeak hovorí. Od nasledujúcej aktualizácie budú vo vašom jazyku aj tieto poznámky k vydaniu.
+- **Inštalácia cez Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Zrozumiteľnejšie správy:** keď pre následné spracovanie chýba kľúč, Lowspeak vám povie, že stačí kľúč pre Groq alebo OpenAI. Keď služba prestane ponúkať niektorý online model, správa uvedie jeho názov a odkáže vás do menu.
+- **Parakeet v2** teraz presne umiestňuje slová na hraniciach svojich 15-sekundových okien a počuje aj posledný okamih každého okna.
+
+Niečo nefunguje alebo chýba? [Nahláste to na GitHube](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="sl"><![CDATA[Lowspeak zdaj na več mestih govori vaš jezik.
+
+- **Posodobitve in poziv za dostop do mikrofona v vašem jeziku:** okna za posodobitve in besedilo, ki ga Lowspeak prikaže v pozivu sistema macOS za dostop do mikrofona, sledijo jeziku vašega Maca – v vseh 35 jezikih, ki jih Lowspeak govori. Od naslednje posodobitve naprej bodo v vašem jeziku tudi te opombe ob izdaji.
+- **Namestitev prek Homebrewa:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Jasnejša sporočila:** ko za naknadno obdelavo ni ključa, vam Lowspeak pove, da zadošča ključ za Groq ali OpenAI. Ko ponudnik umakne spletni model, sporočilo navede ime modela in vas napoti v meni.
+- **Parakeet v2** zdaj natančno umesti besede na robovih svojih 15-sekundnih oken in sliši tudi zadnji trenutek vsakega okna.
+
+Je kaj narobe ali kaj manjka? [Sporočite na GitHubu](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="sv"><![CDATA[Lowspeak talar nu ditt språk på fler ställen.
+
+- **Uppdateringar och mikrofondialogen på ditt språk:** Uppdateringsfönstren och Lowspeaks förklaring när macOS ber om åtkomst till mikrofonen följer språket på din Mac – på alla 35 språk som Lowspeak kan. Från och med nästa uppdatering kommer även de här anteckningarna på ditt språk.
+- **Installera med Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Tydligare meddelanden:** När efterbearbetningen saknar en nyckel berättar Lowspeak att det räcker med en nyckel från Groq eller OpenAI. När en leverantör fasar ut en onlinemodell nämner meddelandet modellen och hänvisar dig till menyn.
+- **Parakeet v2** placerar nu ord exakt vid kanterna av sina 15-sekundersfönster och hör även det sista ögonblicket i varje fönster.
+
+Är något fel, eller saknas något? [Rapportera det på GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="th"><![CDATA[ตอนนี้ Lowspeak พูดภาษาของคุณได้ในอีกหลายที่
+
+- **การอัปเดตและคำขอสิทธิ์ไมโครโฟนเป็นภาษาของคุณ:** หน้าต่างการอัปเดตและข้อความของ Lowspeak ในคำขอสิทธิ์เข้าถึงไมโครโฟนของ macOS จะแสดงเป็นภาษาเดียวกับ Mac ของคุณ ครบทั้ง 35 ภาษาที่ Lowspeak พูดได้ และตั้งแต่การอัปเดตครั้งถัดไป บันทึกการอัปเดตก็จะมาเป็นภาษาของคุณด้วย
+- **ติดตั้งผ่าน Homebrew:** `brew install --cask sventmueller/tap/lowspeak`
+- **ข้อความที่ชัดเจนขึ้น:** เมื่อไม่มีคีย์สำหรับการประมวลผลภายหลัง Lowspeak จะบอกคุณว่าใช้คีย์ของ Groq หรือ OpenAI ก็ได้ ส่วนเมื่อผู้ให้บริการเลิกเปิดให้ใช้โมเดลออนไลน์ตัวใด ข้อความจะบอกชื่อโมเดลนั้นและชี้ให้คุณไปที่เมนู
+- **Parakeet v2** วางคำที่อยู่ตรงขอบของช่วงเสียง 15 วินาทีได้ตรงตำแหน่งแล้ว และยังได้ยินเสี้ยววินาทีสุดท้ายของแต่ละช่วงด้วย
+
+มีอะไรผิดพลาดหรือขาดหายไปไหม [แจ้งบน GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose)]]></description>
+      <description sparkle:format="markdown" xml:lang="tr"><![CDATA[Lowspeak artık daha çok yerde sizin dilinizi konuşuyor.
+
+- **Güncellemeler ve mikrofon izni sizin dilinizde:** Güncelleme pencereleri ve macOS mikrofon izni isterken gösterilen Lowspeak açıklaması artık Mac’inizin dilinde görünüyor; bu, Lowspeak’in konuştuğu 35 dilin tamamı için geçerli. Bir sonraki güncellemeden itibaren bu notları da kendi dilinizde okuyacaksınız.
+- **Homebrew ile yükleyin:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Daha anlaşılır mesajlar:** Son işleme için anahtar yoksa Lowspeak, bir Groq veya OpenAI anahtarının yeterli olduğunu söylüyor. Bir sağlayıcı çevrimiçi bir modeli kullanımdan kaldırdığında mesaj, modelin adını veriyor ve sizi menüye yönlendiriyor.
+- **Parakeet v2** artık 15 saniyelik pencerelerinin sınırlarındaki sözcükleri tam yerine koyuyor ve her pencerenin son anını da duyuyor.
+
+Bir sorun ya da eksik mi var? [GitHub’da bildirin](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="uk"><![CDATA[Lowspeak тепер говорить вашою мовою ще в кількох місцях.
+
+- **Оновлення й запит доступу до мікрофона вашою мовою:** вікна оновлень і пояснення Lowspeak у запиті macOS на доступ до мікрофона відображаються мовою вашого Mac — усіма 35 мовами, якими володіє Lowspeak. З наступного оновлення й ці примітки до випуску будуть вашою мовою.
+- **Встановлення через Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Зрозуміліші повідомлення:** якщо для постобробки немає ключа, Lowspeak підкаже, що підійде ключ Groq або OpenAI. Якщо сервіс більше не надає онлайн-модель, повідомлення назве її та запропонує вибрати іншу в меню.
+- **Parakeet v2** тепер точно розставляє слова на межах своїх 15-секундних вікон, а також чує останню мить кожного вікна.
+
+Щось не так або чогось бракує? [Повідомте на GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="vi"><![CDATA[Lowspeak giờ đây nói ngôn ngữ của bạn ở nhiều nơi hơn.
+
+- **Cập nhật và yêu cầu quyền micrô bằng ngôn ngữ của bạn:** cửa sổ cập nhật và lời giải thích của Lowspeak trong hộp thoại xin quyền micrô của macOS giờ hiển thị theo ngôn ngữ trên máy Mac của bạn, ở cả 35 ngôn ngữ mà Lowspeak hỗ trợ. Từ bản cập nhật tiếp theo, ghi chú phát hành này cũng sẽ có bằng ngôn ngữ của bạn.
+- **Cài đặt bằng Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Thông báo rõ ràng hơn:** khi chưa có khóa cho hậu xử lý, Lowspeak sẽ cho bạn biết chỉ cần một khóa của Groq hoặc OpenAI là được. Khi nhà cung cấp khai tử một mô hình trực tuyến, thông báo sẽ nêu tên mô hình đó và hướng bạn đến menu.
+- **Parakeet v2** giờ đặt chính xác các từ nằm ở rìa những cửa sổ 15 giây của mình và nghe được cả khoảnh khắc cuối cùng của mỗi cửa sổ.
+
+Có gì sai hoặc còn thiếu? [Báo cáo trên GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <description sparkle:format="markdown" xml:lang="zh-Hans"><![CDATA[Lowspeak 现在能在更多地方说你的语言了。
+
+- **更新和麦克风权限请求也说你的语言：** 更新窗口，以及 macOS 请求访问麦克风时 Lowspeak 的说明文字，都会跟随 Mac 的语言，Lowspeak 支持的 35 种语言全都适用。从下一次更新起，更新说明也会使用你的语言。
+- **通过 Homebrew 安装：** `brew install --cask sventmueller/tap/lowspeak`。
+- **更清晰的提示信息：** 后处理缺少密钥时，Lowspeak 会告诉你用 Groq 或 OpenAI 的密钥都可以。服务提供商不再提供某个在线模型时，提示会写明该模型的名称，并引导你前往菜单。
+- **Parakeet v2** 现在能准确定位 15 秒片段边缘处的词，连每个片段的最后一刻也能听到。
+
+发现问题或缺少功能？[在 GitHub 上反馈](https://github.com/sventmueller/lowspeak/issues/new/choose)。]]></description>
+      <description sparkle:format="markdown" xml:lang="zh-Hant"><![CDATA[Lowspeak 現在能在更多地方說你的語言了。
+
+- **更新與麥克風權限請求也說你的語言：** 更新視窗，以及 macOS 詢問是否允許取用麥克風時 Lowspeak 的說明文字，都會跟隨 Mac 的語言，Lowspeak 支援的 35 種語言全都適用。從下一次更新開始，更新說明也會以你的語言呈現。
+- **透過 Homebrew 安裝：** `brew install --cask sventmueller/tap/lowspeak`。
+- **更清楚的訊息：** 後處理缺少密鑰時，Lowspeak 會告訴你使用 Groq 或 OpenAI 的密鑰都可以。服務提供者不再提供某個線上模型時，訊息會寫出該模型的名稱，並引導你前往選單。
+- **Parakeet v2** 現在能準確定位 15 秒片段邊緣的字詞，連每個片段的最後一刻也聽得到。
+
+發現問題或缺少功能？[在 GitHub 上回報](https://github.com/sventmueller/lowspeak/issues/new/choose)。]]></description>
+      <enclosure url="https://github.com/sventmueller/lowspeak/releases/download/v1.0.3/Lowspeak-1.0.3.dmg" sparkle:edSignature="FxC7XzvnX6nZ6HcNgCAIZmXwwbpFMv1Rbuo3CQGLzw+IxzCnZXA8vjf/BrNfQuYTxBPh9FZ9Pn5MSOGSoTGKAQ==" length="6988956" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>

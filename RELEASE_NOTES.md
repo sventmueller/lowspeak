@@ -1,5 +1,6 @@
-Lowspeak now keeps itself up to date.
+Lowspeak now speaks your language in more places.
 
-- **Updates:** on the second launch, Lowspeak asks whether it may look for a new version once a day. **Check for Updates…** in the menu looks right away; the two items below it turn the daily check and automatic installs on or off. When an update is waiting, a dot appears on the ring in the menu bar.
-- **Coming from 1.0.0?** It has no updater yet, so install this version over it once. Your settings, keys and models stay.
-- **The disk image window** shows both icons with their names, on a background that stays sharp on Retina screens.
+- **Updates and the microphone prompt in your language:** the update windows and Lowspeak's words in macOS's microphone prompt follow your Mac's language, in all 35 languages Lowspeak speaks. From the next update on, these notes come in your language too.
+- **Install with Homebrew:** `brew install --cask sventmueller/tap/lowspeak`.
+- **Clearer messages:** when post-processing has no key, Lowspeak tells you that a key from Groq or OpenAI will do. When a provider retires an online model, the message names the model and points you to the menu.
+- **Parakeet v2** now places words at the edges of its 15-second windows exactly and also hears the last moment of each window.
