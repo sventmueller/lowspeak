@@ -116,14 +116,14 @@ Lowspeak woont in de menubalk. Houd de fn-toets (wereldbol) ingedrukt en spreek;
 
 - macOS 14 Sonoma of nieuwer. Lowspeak wordt ontwikkeld en getest op macOS 27.
 - Een Mac met Apple Silicon of een Intel-processor. Lokale transcriptie is gemaakt voor Apple Silicon, waar Whisper op de GPU draait en Parakeet op de Neural Engine; op Intel-Macs draaien beide op de processor, veel langzamer, zie [Intel-Macs](#intel-macs).
-- Ongeveer 10 MB voor de app, plus 75 MB tot 3 GB voor elk lokaal model dat je downloadt.
+- Ongeveer 17 MB voor de app, plus 75 MB tot 3 GB voor elk lokaal model dat je downloadt.
 - Voor online transcriptie een API-sleutel van [OpenAI](https://platform.openai.com/api-keys) of [Groq](https://console.groq.com/keys); beide rekenen af voor wat je transcribeert. Lokale transcriptie heeft geen account nodig.
 
 ## Installatie
 
 **Vanaf de schijfkopie.** Download [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), open haar en sleep Lowspeak naar de map Programma's. De schijfkopie is ondertekend met een Developer ID en door Apple genotariseerd, dus ze opent zonder waarschuwingen.
 
-**Updates.** Lowspeak werkt zichzelf niet bij. Nieuwe versies verschijnen op de [releasepagina](https://github.com/sventmueller/lowspeak/releases); **Help › Lowspeak op GitHub** brengt je daarheen. Installeer een nieuwe versie over de oude heen; je instellingen, sleutels en modellen blijven behouden.
+**Updates.** Lowspeak vanaf de schijfkopie houdt zichzelf up-to-date met [Sparkle](https://sparkle-project.org). Bij de tweede start vraagt het of het zelf mag zoeken naar updates, eenmaal per dag. **Zoek naar updates…** in het menu zoekt meteen; met **Zoek automatisch naar updates** en **Download en installeer updates automatisch** eronder wijzig je je keuze later. Vindt een zoekactie een nieuwe versie terwijl je in een andere app werkt, dan verschijnt er een stip op de ring in de menubalk, en **Zoek naar updates…** haalt de update naar de voorgrond. Lowspeak installeert een update alleen als die de handtekening van de ontwikkelaar draagt; je instellingen, sleutels en modellen blijven behouden. Versie 1.0.0 heeft geen updater: installeer er één keer een nieuwere versie overheen, van de [releasepagina](https://github.com/sventmueller/lowspeak/releases). Een eigen build heeft ook geen updater.
 
 **Vanaf de broncode.** Zie [Bouwen en installeren](../../../docs/development.md#build--deploy) voor de vereisten en voer dan uit:
 
@@ -170,6 +170,7 @@ Klik op de ring in de menubalk:
 | **Beheer modellen** | lokale modellen downloaden en verwijderen, met voortgang |
 | **Stel API-sleutel in…** / **Wijzig API-sleutel…** | sleutels toevoegen, vervangen of verwijderen |
 | **Open bij inloggen** | Lowspeak met je Mac starten; het vinkje geeft aan dat het aan staat |
+| **Zoek naar updates…** | nu naar een nieuwe versie zoeken; de twee onderdelen eronder bepalen of Lowspeak eenmaal per dag zoekt en updates zonder te vragen installeert. Alleen in de app van de schijfkopie |
 | **Help** | **Beknopt overzicht**, **Meld een probleem…**, **Stel een functie voor…**, **Lowspeak op GitHub** |
 | **Over Lowspeak** | versie, copyright, projectpagina en licentie |
 | **Stop Lowspeak** | ⌘Q terwijl het menu open is |
@@ -182,6 +183,7 @@ Het vinkje onder **Lokaal**, **OpenAI** en **Groq** markeert het model dat in ge
 | Gevulde cirkel | Opname terwijl fn ingedrukt is |
 | Afgerond vierkant | Opname vastgezet; de volgende druk op fn of Shift beëindigt hem |
 | Knipperende ring | Bezig met transcriberen |
+| Ring met een stip rechtsboven | Er wacht een nieuwe versie, zie **Zoek naar updates…** |
 | ↓ 42% | Een model wordt gedownload |
 
 Lowspeak heeft geen instellingenvenster: alles staat in dit menu, en het onthoudt elke keuze.
@@ -379,11 +381,11 @@ Lowspeak hoort wat je zegt terwijl fn ingedrukt is, kan in elke app typen en bew
 
 - **Je stem gaat naar één plek.** In de onlinemodus gaat de opname, gecomprimeerd, naar de aanbieder die je hebt gekozen, OpenAI of Groq, samen met je woordenlijst. In de lokale modus verlaat niets je Mac. Mislukt een onlineverzoek, dan transcribeert een lokaal model dezelfde opname op je Mac.
 - **Nabewerking** stuurt, als je die inschakelt, de getranscribeerde tekst en je woordenlijst naar Groq of OpenAI. In de modus Opmaken voegt ze het soort app toe waarin je dicteert (code-editor, terminal, chat of e-mail); de naam van de app wordt niet verstuurd.
-- **Geen telemetrie, geen account.** Naast transcriptie en nabewerking gaat Lowspeak alleen online om de verbinding met je aanbieder te openen terwijl fn ingedrukt is, in de onlinemodus of met nabewerking aan, en om een model te downloaden als je daarom vraagt, van Hugging Face via HTTPS, in een vaste versie, waarbij elk bestand wordt gecontroleerd aan de hand van zijn checksum. **Help › Meld een probleem…** opent een formulier op GitHub in je browser; het adres bevat de versie van Lowspeak en de macOS-versie, niets van wat je hebt gedicteerd.
+- **Geen telemetrie, geen account.** Naast transcriptie en nabewerking gaat Lowspeak alleen online om de verbinding met je aanbieder te openen terwijl fn ingedrukt is, in de onlinemodus of met nabewerking aan, om een model te downloaden als je daarom vraagt, van Hugging Face via HTTPS, in een vaste versie, waarbij elk bestand wordt gecontroleerd aan de hand van zijn checksum, en om op GitHub naar een nieuwe versie te zoeken, eenmaal per dag als je dat toestaat. Dat verzoek bevat de versie van Lowspeak en verder niets. **Help › Meld een probleem…** opent een formulier op GitHub in je browser; het adres bevat de versie van Lowspeak en de macOS-versie, niets van wat je hebt gedicteerd.
 - **API-sleutels** blijven in je inlogsleutelhanger. Ze worden alleen naar hun eigen aanbieder gestuurd en uit foutmeldingen verwijderd voordat er iets naar het logbestand wordt geschreven.
 - **Gedicteerde tekst wordt niet opgeslagen.** De laatste tien dictaten blijven in het geheugen voor **Recente dictaten** en zijn weg als Lowspeak stopt. De logbestanden leggen lengtes en tijden vast, nooit de tekst.
 - **Het klembord** wordt vóór het plakken bewaard en hersteld zodra de app de tekst heeft gelezen, tenzij een andere app het in de tussentijd heeft gewijzigd. Het dictaat is gemarkeerd als tijdelijk, zodat apps voor klembordgeschiedenis die deze markering respecteren het overslaan.
-- **Codeondertekening** met de Hardened Runtime; de app vraagt alleen om de microfoon, toegankelijkheid, meldingen en het netwerk.
+- **Codeondertekening** met de Hardened Runtime; de app vraagt alleen om de microfoon, toegankelijkheid, meldingen en het netwerk. Een update moet de handtekening van de ontwikkelaar dragen, anders weigert Sparkle hem.
 
 Volg het [beveiligingsbeleid](../../../SECURITY.md) om een kwetsbaarheid te melden.
 
@@ -406,7 +408,7 @@ Gemeten op Apple Silicon:
 - **Tijdslimieten:** twee minuten als je fn ingedrukt houdt, vijf minuten als de opname vastgezet is.
 - **Microfoonmodus:** Bedieningspaneel biedt Stemisolatie en Breed spectrum aan voor Lowspeak en meldt ze als actief, maar Lowspeak neemt op zonder stemverwerking, dus de keuze heeft geen effect.
 - **Recente dictaten** staan alleen in het geheugen en zijn weg na het stoppen.
-- **Bewust zo:** geen instellingenvenster, geen Dock-symbool, geen automatische updates, niet in de App Store.
+- **Bewust zo:** geen instellingenvenster, geen Dock-symbool, niet in de App Store.
 
 ## Problemen oplossen
 
@@ -449,6 +451,7 @@ Bouwen, testen, de opbouw van de code en de regels die hij volgt staan in [docs/
 | [sha1, sha2](https://github.com/RustCrypto/hashes) | 0.11 | checksums van de modeldownloads | MIT of Apache-2.0 |
 | [security-framework](https://github.com/kornelski/rust-security-framework) | 3.7 | API-sleutels in de sleutelhanger | MIT of Apache-2.0 |
 | [serde](https://serde.rs), serde_json, anyhow, unicode-general-category | 1 | JSON, fouten, het vocabulaire van Parakeet | MIT of Apache-2.0; Apache-2.0 |
+| [Sparkle](https://sparkle-project.org) | 2.10.1 | updates van de app van de schijfkopie | MIT, met onderdelen onder BSD- en zlib-licenties |
 
 De licentieteksten van alles in de app worden meegeleverd als `Contents/Resources/Acknowledgements.txt`.
 

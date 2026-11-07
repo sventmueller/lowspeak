@@ -116,14 +116,14 @@ El Lowspeak viu a la barra de menús. Mantén premuda la tecla fn (globus terraq
 
 - macOS 14 Sonoma o posterior. El Lowspeak es desenvolupa i es prova amb macOS 27.
 - Un Mac amb Apple Silicon o amb processador Intel. La transcripció local està pensada per a Apple Silicon, on Whisper s’executa a la GPU i Parakeet al Neural Engine; als Mac amb Intel, tots dos s’executen al processador, molt més lentament; consulta [Mac amb Intel](#mac-amb-intel).
-- Uns 10 MB per a l’app, més de 75 MB a 3 GB per cada model local que descarreguis.
+- Uns 17 MB per a l’app, més de 75 MB a 3 GB per cada model local que descarreguis.
 - Per a la transcripció en línia, una clau d’API d’[OpenAI](https://platform.openai.com/api-keys) o de [Groq](https://console.groq.com/keys); tots dos cobren pel que transcrius. La transcripció local no necessita cap compte.
 
 ## Instal·lació
 
 **Des de la imatge de disc.** Descarrega [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), obre’l i arrossega el Lowspeak a la carpeta Aplicacions. La imatge està signada amb un Developer ID i notaritzada per Apple, de manera que s’obre sense advertiments.
 
-**Actualitzacions.** El Lowspeak no s’actualitza sol. Les versions noves apareixen a la [pàgina de versions](https://github.com/sventmueller/lowspeak/releases); **Ajuda › Lowspeak a GitHub** t’hi porta. Instal·la la versió nova damunt de l’antiga; els teus ajustos, claus i models es conserven.
+**Actualitzacions.** El Lowspeak de la imatge de disc s’actualitza sol amb [Sparkle](https://sparkle-project.org). A la segona obertura pregunta si pot cercar actualitzacions pel seu compte, un cop al dia. **Cerca actualitzacions…** al menú les cerca a l’instant; **Cerca actualitzacions automàticament** i **Descarrega i instal·la actualitzacions automàticament**, just a sota, et permeten canviar l’elecció més endavant. Si una cerca troba una versió nova mentre treballes en una altra app, apareix un punt a l’anell de la barra de menús, i **Cerca actualitzacions…** porta l’actualització al primer pla. El Lowspeak només instal·la una actualització si porta la signatura del desenvolupador; els teus ajustos, claus i models es conserven. La versió 1.0.0 no té actualitzador: instal·la un cop una versió més nova damunt seu, des de la [pàgina de versions](https://github.com/sventmueller/lowspeak/releases). Una compilació pròpia tampoc no té actualitzador.
 
 **Des del codi font.** Mira [Compilació i desplegament](../../../docs/development.md#build--deploy) per als requisits previs i després:
 
@@ -170,6 +170,7 @@ Fes clic a l’anell de la barra de menús:
 | **Gestiona els models** | descarregar i eliminar models locals, amb el progrés |
 | **Configura la clau d’API…** / **Actualitza la clau d’API…** | afegir, substituir o eliminar claus |
 | **Obre en iniciar la sessió** | obrir el Lowspeak juntament amb el teu Mac; la marca indica que està activat |
+| **Cerca actualitzacions…** | cercar una versió nova ara mateix; els dos ítems de sota decideixen si el Lowspeak cerca un cop al dia i instal·la les actualitzacions sense preguntar. Només a l’app de la imatge de disc |
 | **Ajuda** | **Referència ràpida**, **Informa d’un problema…**, **Suggereix una funció…**, **Lowspeak a GitHub** |
 | **Sobre el Lowspeak** | versió, copyright, pàgina del projecte i llicència |
 | **Surt del Lowspeak** | ⌘Q amb el menú obert |
@@ -182,6 +183,7 @@ La marca a **Local**, **OpenAI** i **Groq** indica el model en ús. La icona mos
 | Cercle ple | Enregistrant mentre es manté premuda la tecla fn |
 | Quadrat arrodonit | Enregistrament bloquejat; la pulsació següent de fn o Shift l’acaba |
 | Anell parpellejant | Transcrivint |
+| Anell amb un punt a dalt a la dreta | Hi ha una versió nova esperant; consulta **Cerca actualitzacions…** |
 | ↓ 42 % | Descarregant un model |
 
 El Lowspeak no té finestra d’ajustos: tot és en aquest menú, i recorda cada elecció.
@@ -379,11 +381,11 @@ El Lowspeak sent el que dius mentre mantens premuda la tecla fn, pot escriure a 
 
 - **La teva veu va a un sol lloc.** En el mode en línia, l’enregistrament, comprimit, va al proveïdor que has triat, OpenAI o Groq, juntament amb el teu vocabulari. En el mode local, res no surt del teu Mac. Si una sol·licitud en línia falla, un model local transcriu el mateix enregistrament al teu Mac.
 - **El postprocessament**, si l’actives, envia el text transcrit i el teu vocabulari a Groq o a OpenAI. En el mode Format hi afegeix el tipus d’app en què dictes (editor de codi, terminal, xat o correu); el nom de l’app no s’envia.
-- **Sense telemetria ni compte.** A part de la transcripció i el postprocessament, el Lowspeak només es connecta a internet per obrir la connexió amb el teu proveïdor mentre mantens premuda la tecla fn, en el mode en línia o amb el postprocessament activat, i per descarregar un model quan ho demanes, des de Hugging Face per HTTPS, en una versió fixa i comprovant la suma de verificació de cada fitxer. **Ajuda › Informa d’un problema…** obre un formulari de GitHub al navegador; la seva adreça porta la versió del Lowspeak i la de macOS, res del que has dictat.
+- **Sense telemetria ni compte.** A part de la transcripció i el postprocessament, el Lowspeak només es connecta a internet per obrir la connexió amb el teu proveïdor mentre mantens premuda la tecla fn, en el mode en línia o amb el postprocessament activat, per descarregar un model quan ho demanes, des de Hugging Face per HTTPS, en una versió fixa i comprovant la suma de verificació de cada fitxer, i per cercar una versió nova a GitHub, un cop al dia si ho permets. Aquesta sol·licitud porta la versió del Lowspeak i res més. **Ajuda › Informa d’un problema…** obre un formulari de GitHub al navegador; la seva adreça porta la versió del Lowspeak i la de macOS, res del que has dictat.
 - **Les claus d’API** es queden al teu clauer d’inici de sessió. Només s’envien al seu propi proveïdor i s’eliminen dels missatges d’error abans d’escriure res al registre.
 - **El text dictat no es desa.** Els deu últims dictats es queden a la memòria per a **Dictats recents** i desapareixen quan surts del Lowspeak. Els fitxers de registre anoten longituds i temps, mai el text.
 - **El porta-retalls** es desa abans d’enganxar i es restaura un cop l’app ha llegit el text, tret que una altra app l’hagi canviat mentrestant. El dictat es marca com a transitori, de manera que les apps d’historial del porta-retalls que respecten aquesta marca l’ometen.
-- **Signatura de codi** amb el Hardened Runtime; l’app només demana accés al micròfon, a l’accessibilitat, a les notificacions i a la xarxa.
+- **Signatura de codi** amb el Hardened Runtime; l’app només demana accés al micròfon, a l’accessibilitat, a les notificacions i a la xarxa. Una actualització ha de portar la signatura del desenvolupador; si no, Sparkle la rebutja.
 
 Per informar d’una vulnerabilitat, segueix la [política de seguretat](../../../SECURITY.md).
 
@@ -406,7 +408,7 @@ Mesurat amb Apple Silicon:
 - **Límits de temps:** dos minuts mentre es manté premuda la tecla fn, cinc minuts quan l’enregistrament està bloquejat.
 - **Mode de micròfon:** el centre de control ofereix Aïllament de veu i Ampli espectre per al Lowspeak i els mostra com a actius, però el Lowspeak enregistra sense processament de veu, de manera que l’elecció no té cap efecte.
 - **Dictats recents** només existeix a la memòria i desapareix quan surts.
-- **Per disseny:** sense finestra d’ajustos, sense icona al Dock, sense actualitzacions automàtiques i fora de l’App Store.
+- **Per disseny:** sense finestra d’ajustos, sense icona al Dock i fora de l’App Store.
 
 ## Resolució de problemes
 
@@ -449,6 +451,7 @@ La compilació, les proves, l’estructura del codi i les regles que segueix es 
 | [sha1, sha2](https://github.com/RustCrypto/hashes) | 0.11 | sumes de verificació de les descàrregues de models | MIT o Apache-2.0 |
 | [security-framework](https://github.com/kornelski/rust-security-framework) | 3.7 | claus d’API al clauer | MIT o Apache-2.0 |
 | [serde](https://serde.rs), serde_json, anyhow, unicode-general-category | 1 | JSON, errors, el vocabulari de Parakeet | MIT o Apache-2.0; Apache-2.0 |
+| [Sparkle](https://sparkle-project.org) | 2.10.1 | actualitzacions de l’app de la imatge de disc | MIT, amb parts sota llicències BSD i zlib |
 
 Els textos de llicència de tot el que conté l’app s’hi inclouen com a `Contents/Resources/Acknowledgements.txt`.
 

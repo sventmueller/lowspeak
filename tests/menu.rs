@@ -12,6 +12,7 @@ use objc2_app_kit::{
 use objc2_foundation::{MainThreadMarker, ns_string};
 
 use lowspeak::app::menu::{self, StatusUi};
+use lowspeak::app::updates::UpdateMenu;
 use lowspeak::app::{Snapshot, Status};
 use lowspeak::app::{about, reference};
 use lowspeak::audio::recorder::Microphone;
@@ -151,6 +152,7 @@ fn main() {
         ],
         vocabulary_terms: 3,
         login_item: true,
+        updates: None,
     };
     let root = NSMenu::new(mtm);
     ui.rebuild(&root, &state);
@@ -187,6 +189,69 @@ fn main() {
     assert!(find(&root, "About Lowspeak").isEnabled());
     let login = find(&root, "Open at Login");
     assert!(login.isEnabled() && checked(&login) && !login.title().to_string().contains('✓'));
+    assert!(
+        !top.iter().any(|title| title.contains("Updates")),
+        "a build without Sparkle offers no updates: {top:?}"
+    );
+
+    // With automatic checks off, Sparkle installs nothing on its own.
+    let updates = UpdateMenu {
+        can_check: true,
+        checks_automatically: false,
+        installs_automatically: false,
+        can_install_automatically: false,
+        waiting: false,
+    };
+    ui.rebuild(
+        &root,
+        &Snapshot {
+            updates: Some(updates),
+            ..state.clone()
+        },
+    );
+    let top = titles(&root);
+    let at = top
+        .iter()
+        .position(|title| title == "Open at Login")
+        .unwrap();
+    assert_eq!(
+        &top[at..at + 6],
+        [
+            "Open at Login",
+            "",
+            "Check for Updates…",
+            "Check for Updates Automatically",
+            "Automatically Download and Install Updates",
+            ""
+        ]
+    );
+    let check = find(&root, "Check for Updates…");
+    assert!(check.isEnabled() && check.badge().is_none());
+    let checks = find(&root, "Check for Updates Automatically");
+    assert!(checks.isEnabled() && !checked(&checks));
+    let installs = find(&root, "Automatically Download and Install Updates");
+    assert!(!installs.isEnabled() && !checked(&installs));
+
+    // A scheduled check found an update while another one runs.
+    ui.rebuild(
+        &root,
+        &Snapshot {
+            updates: Some(UpdateMenu {
+                can_check: false,
+                checks_automatically: true,
+                installs_automatically: true,
+                can_install_automatically: true,
+                waiting: true,
+            }),
+            ..state.clone()
+        },
+    );
+    let check = find(&root, "Check for Updates…");
+    assert!(!check.isEnabled() && check.badge().is_some());
+    assert!(checked(&find(&root, "Check for Updates Automatically")));
+    let installs = find(&root, "Automatically Download and Install Updates");
+    assert!(installs.isEnabled() && checked(&installs));
+    ui.rebuild(&root, &state);
 
     let local = submenu(&root, "Local");
     let parakeet = find(&local, "Parakeet Ultra (~630 MB, 25 Languages)");
@@ -268,8 +333,20 @@ fn main() {
         vocabulary_terms: 3,
         ..empty
     };
-    ui.rebuild(&root, &german);
+    ui.rebuild(
+        &root,
+        &Snapshot {
+            updates: Some(updates),
+            ..german.clone()
+        },
+    );
     let top = titles(&root);
+    assert!(
+        top.contains(&"Nach Updates suchen …".to_owned())
+            && top.contains(&"Automatisch nach Updates suchen".to_owned())
+            && top.contains(&"Updates automatisch laden und installieren".to_owned()),
+        "{top:?}"
+    );
     assert_eq!(
         &top[..4],
         ["Letzte Diktate", "", "Lokal", "OpenAI (kein Schlüssel)"]
@@ -321,11 +398,14 @@ fn main() {
     assert!(ui.pulse(pulse) && ui.pulse(pulse));
     assert_eq!(ui.show(Status::Idle, false, None), None);
     assert!(!ui.pulse(pulse), "the pulse ends with the transcription");
+    ui.show_update(true);
+    ui.show_update(false);
     assert!(
         renders(&menu::idle_icon())
             && renders(&menu::recording_icon())
             && renders(&menu::hands_free_icon())
             && renders(&menu::blank_icon())
+            && renders(&menu::update_icon())
     );
 
     // Help → Quick Reference opens one window, in every interface language, at a size that fits next to other windows.

@@ -116,14 +116,14 @@ A Lowspeak a menüsorban él. Tartsa lenyomva az fn (Földgömb) billentyűt, é
 
 - macOS 14 Sonoma vagy újabb. A Lowspeaket macOS 27 alatt fejlesztik és tesztelik.
 - Apple Silicon vagy Intel processzoros Mac. A helyi átírás Apple Siliconra készült, ahol a Whisper a GPU-n, a Parakeet pedig a Neural Engine-en fut; Intel-alapú Maceken mindkettő a processzoron fut, jóval lassabban, lásd: [Intel-alapú Macek](#intel-alapú-macek).
-- Körülbelül 10 MB az appnak, továbbá 75 MB és 3 GB között minden letöltött helyi modellnek.
+- Körülbelül 17 MB az appnak, továbbá 75 MB és 3 GB között minden letöltött helyi modellnek.
 - Online átíráshoz API-kulcs az [OpenAI](https://platform.openai.com/api-keys) vagy a [Groq](https://console.groq.com/keys) szolgáltatótól; mindkettő díjat számít fel azért, amit átír. A helyi átíráshoz nem kell fiók.
 
 ## Telepítés
 
 **Lemezképből.** Töltse le a [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg) fájlt, nyissa meg, és húzza a Lowspeaket az Alkalmazások mappára. A lemezképet Developer ID-val írták alá, és az Apple hitelesítette, így figyelmeztetés nélkül megnyílik.
 
-**Frissítések.** A Lowspeak nem frissíti magát. Az új verziók a [kiadások oldalán](https://github.com/sventmueller/lowspeak/releases) jelennek meg; a **Súgó › A Lowspeak a GitHubon** oda vezet. Az új verziót a régire telepítse; a beállítások, a kulcsok és a modellek megmaradnak.
+**Frissítések.** A lemezképből telepített Lowspeak a [Sparkle](https://sparkle-project.org) segítségével naprakészen tartja magát. A második indításkor megkérdezi, hogy naponta egyszer magától kereshet-e frissítéseket. A menü **Frissítések keresése…** pontja azonnal keres; az alatta lévő **Frissítések automatikus keresése** és **Frissítések automatikus letöltése és telepítése** később módosítja a választást. Ha egy keresés új verziót talál, miközben Ön egy másik appban dolgozik, egy pont jelenik meg a menüsorban lévő gyűrűn, és a **Frissítések keresése…** előtérbe hozza a frissítést. A Lowspeak csak olyan frissítést telepít, amely hordozza a fejlesztő aláírását; a beállítások, a kulcsok és a modellek megmaradnak. Az 1.0.0-s verziónak nincs frissítője: egyszer telepítsen fölé egy újabb verziót a [kiadások oldaláról](https://github.com/sventmueller/lowspeak/releases). A saját fordításnak sincs frissítője.
 
 **Forráskódból.** Az előfeltételeket lásd a [Fordítás és telepítés](../../../docs/development.md#build--deploy) szakaszban, majd:
 
@@ -170,6 +170,7 @@ Kattintson a menüsorban lévő gyűrűre:
 | **Modellek kezelése** | helyi modellek letöltése és törlése, folyamatjelzővel |
 | **API-kulcs megadása…** / **API-kulcs módosítása…** | kulcsok hozzáadása, cseréje vagy eltávolítása |
 | **Megnyitás bejelentkezéskor** | a Lowspeak indítása a Mackel együtt; a pipa jelzi, hogy be van kapcsolva |
+| **Frissítések keresése…** | új verzió keresése most; az alatta lévő két elem dönti el, hogy a Lowspeak naponta egyszer keressen-e, és kérdés nélkül telepítse-e a frissítéseket. Csak a lemezképből telepített appban |
 | **Súgó** | **Gyors áttekintés**, **Probléma jelentése…**, **Funkció javaslása…**, **A Lowspeak a GitHubon** |
 | **A Lowspeak névjegye** | verzió, szerzői jog, projektoldal és licenc |
 | **Lowspeak bezárása** | ⌘Q, amíg a menü nyitva van |
@@ -182,6 +183,7 @@ A pipa a **Helyi**, az **OpenAI** és a **Groq** alatt a használt modellt jelö
 | Kitöltött kör | Felvétel, amíg az fn le van nyomva |
 | Lekerekített négyzet | Zárolt felvétel; az fn vagy a Shift következő lenyomása befejezi |
 | Villogó gyűrű | Átírás |
+| Gyűrű ponttal a jobb felső sarokban | Új verzió érhető el, lásd: **Frissítések keresése…** |
 | ↓ 42% | Modell letöltése |
 
 A Lowspeaknek nincs beállítási ablaka: minden ebben a menüben van, és minden választását megjegyzi.
@@ -379,11 +381,11 @@ A Lowspeak hallja, amit mond, amíg az fn le van nyomva, bármelyik appba tud g�
 
 - **A hangja egyetlen helyre jut.** Online módban a tömörített felvétel a választott szolgáltatóhoz, az OpenAI-hoz vagy a Groqhoz kerül, a szókincsével együtt. Helyi módban semmi sem hagyja el a Macet. Ha egy online kérés nem sikerül, egy helyi modell írja át ugyanazt a felvételt a Macen.
 - Az **utófeldolgozás**, ha bekapcsolja, az átírt szöveget és a szókincsét elküldi a Groqnak vagy az OpenAI-nak. Formázás módban hozzáadja annak az appnak a típusát, amelybe diktál (kódszerkesztő, terminál, csevegés vagy e-mail); az app nevét nem küldi el.
-- **Nincs telemetria, nincs fiók.** Az átíráson és az utófeldolgozáson kívül a Lowspeak csak azért kapcsolódik a hálózathoz, hogy online módban vagy bekapcsolt utófeldolgozásnál az fn lenyomva tartása alatt megnyissa a kapcsolatot a szolgáltatóval, és hogy kérésre letöltsön egy modellt a Hugging Face-ről, HTTPS-en keresztül, rögzített verzióban, minden fájlt az ellenőrzőösszegével összevetve. A **Súgó › Probléma jelentése…** egy GitHub-űrlapot nyit meg a böngészőben; a címe a Lowspeak és a macOS verzióját tartalmazza, semmit abból, amit diktált.
+- **Nincs telemetria, nincs fiók.** Az átíráson és az utófeldolgozáson kívül a Lowspeak csak azért kapcsolódik a hálózathoz, hogy online módban vagy bekapcsolt utófeldolgozásnál az fn lenyomva tartása alatt megnyissa a kapcsolatot a szolgáltatóval, hogy kérésre letöltsön egy modellt a Hugging Face-ről, HTTPS-en keresztül, rögzített verzióban, minden fájlt az ellenőrzőösszegével összevetve, és hogy új verziót keressen a GitHubon, ha engedélyezi, naponta egyszer. Ez a kérés a Lowspeak verzióját tartalmazza, semmi mást. A **Súgó › Probléma jelentése…** egy GitHub-űrlapot nyit meg a böngészőben; a címe a Lowspeak és a macOS verzióját tartalmazza, semmit abból, amit diktált.
 - Az **API-kulcsok** az Ön bejelentkezési kulcskarikáján maradnak. Csak a saját szolgáltatójukhoz jutnak el, és a Lowspeak eltávolítja őket a hibaüzenetekből, mielőtt bármi a naplóba kerülne.
 - **A diktált szöveg nem tárolódik.** Az utolsó tíz diktálás a **Legutóbbi diktálások** számára a memóriában marad, és a Lowspeak bezárásakor eltűnik. A naplófájlok hosszakat és időzítéseket rögzítenek, a szöveget soha.
 - **A vágólap** tartalmát a Lowspeak beillesztés előtt elmenti, és visszaállítja, amint az app kiolvasta a szöveget, hacsak egy másik app közben meg nem változtatta. A diktált szöveg ideiglenesként van megjelölve, így a vágólap-előzményeket kezelő appok, amelyek tiszteletben tartják ezt a jelölést, kihagyják.
-- **Kódaláírás** Hardened Runtime-mal; az app csak a mikrofonhoz, a Kisegítő lehetőségekhez, az értesítésekhez és a hálózathoz kér engedélyt.
+- **Kódaláírás** Hardened Runtime-mal; az app csak a mikrofonhoz, a Kisegítő lehetőségekhez, az értesítésekhez és a hálózathoz kér engedélyt. A frissítésnek a fejlesztő aláírását kell hordoznia, különben a Sparkle elutasítja.
 
 A sebezhetőségek bejelentéséhez kövesse a [biztonsági szabályzatot](../../../SECURITY.md).
 
@@ -406,7 +408,7 @@ Apple Siliconon mérve:
 - **Időkorlátok:** két perc, amíg az fn le van nyomva, öt perc zárolva.
 - **Mikrofonmód:** a Vezérlőközpont felkínálja a Lowspeaknek a Beszédhang izolálása és a Széles spektrum módot, és aktívként jelzi őket, a Lowspeak azonban hangfeldolgozás nélkül rögzít, így a választásnak nincs hatása.
 - A **Legutóbbi diktálások** csak a memóriában élnek, és kilépés után eltűnnek.
-- **Szándékosan:** nincs beállítási ablak, nincs Dock-ikon, nincsenek automatikus frissítések, és nincs az App Store-ban.
+- **Szándékosan:** nincs beállítási ablak, nincs Dock-ikon, és nincs az App Store-ban.
 
 ## Hibaelhárítás
 
@@ -449,6 +451,7 @@ A fordítás, a tesztelés, a kód felépítése és az általa követett szabá
 | [sha1, sha2](https://github.com/RustCrypto/hashes) | 0.11 | a letöltött modellek ellenőrzőösszegei | MIT vagy Apache-2.0 |
 | [security-framework](https://github.com/kornelski/rust-security-framework) | 3.7 | API-kulcsok a kulcskarikán | MIT vagy Apache-2.0 |
 | [serde](https://serde.rs), serde_json, anyhow, unicode-general-category | 1 | JSON, hibák, a Parakeet szókészlete | MIT vagy Apache-2.0; Apache-2.0 |
+| [Sparkle](https://sparkle-project.org) | 2.10.1 | a lemezképből telepített app frissítései | MIT, részben BSD- és zlib-licenc alatt |
 
 Az appban található összes összetevő licencszövege `Contents/Resources/Acknowledgements.txt` néven az appal együtt érkezik.
 

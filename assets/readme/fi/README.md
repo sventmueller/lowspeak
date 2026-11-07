@@ -116,14 +116,14 @@ Lowspeak asuu valikkorivillä. Pidä fn-näppäintä (Maapallo) painettuna ja pu
 
 - macOS 14 Sonoma tai uudempi. Lowspeakia kehitetään ja testataan macOS 27:llä.
 - Mac, jossa on Apple Silicon tai Intel-suoritin. Paikallinen litterointi on tehty Apple Siliconille, jossa Whisper toimii grafiikkasuorittimella ja Parakeet Neural Enginellä; Intel-Maceissa molemmat toimivat suorittimella ja paljon hitaammin, katso [Intel-Macit](#intel-macit).
-- Noin 10 Mt appia varten sekä 75 Mt:stä 3 Gt:hen jokaista lataamaasi paikallista mallia kohden.
+- Noin 17 Mt appia varten sekä 75 Mt:stä 3 Gt:hen jokaista lataamaasi paikallista mallia kohden.
 - Verkkolitterointiin API-avain palvelusta [OpenAI](https://platform.openai.com/api-keys) tai [Groq](https://console.groq.com/keys); molemmat laskuttavat litteroimastasi määrästä. Paikallinen litterointi ei vaadi tiliä.
 
 ## Asennus
 
 **Levykuvasta.** Lataa [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), avaa se ja vedä Lowspeak Apit-kansioon. Kuva on allekirjoitettu Developer ID:llä ja Apple on notarisoinut sen, joten se aukeaa ilman varoituksia.
 
-**Päivitykset.** Lowspeak ei päivitä itseään. Uudet versiot julkaistaan [julkaisusivulla](https://github.com/sventmueller/lowspeak/releases); **Ohje › Lowspeak GitHubissa** vie sinne. Asenna uusi versio vanhan päälle; asetuksesi, avaimesi ja mallisi säilyvät.
+**Päivitykset.** Levykuvasta asennettu Lowspeak päivittää itsensä [Sparklen](https://sparkle-project.org) avulla. Toisella käynnistyskerralla se kysyy, saako se etsiä päivityksiä itse kerran päivässä. Valikon **Etsi päivityksiä…** etsii heti; sen alla olevat **Etsi päivityksiä automaattisesti** ja **Lataa ja asenna päivitykset automaattisesti** muuttavat valintaasi myöhemmin. Jos haku löytää uuden version, kun työskentelet toisessa apissa, valikkorivin renkaaseen ilmestyy piste ja **Etsi päivityksiä…** tuo päivityksen etualalle. Lowspeak asentaa päivityksen vain, jos siinä on kehittäjän allekirjoitus; asetuksesi, avaimesi ja mallisi säilyvät. Versiossa 1.0.0 ei ole päivitysohjelmaa: asenna uudempi versio sen päälle kerran [julkaisusivulta](https://github.com/sventmueller/lowspeak/releases). Myöskään itse rakennetussa versiossa ei ole päivitysohjelmaa.
 
 **Lähdekoodista.** Katso esivaatimukset kohdasta [Rakentaminen ja käyttöönotto](../../../docs/development.md#build--deploy) ja suorita sitten:
 
@@ -170,6 +170,7 @@ Napsauta valikkorivillä olevaa rengasta:
 | **Hallitse malleja** | lataa ja poista paikallisia malleja edistymisen näyttäen |
 | **Aseta API-avain…** / **Vaihda API-avain…** | lisää, korvaa tai poista avaimia |
 | **Avaa sisäänkirjauduttaessa** | käynnistä Lowspeak yhdessä Macisi kanssa; valintamerkki näyttää, että se on päällä |
+| **Etsi päivityksiä…** | etsi uutta versiota heti; sen alla olevat kaksi kohdetta ratkaisevat, etsiikö Lowspeak kerran päivässä ja asentaako se päivitykset kysymättä. Vain levykuvasta asennetussa apissa |
 | **Ohje** | **Pikaopas**, **Ilmoita ongelmasta…**, **Ehdota ominaisuutta…**, **Lowspeak GitHubissa** |
 | **Tietoja: Lowspeak** | versio, tekijänoikeus, projektisivu ja lisenssi |
 | **Lopeta Lowspeak** | ⌘Q, kun valikko on auki |
@@ -182,6 +183,7 @@ Valintamerkki kohdissa **Paikallinen**, **OpenAI** ja **Groq** osoittaa käytös
 | Täytetty ympyrä | Äänittää, kun fn on painettuna |
 | Pyöristetty neliö | Äänitys lukittu; seuraava fn- tai Shift-painallus lopettaa sen |
 | Vilkkuva rengas | Litteroi |
+| Rengas, jossa on piste oikeassa yläkulmassa | Uusi versio odottaa, katso **Etsi päivityksiä…** |
 | ↓ 42 % | Lataa mallia |
 
 Lowspeakissa ei ole asetusikkunaa: kaikki on tässä valikossa, ja se muistaa jokaisen valinnan.
@@ -379,11 +381,11 @@ Lowspeak kuulee, mitä sanot fn:n ollessa painettuna, voi kirjoittaa mihin tahan
 
 - **Äänesi menee yhteen paikkaan.** Verkkotilassa äänitys menee pakattuna valitsemallesi palveluntarjoajalle, OpenAI:lle tai Groqille, yhdessä sanastosi kanssa. Paikallisessa tilassa mikään ei poistu Macistasi. Jos verkkopyyntö epäonnistuu, paikallinen malli litteroi saman äänityksen Macillasi.
 - **Jälkikäsittely**, jos otat sen käyttöön, lähettää litteroidun tekstin ja sanastosi Groqille tai OpenAI:lle. Muotoile-tilassa se lisää tiedon siitä, millaiseen appiin sanelet (koodieditori, pääte, chat tai sähköposti); apin nimeä ei lähetetä.
-- **Ei telemetriaa, ei tiliä.** Litteroinnin ja jälkikäsittelyn lisäksi Lowspeak ottaa yhteyttä verkkoon vain avatakseen yhteyden palveluntarjoajaasi fn:n ollessa painettuna, verkkotilassa tai jälkikäsittelyn ollessa päällä, sekä ladatakseen mallin pyynnöstäsi Hugging Facesta HTTPS:n kautta kiinteänä versiona niin, että jokaista tiedostoa verrataan sen tarkistussummaan. **Ohje › Ilmoita ongelmasta…** avaa selaimessa lomakkeen GitHubissa; sen osoite sisältää Lowspeakin ja macOS:n versiot, ei mitään sanelemaasi.
+- **Ei telemetriaa, ei tiliä.** Litteroinnin ja jälkikäsittelyn lisäksi Lowspeak ottaa yhteyttä verkkoon vain avatakseen yhteyden palveluntarjoajaasi fn:n ollessa painettuna, verkkotilassa tai jälkikäsittelyn ollessa päällä, ladatakseen mallin pyynnöstäsi Hugging Facesta HTTPS:n kautta kiinteänä versiona niin, että jokaista tiedostoa verrataan sen tarkistussummaan, sekä etsiäkseen uutta versiota GitHubista kerran päivässä, jos sallit sen. Pyyntö sisältää Lowspeakin version eikä mitään muuta. **Ohje › Ilmoita ongelmasta…** avaa selaimessa lomakkeen GitHubissa; sen osoite sisältää Lowspeakin ja macOS:n versiot, ei mitään sanelemaasi.
 - **API-avaimet** pysyvät sisäänkirjautumisavainnipussasi. Ne lähetetään vain omalle palveluntarjoajalleen, ja ne poistetaan virheilmoituksista ennen kuin mitään kirjoitetaan lokiin.
 - **Saneltua tekstiä ei tallenneta.** Kymmenen viimeisintä sanelua pysyvät muistissa valikkoa **Viimeaikaiset sanelut** varten ja katoavat, kun Lowspeak lopetetaan. Lokitiedostot kirjaavat pituudet ja ajoitukset, eivät koskaan tekstiä.
 - **Leikepöytä** tallennetaan ennen sijoittamista ja palautetaan, kun vastaanottava appi on lukenut tekstin, ellei jokin toinen appi ole sillä välin muuttanut sitä. Sanelu merkitään tilapäiseksi, joten leikepöytähistoriaa keräävät apit, jotka noudattavat merkintää, ohittavat sen.
-- **Koodin allekirjoitus** Hardened Runtimella; appi pyytää pääsyä vain mikrofoniin, Käyttöapuun, ilmoituksiin ja verkkoon.
+- **Koodin allekirjoitus** Hardened Runtimella; appi pyytää pääsyä vain mikrofoniin, Käyttöapuun, ilmoituksiin ja verkkoon. Päivityksessä on oltava kehittäjän allekirjoitus, muuten Sparkle hylkää sen.
 
 Jos haluat ilmoittaa haavoittuvuudesta, noudata [tietoturvakäytäntöä](../../../SECURITY.md).
 
@@ -406,7 +408,7 @@ Mitattu Apple Siliconilla:
 - **Aikarajat:** kaksi minuuttia, kun fn on painettuna, viisi minuuttia lukittuna.
 - **Mikrofonitila:** Ohjauskeskus tarjoaa Lowspeakille vaihtoehdot Puheäänen eristys ja Laaja spektri ja näyttää ne aktiivisina, mutta Lowspeak äänittää ilman puheenkäsittelyä, joten valinnalla ei ole vaikutusta.
 - **Viimeaikaiset sanelut** ovat vain muistissa ja katoavat, kun appi lopetetaan.
-- **Tarkoituksella:** ei asetusikkunaa, ei Dock-kuvaketta, ei automaattisia päivityksiä, ei App Storessa.
+- **Tarkoituksella:** ei asetusikkunaa, ei Dock-kuvaketta, ei App Storessa.
 
 ## Vianmääritys
 
@@ -449,6 +451,7 @@ Rakentaminen, testaus, koodin rakenne ja sen noudattamat säännöt on kuvattu t
 | [sha1, sha2](https://github.com/RustCrypto/hashes) | 0.11 | mallien latausten tarkistussummat | MIT tai Apache-2.0 |
 | [security-framework](https://github.com/kornelski/rust-security-framework) | 3.7 | API-avaimet avainnipussa | MIT tai Apache-2.0 |
 | [serde](https://serde.rs), serde_json, anyhow, unicode-general-category | 1 | JSON, virheet, Parakeetin token-sanasto | MIT tai Apache-2.0; Apache-2.0 |
+| [Sparkle](https://sparkle-project.org) | 2.10.1 | levykuvasta asennetun apin päivitykset | MIT, osin BSD- ja zlib-lisensseillä |
 
 Lisenssitekstit kaikesta, mitä appi sisältää, toimitetaan sen mukana tiedostona `Contents/Resources/Acknowledgements.txt`.
 

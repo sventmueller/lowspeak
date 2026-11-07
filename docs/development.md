@@ -26,7 +26,7 @@ Xcode.
 | Path | Purpose |
 |---|---|
 | `src/main.rs` | `NSApplication` setup, single-instance check, Accessibility prompt, app delegate (terminate) |
-| `src/app/` | `state.rs` what the app decides, without AppKit or threads (events in, `Effect`s out), built from `recording.rs` (the running recording), `delivery.rs` (dictations on their way to the paste) and `model_library.rs` (installed models, the running download or deletion); `mod.rs` carries the effects out on the main thread; `capture.rs` the recorder on its own thread; `policy.rs` further decisions without AppKit (selection fallback, notification streaks, time limits, dictation order); `gesture.rs` fn hold/double-tap; `menu.rs` status item, icons, menu; `dialogs.rs` API key and vocabulary alerts; `notify.rs` user notifications; `reference.rs` Help → Quick Reference window; `feedback.rs` GitHub links of the Help menu; `about.rs` About panel |
+| `src/app/` | `state.rs` what the app decides, without AppKit or threads (events in, `Effect`s out), built from `recording.rs` (the running recording), `delivery.rs` (dictations on their way to the paste) and `model_library.rs` (installed models, the running download or deletion); `mod.rs` carries the effects out on the main thread; `capture.rs` the recorder on its own thread; `policy.rs` further decisions without AppKit (selection fallback, notification streaks, time limits, dictation order); `gesture.rs` fn hold/double-tap; `menu.rs` status item, icons, menu; `dialogs.rs` API key and vocabulary alerts; `notify.rs` user notifications; `reference.rs` Help → Quick Reference window; `feedback.rs` GitHub links of the Help menu; `about.rs` About panel; `updates.rs` Sparkle, loaded at run time where the bundle carries it |
 | `src/hotkey.rs` | fn key detection via event tap |
 | `src/models.rs` | the settings enums and the model catalogue (`LocalModel::spec`); how a model runs and where it comes from is in `transcription/catalog.rs` |
 | `src/audio/` | `mod.rs` sample rate and minimum length; `recorder.rs` capture, `vad.rs` silence trimming, `preprocess.rs` resampling, HPF and normalisation, `aac.rs` M4A encoding, `mp4.rs` M4A padding removal, `wav.rs` |
@@ -35,7 +35,7 @@ Xcode.
 | `src/i18n/` | `mod.rs` the `Texts` table and language choice; one file per language with menu, dialog, notification and error texts |
 | `src/paste.rs` | clipboard backup, the dictation handed out on request, simulated ⌘V, restore after the read |
 | `src/util/` | `filelog.rs` (`flog!` macro), `crash.rs`, `retry.rs`, `url_session.rs` (API requests, `HttpClient`), `http.rs` (`ureq` for downloads, key redaction), `numeric.rs` (saturating conversions), `main_thread.rs`, `paths.rs`, `version.rs` (bundle version) |
-| `xtask/` | build tooling (`cargo xtask …`): `bundle.rs` Info.plist, bundle, install, universal program; `signing.rs`; `release.rs` DMG and notarisation; `assets.rs` icon; `licenses.rs` `Acknowledgements.txt` |
+| `xtask/` | build tooling (`cargo xtask …`): `bundle.rs` Info.plist, bundle, install, universal program; `signing.rs`; `release.rs` DMG and notarisation; `updates.rs` Sparkle download, update key, feed; `assets.rs` icon; `licenses.rs` `Acknowledgements.txt` |
 | `tests/` | integration tests (see Tests); `fixtures/builtin.wav` a short recording from the built-in microphone |
 | `docs/` | this guide |
 | `assets/readme/` | the README in the other 34 interface languages |
@@ -138,6 +138,7 @@ fn UP   → event tap thread → dispatch → App::fn_up → FnGesture (held: st
 - Retry waits end early when `Api::cancel` fires; `transcription::shutdown()` fires it for good when the app quits
 - fn down sends a `HEAD` to the provider (at most every 20 s) so the connection is open when the upload starts: first request after a pause 0.61 s → 0.42 s (median, Groq)
 - Microphone start-up (~0.5 s until the first samples on a Studio Display mic) is hardware-bound; `AVAudioEngine` is no faster
+- Sparkle, only in the disk image, reads the feed once a day after the user allowed it on the second launch, see Updates
 
 ### Fallback to a local model
 - A failed online transcription is redone by an installed local model: the one chosen for local mode, else the one with the lowest `fallback_rank` in the catalogue — Parakeet Ultra, then the largest Whisper, Parakeet v2 last (English only)
@@ -186,6 +187,7 @@ fn UP   → event tap thread → dispatch → App::fn_up → FnGesture (held: st
 - Toggles show the item's checkmark state, not a `✓` in the title; actions start with a verb ("Download …", "Delete …")
 - Model groups in a submenu are `NSMenuItem::sectionHeaderWithTitle` headers (macOS 14), not indented titles
 - A provider without a key still lists its models, disabled, followed by "Set API Key…"
+- With Sparkle, Check for Updates…, Check for Updates Automatically and Automatically Download and Install Updates follow Open at Login, as in splat's app menu, in splat's translations
 - The menu ends with Help (Quick Reference, Report Problem…, Suggest Feature…, Lowspeak on GitHub), About Lowspeak and Quit Lowspeak (⌘Q)
 - Notifications put the event in the title; macOS shows the app's icon itself. Errors during dictation stay notifications, not alerts, since an alert would take the focus from the text field the dictation goes to
 - The status item images are template images with the accessibility description "Lowspeak"
@@ -205,7 +207,7 @@ fn UP   → event tap thread → dispatch → App::fn_up → FnGesture (held: st
 - A failed resampling (`TranscriptionError::Audio`) and a failed ⌘V (`Pasted::Failed`, text left on the clipboard) reach the user as notifications
 
 ### Settings
-- `NSUserDefaults` domain `com.lowspeak.app` (keys `mode`, `localModel`, `onlineModel`, `language`, `postProcessingMode`, `preprocessingEnabled`, `startSound`, `microphoneID`, `microphoneName`, `vocabulary`)
+- `NSUserDefaults` domain `com.lowspeak.app` (keys `mode`, `localModel`, `onlineModel`, `language`, `postProcessingMode`, `preprocessingEnabled`, `startSound`, `microphoneID`, `microphoneName`, `vocabulary`); Sparkle keeps its own `SU…` keys there, such as `SUEnableAutomaticChecks` and `SUAutomaticallyUpdate`
 - `policy::reconciled` falls back to an available provider/installed model when the saved one is gone
 
 ### Clipboard
@@ -243,7 +245,7 @@ cargo xtask signing-identity  # once per Mac: local certificate so updates keep 
 
 ### Licenses
 - Lowspeak is `MIT OR Apache-2.0` (`LICENSE-MIT`, `LICENSE-APACHE`, `[workspace.package]` in `Cargo.toml`)
-- `bundle` writes `Contents/Resources/Acknowledgements.txt`: Lowspeak's licenses and the license text of every crate `cargo tree` finds in the program, each text once under the components it covers, plus whisper.cpp (built from the sources inside `whisper-rs-sys`) and FluidAudio (`src/transcription/parakeet/LICENSE-FluidAudio`)
+- `bundle` writes `Contents/Resources/Acknowledgements.txt`: Lowspeak's licenses and the license text of every crate `cargo tree` finds in the program, each text once under the components it covers, plus whisper.cpp (built from the sources inside `whisper-rs-sys`), FluidAudio (`src/transcription/parakeet/LICENSE-FluidAudio`) and, in the disk image, Sparkle
 - Of alternatives a crate offers, MIT is taken where it can be; a crate that names MIT without shipping its text gets Lowspeak's MIT terms with the authors from its manifest
 - A dependency whose license text xtask does not recognise stops the build with its name; `cargo test -p xtask` finds it first
 - The Parakeet module is a translation of FluidAudio's Swift code; Apache-2.0 asks that the license goes along and that the module says so, which its doc comment does
@@ -262,23 +264,48 @@ notarizes the app with Apple and staples the ticket, packs it into a compressed,
 Applications, signs, notarizes and staples the image as well and checks the result with Gatekeeper (`spctl`). The app
 carries its own ticket so that a copy taken out of the image opens offline on first launch too; the two rounds with the
 notary service take a few minutes each. Only an image that passed every step becomes `dist/Lowspeak-<version>.dmg`,
-next to `dist/Lowspeak-<version>.md` with the notes; older ones go to the Trash and the build number goes up. A failed
-run leaves `dist/` and `VERSION` as they were. It needs:
+next to `dist/Lowspeak-<version>.md` with the notes and `dist/appcast.xml`, the update feed; older ones go to the Trash
+and the build number goes up. A failed run leaves `dist/` and `VERSION` as they were. It needs:
 
 - a "Developer ID Application" certificate in the keychain
 - a saved login for Apple's notary service with an app-specific password, created once per Mac with
   `xcrun notarytool store-credentials notary --apple-id <Apple ID> --team-id <team ID>`; splat uses the same profile
-- `RELEASE_NOTES.md` with what this release brings; `dmg` stops if it is empty or still holds the notes in `dist/`
+- the private key that signs updates, in the login keychain. Sparkle's `generate_keys` created it for splat, and
+  Lowspeak signs with the same one, as Sparkle recommends one key per developer; its public half is `UPDATE_KEY` in
+  `xtask/src/updates.rs` and inside every installed copy, which accepts only updates signed with it. splat's
+  development guide says how to back it up and move it to another Mac. Without it, installed copies can never be
+  updated again
+- `RELEASE_NOTES.md` with what this release brings; `dmg` stops if it is empty or still holds the notes in `dist/`.
+  The update dialog shows the notes above a line on how to report a problem
 
 If one of them is missing, `dmg` stops before building. On the first run, macOS asks whether Terminal may control the
 Finder, which lays out the disk image window. `dmg` then reads the icon positions Finder stored in the image and stops
 if they are not the intended ones, as when Finder shows hidden files (⇧⌘. hides them) or lacks the permission;
 `deploy` packs its image with Finder's default window instead.
 
-The images are not committed (`.gitignore`); the notes are. The download link in the README points at `Lowspeak.dmg`
-in the latest GitHub release, so each release carries a copy under that name:
+The images are not committed (`.gitignore`); the notes and the feed are. The download link in the README points at
+`Lowspeak.dmg` in the latest GitHub release, so each release carries a copy under that name:
 `cp dist/Lowspeak-<version>.dmg target/Lowspeak.dmg`, then
-`gh release create v<version> dist/Lowspeak-<version>.dmg target/Lowspeak.dmg --notes-file dist/Lowspeak-<version>.md`.
+`gh release create v<version> dist/Lowspeak-<version>.dmg target/Lowspeak.dmg dist/appcast.xml --notes-file dist/Lowspeak-<version>.md`.
+Creating the release publishes the update: installed copies read the feed from the latest release, and its download
+link points at `Lowspeak-<version>.dmg` of that release, so pushing to `main` alone offers nothing.
+
+### Updates
+Only the disk image carries the updater, [Sparkle](https://sparkle-project.org), which the build downloads once into
+`target/` from its GitHub release and checks against the checksum in `xtask/src/updates.rs`. Local builds have none:
+an update must not replace a build of your own. Sparkle's XPC services are left out, since only a sandboxed app needs
+them, and its helpers are signed inside out before the app. The hardened runtime loads the framework only when it
+carries the app's Team ID, which the Developer ID signature gives it.
+
+- `app/updates.rs` loads `Sparkle.framework` from the bundle at run time, so the program links nothing of it and runs
+  the same without it; the menu then shows no update items
+- Sparkle asks on the second launch whether it may check once a day; the choice and the two update items of the menu
+  are Sparkle's settings
+- A menu bar app is always in the background, so Sparkle shows the update a scheduled check found behind the other
+  windows, except right after launch. Lowspeak implements Sparkle's gentle reminders: a dot on the status item and a
+  badge on Check for Updates…, which brings the update to the front, until the user turns to it
+- Sparkle installs an update when the app quits, also with the `_exit` of `app::shutdown`: its installer waits for the
+  process to end, not for the termination notification
 
 The disk image is a universal binary for Apple Silicon and Intel; other builds are for the host processor alone.
 Homebrew's Rust ships the standard library for the host processor only, so `dmg` builds through rustup, which installs

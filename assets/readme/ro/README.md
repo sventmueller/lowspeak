@@ -116,14 +116,14 @@ Lowspeak se află în bara de meniu. Țineți apăsată tasta fn (Glob) și vorb
 
 - macOS 14 Sonoma sau mai nou. Lowspeak este dezvoltat și testat pe macOS 27.
 - Un Mac cu Apple Silicon sau cu procesor Intel. Transcrierea locală este construită pentru Apple Silicon, unde Whisper rulează pe GPU, iar Parakeet pe Neural Engine; pe Mac-urile cu Intel, ambele rulează pe procesor, mult mai lent, vedeți [Mac-uri cu Intel](#mac-uri-cu-intel).
-- Circa 10 MB pentru aplicație, plus între 75 MB și 3 GB pentru fiecare model local pe care îl descărcați.
+- Circa 17 MB pentru aplicație, plus între 75 MB și 3 GB pentru fiecare model local pe care îl descărcați.
 - Pentru transcrierea online, o cheie API de la [OpenAI](https://platform.openai.com/api-keys) sau [Groq](https://console.groq.com/keys); ambele taxează ce transcrieți. Transcrierea locală nu necesită niciun cont.
 
 ## Instalare
 
 **Din imaginea de disc.** Descărcați [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), deschideți-o și trageți Lowspeak în dosarul Aplicații. Imaginea este semnată cu un Developer ID și notarizată de Apple, deci se deschide fără avertismente.
 
-**Actualizări.** Lowspeak nu se actualizează singur. Versiunile noi apar pe [pagina de lansări](https://github.com/sventmueller/lowspeak/releases); **Ajutor › Lowspeak pe GitHub** duce acolo. Instalați versiunea nouă peste cea veche; setările, cheile și modelele rămân.
+**Actualizări.** Lowspeak din imaginea de disc se actualizează singur prin [Sparkle](https://sparkle-project.org). La a doua pornire întreabă dacă are voie să caute singur actualizări, o dată pe zi. **Căutați actualizări…** din meniu caută imediat; **Căutați automat actualizări** și **Descărcați și instalați automat actualizările**, chiar dedesubt, vă schimbă ulterior alegerea. Dacă o căutare găsește o versiune nouă în timp ce lucrați în altă aplicație, pe inelul din bara de meniu apare un punct, iar **Căutați actualizări…** aduce actualizarea în prim-plan. Lowspeak instalează o actualizare doar dacă are semnătura dezvoltatorului; setările, cheile și modelele rămân. Versiunea 1.0.0 nu are mecanism de actualizare: instalați o singură dată peste ea o versiune mai nouă, de pe [pagina de lansări](https://github.com/sventmueller/lowspeak/releases). Nici versiunile compilate de dumneavoastră nu au mecanism de actualizare.
 
 **Din sursă.** Vedeți [Compilare și instalare](../../../docs/development.md#build--deploy) pentru cerințe, apoi:
 
@@ -170,6 +170,7 @@ Faceți clic pe inelul din bara de meniu:
 | **Gestionați modelele** | descărcarea și ștergerea modelelor locale, cu indicarea progresului |
 | **Configurați cheia API…** / **Actualizați cheia API…** | adăugarea, înlocuirea sau eliminarea cheilor |
 | **Deschideți la login** | pornește Lowspeak odată cu Mac-ul; bifa arată că opțiunea este activată |
+| **Căutați actualizări…** | caută acum o versiune nouă; cele două elemente de dedesubt decid dacă Lowspeak caută o dată pe zi și instalează actualizările fără să întrebe. Doar în aplicația din imaginea de disc |
 | **Ajutor** | **Referință rapidă**, **Raportați o problemă…**, **Sugerați o funcție…**, **Lowspeak pe GitHub** |
 | **Despre Lowspeak** | versiunea, drepturile de autor, pagina proiectului și licența |
 | **Închideți aplicația Lowspeak** | ⌘Q cât timp meniul este deschis |
@@ -182,6 +183,7 @@ Bifa din **Local**, **OpenAI** și **Groq** marchează modelul folosit. Pictogra
 | Cerc plin | Înregistrează cât timp fn este ținut apăsat |
 | Pătrat rotunjit | Înregistrare blocată; următoarea apăsare pe fn sau Shift o încheie |
 | Inel care clipește | Transcrie |
+| Inel cu un punct în dreapta sus | O versiune nouă așteaptă, vedeți **Căutați actualizări…** |
 | ↓ 42 % | Descarcă un model |
 
 Lowspeak nu are fereastră de setări: totul se află în acest meniu, care își amintește fiecare alegere.
@@ -379,11 +381,11 @@ Lowspeak aude ce spuneți cât timp fn este ținut apăsat, poate scrie în oric
 
 - **Vocea dumneavoastră merge într-un singur loc.** În modul online, înregistrarea, comprimată, merge la furnizorul ales, OpenAI sau Groq, împreună cu vocabularul. În modul local, nimic nu părăsește Mac-ul. Când o cerere online eșuează, un model local transcrie aceeași înregistrare pe Mac-ul dumneavoastră.
 - **Postprocesarea**, dacă o activați, trimite textul transcris și vocabularul la Groq sau OpenAI. În modul Formatare adaugă tipul de aplicație în care dictați (editor de cod, terminal, chat sau e-mail); numele aplicației nu este trimis.
-- **Fără telemetrie, fără cont.** În afară de transcriere și postprocesare, Lowspeak se conectează la internet doar pentru a deschide conexiunea cu furnizorul cât timp fn este ținut apăsat, în modul online sau cu postprocesarea activată, și pentru a descărca un model când cereți unul, de pe Hugging Face prin HTTPS, la o versiune fixă și cu fiecare fișier verificat după suma lui de control. **Ajutor › Raportați o problemă…** deschide un formular pe GitHub în browser; adresa lui conține versiunea Lowspeak și versiunea macOS, nimic din ce ați dictat.
+- **Fără telemetrie, fără cont.** În afară de transcriere și postprocesare, Lowspeak se conectează la internet doar pentru a deschide conexiunea cu furnizorul cât timp fn este ținut apăsat, în modul online sau cu postprocesarea activată, pentru a descărca un model când cereți unul, de pe Hugging Face prin HTTPS, la o versiune fixă și cu fiecare fișier verificat după suma lui de control, și pentru a căuta o versiune nouă pe GitHub, o dată pe zi dacă îi permiteți. Cererea aceasta conține versiunea Lowspeak și nimic altceva. **Ajutor › Raportați o problemă…** deschide un formular pe GitHub în browser; adresa lui conține versiunea Lowspeak și versiunea macOS, nimic din ce ați dictat.
 - **Cheile API** rămân în portcheiul dumneavoastră de login. Sunt trimise doar propriului furnizor și sunt eliminate din mesajele de eroare înainte ca ceva să fie scris în jurnal.
 - **Textul dictat nu este stocat.** Ultimele zece dictări rămân în memorie pentru **Dictări recente** și dispar când Lowspeak se închide. Fișierele jurnal înregistrează lungimi și durate, niciodată textul.
 - **Clipboardul** este salvat înainte de lipire și restaurat după ce aplicația a citit textul, cu excepția cazului în care altă aplicație l-a modificat între timp. Dictarea este marcată ca temporară, așa că aplicațiile de istoric al clipboardului care respectă acest marcaj o omit.
-- **Semnarea codului** cu Hardened Runtime; aplicația cere doar microfonul, Accesibilitate, notificările și rețeaua.
+- **Semnarea codului** cu Hardened Runtime; aplicația cere doar microfonul, Accesibilitate, notificările și rețeaua. O actualizare trebuie să poarte semnătura dezvoltatorului, altfel Sparkle o refuză.
 
 Pentru a raporta o vulnerabilitate, urmați [politica de securitate](../../../SECURITY.md).
 
@@ -406,7 +408,7 @@ Măsurat pe Apple Silicon:
 - **Limite de timp:** două minute cât timp fn este ținut apăsat, cinci minute când înregistrarea este blocată.
 - **Mod microfon:** Centrul de control oferă pentru Lowspeak Izolare voce și Spectru larg și le raportează ca active, dar Lowspeak înregistrează fără procesarea vocii, așa că alegerea nu are niciun efect.
 - **Dictări recente** există doar în memorie și dispar după închidere.
-- **Prin concepție:** fără fereastră de setări, fără pictogramă în Dock, fără actualizări automate, fără App Store.
+- **Prin concepție:** fără fereastră de setări, fără pictogramă în Dock, fără App Store.
 
 ## Depanare
 
@@ -449,6 +451,7 @@ Compilarea, testarea, structura codului și regulile pe care le urmează sunt de
 | [sha1, sha2](https://github.com/RustCrypto/hashes) | 0.11 | sumele de control ale modelelor descărcate | MIT sau Apache-2.0 |
 | [security-framework](https://github.com/kornelski/rust-security-framework) | 3.7 | cheile API în portchei | MIT sau Apache-2.0 |
 | [serde](https://serde.rs), serde_json, anyhow, unicode-general-category | 1 | JSON, erori, vocabularul Parakeet | MIT sau Apache-2.0; Apache-2.0 |
+| [Sparkle](https://sparkle-project.org) | 2.10.1 | actualizările aplicației din imaginea de disc | MIT, cu părți sub licențe BSD și zlib |
 
 Textele licențelor pentru tot ce se află în aplicație sunt livrate împreună cu ea, ca `Contents/Resources/Acknowledgements.txt`.
 

@@ -116,14 +116,14 @@ Lowspeak wohnt in der Menüleiste. Halte die fn-Taste (Globus) gedrückt und spr
 
 - macOS 14 Sonoma oder neuer. Lowspeak wird auf macOS 27 entwickelt und getestet.
 - Ein Mac mit Apple Silicon oder einem Intel-Prozessor. Die lokale Transkription ist für Apple Silicon gebaut, wo Whisper auf der GPU und Parakeet auf der Neural Engine läuft; auf Intel-Macs laufen beide auf dem Prozessor, viel langsamer, siehe [Intel-Macs](#intel-macs).
-- Etwa 10 MB für die App, dazu 75 MB bis 3 GB für jedes lokale Modell, das du lädst.
+- Etwa 17 MB für die App, dazu 75 MB bis 3 GB für jedes lokale Modell, das du lädst.
 - Für die Onlinetranskription einen API-Schlüssel von [OpenAI](https://platform.openai.com/api-keys) oder [Groq](https://console.groq.com/keys); beide berechnen, was du transkribierst. Die lokale Transkription braucht kein Konto.
 
 ## Installation
 
 **Vom Disk-Image.** Lade [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), öffne es und ziehe Lowspeak auf den Ordner „Programme“. Das Image ist mit einer Developer ID signiert und von Apple notarisiert, sodass es ohne Warnungen öffnet.
 
-**Updates.** Lowspeak aktualisiert sich nicht selbst. Neue Versionen erscheinen auf der [Release-Seite](https://github.com/sventmueller/lowspeak/releases); **Hilfe › Lowspeak auf GitHub** führt dorthin. Installiere eine neue Version über die alte; deine Einstellungen, Schlüssel und Modelle bleiben erhalten.
+**Updates.** Lowspeak aus dem Disk-Image hält sich mit [Sparkle](https://sparkle-project.org) selbst aktuell. Beim zweiten Start fragt es, ob es einmal täglich selbstständig nach Updates suchen darf. **Nach Updates suchen …** im Menü sucht sofort; **Automatisch nach Updates suchen** und **Updates automatisch laden und installieren** direkt darunter ändern deine Wahl später. Findet eine Suche eine neue Version, während du in einer anderen App arbeitest, erscheint ein Punkt am Ring in der Menüleiste, und **Nach Updates suchen …** bringt das Update in den Vordergrund. Lowspeak installiert ein Update nur, wenn es die Signatur des Entwicklers trägt; deine Einstellungen, Schlüssel und Modelle bleiben erhalten. Version 1.0.0 hat keinen Updater: Installiere einmalig eine neuere Version von der [Release-Seite](https://github.com/sventmueller/lowspeak/releases) darüber. Ein selbst gebautes Lowspeak hat ebenfalls keinen Updater.
 
 **Aus dem Quellcode.** Die Voraussetzungen stehen unter [Bauen und Installieren](../../../docs/development.md#build--deploy), dann:
 
@@ -170,6 +170,7 @@ Klicke auf den Ring in der Menüleiste:
 | **Modelle verwalten** | lokale Modelle laden und löschen, mit Fortschrittsanzeige |
 | **API-Schlüssel festlegen …** / **API-Schlüssel ändern …** | Schlüssel hinzufügen, ersetzen oder entfernen |
 | **Bei der Anmeldung öffnen** | Lowspeak mit deinem Mac starten; das Häkchen zeigt, dass es eingeschaltet ist |
+| **Nach Updates suchen …** | jetzt nach einer neuen Version suchen; die beiden Einträge darunter legen fest, ob Lowspeak einmal täglich sucht und Updates ohne Nachfrage installiert. Nur in der App aus dem Disk-Image |
 | **Hilfe** | **Kurzreferenz**, **Problem melden …**, **Funktion vorschlagen …**, **Lowspeak auf GitHub** |
 | **Über Lowspeak** | Version, Copyright, Projektseite und Lizenz |
 | **Lowspeak beenden** | ⌘Q, solange das Menü offen ist |
@@ -182,6 +183,7 @@ Das Häkchen unter **Lokal**, **OpenAI** und **Groq** markiert das Modell, das i
 | Gefüllter Kreis | Aufnahme, solange fn gehalten wird |
 | Abgerundetes Quadrat | Aufnahme festgestellt; der nächste Druck auf fn oder Shift beendet sie |
 | Blinkender Ring | Transkription läuft |
+| Ring mit Punkt oben rechts | Eine neue Version wartet, siehe **Nach Updates suchen …** |
 | ↓ 42 % | Ein Modell wird geladen |
 
 Lowspeak hat kein Einstellungsfenster: Alles steht in diesem Menü, und es merkt sich jede Wahl.
@@ -379,11 +381,11 @@ Lowspeak hört, was du sagst, während fn gehalten wird, kann in jede App tippen
 
 - **Deine Stimme geht an genau einen Ort.** Im Onlinemodus geht die Aufnahme komprimiert an den Anbieter, den du gewählt hast, OpenAI oder Groq, zusammen mit deinem Vokabular. Im lokalen Modus verlässt nichts deinen Mac. Schlägt eine Onlineanfrage fehl, transkribiert ein lokales Modell dieselbe Aufnahme auf deinem Mac.
 - **Die Nachbearbeitung** sendet, wenn du sie einschaltest, den transkribierten Text und dein Vokabular an Groq oder OpenAI. Im Modus „Formatieren“ kommt die Art der App hinzu, in die du diktierst (Code-Editor, Terminal, Chat oder E-Mail); der Name der App wird nicht gesendet.
-- **Keine Telemetrie, kein Konto.** Abgesehen von Transkription und Nachbearbeitung geht Lowspeak nur online, um die Verbindung zu deinem Anbieter zu öffnen, während fn gehalten wird, im Onlinemodus oder mit eingeschalteter Nachbearbeitung, und um ein Modell zu laden, wenn du darum bittest, von Hugging Face über HTTPS, in einer festen Version, und jede Datei wird mit ihrer Prüfsumme abgeglichen. **Hilfe › Problem melden …** öffnet in deinem Browser ein Formular auf GitHub; seine Adresse enthält die Version von Lowspeak und die von macOS, nichts von dem, was du diktiert hast.
+- **Keine Telemetrie, kein Konto.** Abgesehen von Transkription und Nachbearbeitung geht Lowspeak nur online, um die Verbindung zu deinem Anbieter zu öffnen, während fn gehalten wird, im Onlinemodus oder mit eingeschalteter Nachbearbeitung, um ein Modell zu laden, wenn du darum bittest, von Hugging Face über HTTPS, in einer festen Version, wobei jede Datei mit ihrer Prüfsumme abgeglichen wird, und um auf GitHub nach einer neuen Version zu suchen, einmal täglich, wenn du es erlaubst. Diese Anfrage enthält die Version von Lowspeak und sonst nichts. **Hilfe › Problem melden …** öffnet in deinem Browser ein Formular auf GitHub; seine Adresse enthält die Version von Lowspeak und die von macOS, nichts von dem, was du diktiert hast.
 - **API-Schlüssel** bleiben in deinem Schlüsselbund „Anmeldung“. Sie werden nur an ihren eigenen Anbieter gesendet und aus Fehlermeldungen entfernt, bevor etwas ins Log geschrieben wird.
 - **Diktierter Text wird nicht gespeichert.** Die letzten zehn Diktate bleiben für **Letzte Diktate** im Arbeitsspeicher und sind weg, wenn Lowspeak beendet wird. Die Logdateien halten Längen und Zeiten fest, nie den Text.
 - **Die Zwischenablage** wird vor dem Einfügen gesichert und wiederhergestellt, sobald die App den Text gelesen hat, sofern nicht eine andere App sie zwischendurch geändert hat. Das Diktat ist als flüchtig gekennzeichnet, sodass Apps für den Zwischenablageverlauf, die diese Kennzeichnung beachten, es überspringen.
-- **Codesignatur** mit der Hardened Runtime; die App fragt nur nach Mikrofon, Bedienungshilfen, Mitteilungen und dem Netzwerk.
+- **Codesignatur** mit der Hardened Runtime; die App fragt nur nach Mikrofon, Bedienungshilfen, Mitteilungen und dem Netzwerk. Ein Update muss die Signatur des Entwicklers tragen, sonst lehnt Sparkle es ab.
 
 Um eine Sicherheitslücke zu melden, folge der [Sicherheitsrichtlinie](../../../SECURITY.md).
 
@@ -406,7 +408,7 @@ Gemessen auf Apple Silicon:
 - **Zeitlimits:** zwei Minuten, solange fn gehalten wird, fünf Minuten, wenn die Aufnahme festgestellt ist.
 - **Mikrofonmodus:** Das Kontrollzentrum bietet für Lowspeak Stimmisolation und Breites Spektrum an und meldet sie als aktiv, aber Lowspeak nimmt ohne Sprachverarbeitung auf, sodass die Wahl keine Wirkung hat.
 - **Letzte Diktate** liegen nur im Arbeitsspeicher und sind nach dem Beenden weg.
-- **Gewollt:** kein Einstellungsfenster, kein Dock-Symbol, keine automatischen Updates, nicht im App Store.
+- **Gewollt:** kein Einstellungsfenster, kein Dock-Symbol, nicht im App Store.
 
 ## Fehlerbehebung
 
@@ -449,6 +451,7 @@ Bauen, Testen, der Aufbau des Codes und die Regeln, denen er folgt, stehen in [d
 | [sha1, sha2](https://github.com/RustCrypto/hashes) | 0.11 | Prüfsummen der Modell-Downloads | MIT oder Apache-2.0 |
 | [security-framework](https://github.com/kornelski/rust-security-framework) | 3.7 | API-Schlüssel im Schlüsselbund | MIT oder Apache-2.0 |
 | [serde](https://serde.rs), serde_json, anyhow, unicode-general-category | 1 | JSON, Fehler, das Vokabular von Parakeet | MIT oder Apache-2.0; Apache-2.0 |
+| [Sparkle](https://sparkle-project.org) | 2.10.1 | Updates der App aus dem Disk-Image | MIT, mit Teilen unter BSD- und zlib-Lizenzen |
 
 Die Lizenztexte von allem, was in der App steckt, liegen ihr als `Contents/Resources/Acknowledgements.txt` bei.
 

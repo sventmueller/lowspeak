@@ -14,6 +14,7 @@ pub mod policy;
 mod recording;
 pub mod reference;
 pub mod state;
+pub mod updates;
 
 use std::cell::RefCell;
 use std::collections::HashSet;
@@ -67,6 +68,9 @@ pub enum Action {
     Delete(LocalModel),
     ApiKey,
     ToggleLogin,
+    CheckForUpdates,
+    ToggleUpdateChecks,
+    ToggleUpdateInstalls,
     QuickReference,
     ReportProblem,
     SuggestFeature,
@@ -202,6 +206,7 @@ pub fn launch(mtm: MainThreadMarker) {
             .collect::<Vec<_>>()
     );
     APP.with(|cell| *cell.borrow_mut() = Some(app));
+    updates::start(mtm);
 }
 
 pub fn shutdown() {
@@ -251,6 +256,9 @@ fn perform(action: Action) {
         Action::Download(model) => update_now_or_later(move |state| state.download(model)),
         Action::Delete(model) => update_now_or_later(move |state| state.delete(model)),
         Action::ToggleLogin => update_now_or_later(State::toggle_login_item),
+        Action::CheckForUpdates => updates::check(),
+        Action::ToggleUpdateChecks => updates::toggle_automatic_checks(),
+        Action::ToggleUpdateInstalls => updates::toggle_automatic_installs(),
         // Modal dialogs spin the run loop, which runs queued work on the app state, so they run
         // outside its borrow.
         Action::ApiKey => {
@@ -293,7 +301,7 @@ fn perform(action: Action) {
 
 fn menu_needs_update(menu: &NSMenu) {
     with_app(|app| {
-        app.ui.rebuild(menu, &app.state.snapshot());
+        app.ui.rebuild(menu, &app.snapshot());
         app.refresh_system();
     });
 }
@@ -350,6 +358,13 @@ fn transcribe(
 }
 
 impl App {
+    fn snapshot(&self) -> Snapshot {
+        Snapshot {
+            updates: updates::menu(),
+            ..self.state.snapshot()
+        }
+    }
+
     fn update(&mut self, event: impl FnOnce(&mut State)) {
         event(&mut self.state);
         while let Some(effect) = self.state.next_effect() {
@@ -561,7 +576,7 @@ impl App {
             && self.state.system_refreshed(microphones, login_item)
             && let Some(menu) = self.ui.menu()
         {
-            self.ui.rebuild(&menu, &self.state.snapshot());
+            self.ui.rebuild(&menu, &self.snapshot());
         }
     }
 }

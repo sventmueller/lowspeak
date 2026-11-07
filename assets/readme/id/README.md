@@ -116,14 +116,14 @@ Lowspeak tinggal di bar menu. Tahan tombol fn (Globe) dan bicaralah; begitu Anda
 
 - macOS 14 Sonoma atau yang lebih baru. Lowspeak dikembangkan dan diuji di macOS 27.
 - Mac dengan Apple Silicon atau prosesor Intel. Transkripsi lokal dibuat untuk Apple Silicon, tempat Whisper berjalan di GPU dan Parakeet di Neural Engine; di Mac Intel keduanya berjalan di prosesor dan jauh lebih lambat, lihat [Mac Intel](#mac-intel).
-- Sekitar 10 MB untuk app, ditambah 75 MB hingga 3 GB untuk setiap model lokal yang Anda unduh.
+- Sekitar 17 MB untuk app, ditambah 75 MB hingga 3 GB untuk setiap model lokal yang Anda unduh.
 - Untuk transkripsi online, kunci API dari [OpenAI](https://platform.openai.com/api-keys) atau [Groq](https://console.groq.com/keys); keduanya mengenakan biaya untuk apa yang Anda transkripsi. Transkripsi lokal tidak memerlukan akun.
 
 ## Instalasi
 
 **Dari image disk.** Unduh [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), buka, lalu seret Lowspeak ke folder Aplikasi. Image ini ditandatangani dengan Developer ID dan dinotarisasi oleh Apple, sehingga terbuka tanpa peringatan.
 
-**Pembaruan.** Lowspeak tidak memperbarui dirinya sendiri. Versi baru muncul di [halaman rilis](https://github.com/sventmueller/lowspeak/releases); **Bantuan › Lowspeak di GitHub** mengarah ke sana. Instal versi baru di atas versi lama; pengaturan, kunci, dan model Anda tetap ada.
+**Pembaruan.** Lowspeak dari image disk memperbarui dirinya sendiri melalui [Sparkle](https://sparkle-project.org). Pada peluncuran kedua, Lowspeak bertanya apakah boleh mencari pembaruan sendiri, sekali sehari. **Periksa Pembaruan…** di menu langsung memeriksa; **Periksa Pembaruan Secara Otomatis** dan **Unduh dan Instal Pembaruan Secara Otomatis** di bawahnya mengubah pilihan Anda nanti. Jika pemeriksaan menemukan versi baru saat Anda bekerja di app lain, sebuah titik muncul pada cincin di bar menu, dan **Periksa Pembaruan…** membawa pembaruan itu ke depan. Lowspeak hanya menginstal pembaruan yang membawa tanda tangan pengembang; pengaturan, kunci, dan model Anda tetap ada. Versi 1.0.0 tidak punya pemutakhir: instal versi yang lebih baru di atasnya sekali saja, dari [halaman rilis](https://github.com/sventmueller/lowspeak/releases). Build buatan sendiri juga tidak punya pemutakhir.
 
 **Dari sumber.** Lihat [Membangun & memasang](../../../docs/development.md#build--deploy) untuk prasyaratnya, lalu:
 
@@ -170,6 +170,7 @@ Klik cincin di bar menu:
 | **Kelola Model** | mengunduh dan menghapus model lokal, dengan tampilan kemajuan |
 | **Atur Kunci API…** / **Perbarui Kunci API…** | menambah, mengganti, atau menghapus kunci |
 | **Buka saat Masuk** | memulai Lowspeak bersama Mac Anda; tanda centang menunjukkan bahwa opsi ini aktif |
+| **Periksa Pembaruan…** | mencari versi baru sekarang; dua item di bawahnya menentukan apakah Lowspeak memeriksa sekali sehari dan menginstal pembaruan tanpa bertanya. Hanya di app dari image disk |
 | **Bantuan** | **Referensi Cepat**, **Laporkan Masalah…**, **Usulkan Fitur…**, **Lowspeak di GitHub** |
 | **Mengenai Lowspeak** | versi, hak cipta, halaman proyek, dan lisensi |
 | **Tutup Lowspeak** | ⌘Q saat menu terbuka |
@@ -182,6 +183,7 @@ Tanda centang di bawah **Lokal**, **OpenAI**, dan **Groq** menandai model yang s
 | Lingkaran penuh | Merekam selagi fn ditahan |
 | Persegi bersudut bulat | Rekaman terkunci; tekanan berikutnya pada fn atau Shift mengakhirinya |
 | Cincin berkedip | Mentranskripsi |
+| Cincin dengan titik di kanan atas | Ada versi baru yang menunggu, lihat **Periksa Pembaruan…** |
 | ↓ 42% | Mengunduh model |
 
 Lowspeak tidak punya jendela pengaturan: semuanya ada di menu ini, dan Lowspeak mengingat setiap pilihan.
@@ -379,11 +381,11 @@ Lowspeak mendengar apa yang Anda ucapkan selagi fn ditahan, dapat mengetik ke ap
 
 - **Suara Anda pergi ke satu tempat saja.** Dalam mode online, rekaman dikirim dalam bentuk terkompresi ke penyedia yang Anda pilih, OpenAI atau Groq, bersama kosakata Anda. Dalam mode lokal, tidak ada yang meninggalkan Mac Anda. Saat permintaan online gagal, model lokal mentranskripsi rekaman yang sama di Mac Anda.
 - **Pascapemrosesan**, jika Anda menyalakannya, mengirim teks hasil transkripsi dan kosakata Anda ke Groq atau OpenAI. Dalam mode Format, ikut dikirim jenis app tempat Anda mendikte (editor kode, terminal, chat, atau email); nama app-nya tidak dikirim.
-- **Tanpa telemetri, tanpa akun.** Selain untuk transkripsi dan pascapemrosesan, Lowspeak hanya terhubung ke internet untuk membuka koneksi ke penyedia Anda selagi fn ditahan, dalam mode online atau saat pascapemrosesan aktif, dan untuk mengunduh model saat Anda memintanya, dari Hugging Face melalui HTTPS, pada versi yang tetap dan dengan setiap file dicocokkan dengan ceksumnya. **Bantuan › Laporkan Masalah…** membuka formulir di GitHub pada browser Anda; alamatnya memuat versi Lowspeak dan versi macOS, tanpa apa pun yang Anda dikte.
+- **Tanpa telemetri, tanpa akun.** Selain untuk transkripsi dan pascapemrosesan, Lowspeak hanya terhubung ke internet untuk membuka koneksi ke penyedia Anda selagi fn ditahan, dalam mode online atau saat pascapemrosesan aktif, untuk mengunduh model saat Anda memintanya, dari Hugging Face melalui HTTPS, pada versi yang tetap dan dengan setiap file dicocokkan dengan ceksumnya, dan untuk mencari versi baru di GitHub, sekali sehari jika Anda mengizinkannya. Permintaan itu memuat versi Lowspeak dan tidak ada yang lain. **Bantuan › Laporkan Masalah…** membuka formulir di GitHub pada browser Anda; alamatnya memuat versi Lowspeak dan versi macOS, tanpa apa pun yang Anda dikte.
 - **Kunci API** tetap berada di rantai kunci masuk Anda. Kunci hanya dikirim ke penyedianya masing-masing dan dihapus dari pesan kesalahan sebelum apa pun ditulis ke log.
 - **Teks yang didikte tidak disimpan.** Sepuluh dikte terakhir tetap ada di memori untuk **Dikte Terbaru** dan hilang saat Lowspeak ditutup. File log mencatat panjang dan waktu, tidak pernah teksnya.
 - **Papan klip** disimpan sebelum menempel dan dipulihkan setelah app membaca teks, kecuali app lain mengubahnya di antaranya. Dikte ditandai sebagai sementara, sehingga app riwayat papan klip yang menghormati penanda tersebut melewatinya.
-- **Penandatanganan kode** dengan Hardened Runtime; app hanya meminta akses ke mikrofon, Aksesibilitas, notifikasi, dan jaringan.
+- **Penandatanganan kode** dengan Hardened Runtime; app hanya meminta akses ke mikrofon, Aksesibilitas, notifikasi, dan jaringan. Pembaruan harus membawa tanda tangan pengembang; jika tidak, Sparkle menolaknya.
 
 Untuk melaporkan kerentanan, ikuti [kebijakan keamanan](../../../SECURITY.md).
 
@@ -406,7 +408,7 @@ Diukur di Apple Silicon:
 - **Batas waktu:** dua menit selagi fn ditahan, lima menit saat terkunci.
 - **Mode Mik:** Pusat Kontrol menawarkan Isolasi Suara dan Spektrum Lebar untuk Lowspeak dan melaporkannya sebagai aktif, tetapi Lowspeak merekam tanpa pemrosesan suara, sehingga pilihan itu tidak berpengaruh.
 - **Dikte Terbaru** hanya ada di memori dan hilang setelah Lowspeak ditutup.
-- **Menurut rancangan:** tanpa jendela pengaturan, tanpa ikon Dock, tanpa pembaruan otomatis, tidak ada di App Store.
+- **Menurut rancangan:** tanpa jendela pengaturan, tanpa ikon Dock, tidak ada di App Store.
 
 ## Pemecahan masalah
 
@@ -449,6 +451,7 @@ Cara membangun, menguji, struktur kode, dan aturan yang diikutinya dijelaskan di
 | [sha1, sha2](https://github.com/RustCrypto/hashes) | 0.11 | ceksum unduhan model | MIT atau Apache-2.0 |
 | [security-framework](https://github.com/kornelski/rust-security-framework) | 3.7 | kunci API di rantai kunci | MIT atau Apache-2.0 |
 | [serde](https://serde.rs), serde_json, anyhow, unicode-general-category | 1 | JSON, penanganan kesalahan, kosakata Parakeet | MIT atau Apache-2.0; Apache-2.0 |
+| [Sparkle](https://sparkle-project.org) | 2.10.1 | pembaruan app dari image disk | MIT, dengan bagian di bawah lisensi BSD dan zlib |
 
 Teks lisensi dari semua yang ada di dalam app disertakan bersamanya sebagai `Contents/Resources/Acknowledgements.txt`.
 

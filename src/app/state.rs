@@ -9,6 +9,7 @@ use super::gesture::{Command, SECOND_TAP_WINDOW};
 use super::model_library::ModelLibrary;
 use super::policy::{self, MAX_HANDS_FREE_RECORDING, MAX_RECORDING, Notice};
 use super::recording::Recording;
+use super::updates::UpdateMenu;
 use crate::audio::recorder::{Microphone, StartError};
 use crate::config::settings::{ChosenMicrophone, Settings};
 use crate::config::vocabulary;
@@ -126,6 +127,8 @@ pub struct Snapshot {
     pub recent: Vec<String>,
     pub vocabulary_terms: usize,
     pub login_item: bool,
+    /// `None` without Sparkle; `State` leaves it to `App`, which asks Sparkle.
+    pub updates: Option<UpdateMenu>,
 }
 
 pub struct Launch {
@@ -253,6 +256,7 @@ impl State {
             recent: self.delivery.recent().cloned().collect(),
             vocabulary_terms: self.vocabulary.len(),
             login_item: self.system.login_item,
+            updates: None,
         }
     }
 

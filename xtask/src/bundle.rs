@@ -7,7 +7,16 @@ use anyhow::Result;
 
 use crate::*;
 
-pub(crate) fn info_plist(version: &str) -> String {
+/// `updates` adds what Sparkle reads: where the feed is and the key every update must be signed with.
+pub(crate) fn info_plist(version: &str, updates: bool) -> String {
+    let updates = if updates {
+        format!(
+            "    <key>SUFeedURL</key>\n    <string>{}</string>\n    <key>SUPublicEDKey</key>\n    <string>{UPDATE_KEY}</string>\n",
+            feed_url()
+        )
+    } else {
+        String::new()
+    };
     format!(
         r#"<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -45,7 +54,7 @@ pub(crate) fn info_plist(version: &str) -> String {
     <string>Lowspeak needs accessibility permission to detect the fn (Globe) key and type transcribed text.</string>
     <key>NSHumanReadableCopyright</key>
     <string>© 2026 Sven Müller</string>
-</dict>
+{updates}</dict>
 </plist>
 "#
     )
@@ -65,8 +74,15 @@ pub(crate) enum Build {
     Distribution,
 }
 
+impl Build {
+    /// Only the disk image carries Sparkle: an update must not replace a build of one's own.
+    pub(crate) fn updates(self) -> bool {
+        self == Build::Distribution
+    }
+}
+
 /// Builds the program and lays out `target/bundle/Lowspeak.app` around it, unsigned. The distribution carries the
-/// universal program, the other builds the one for this Mac.
+/// universal program and Sparkle, the other builds the program for this Mac.
 pub(crate) fn assemble(build: Build, version: &str) -> Result<PathBuf> {
     let root = root();
     let release = build != Build::Debug;
@@ -102,10 +118,35 @@ pub(crate) fn assemble(build: Build, version: &str) -> Result<PathBuf> {
         contents.join("Resources").join("AppIcon.icns"),
     )
     .context("copying the icon (run `cargo xtask icon` first)")?;
-    std::fs::write(contents.join("Info.plist"), info_plist(version))?;
+    std::fs::write(
+        contents.join("Info.plist"),
+        info_plist(version, build.updates()),
+    )?;
+    let mut bundled_sparkle = None;
+    if build.updates() {
+        let sparkle = sparkle()?;
+        let frameworks = contents.join("Frameworks");
+        std::fs::create_dir_all(&frameworks)?;
+        let framework = frameworks.join("Sparkle.framework");
+        run(Command::new("ditto")
+            .arg(sparkle.join("Sparkle.framework"))
+            .arg(&framework))?;
+        // Only a sandboxed app needs Sparkle's XPC services.
+        std::fs::remove_dir_all(framework.join("Versions/B/XPCServices"))?;
+        std::fs::remove_file(framework.join("XPCServices"))?;
+        let code = framework.join("Versions/B");
+        for program in [
+            code.join("Sparkle"),
+            code.join("Autoupdate"),
+            code.join("Updater.app/Contents/MacOS/Updater"),
+        ] {
+            check_universal(&program)?;
+        }
+        bundled_sparkle = Some(sparkle);
+    }
     std::fs::write(
         contents.join("Resources").join(ACKNOWLEDGEMENTS),
-        acknowledgements()?,
+        acknowledgements(bundled_sparkle.as_deref())?,
     )?;
     run(Command::new("plutil")
         .arg("-lint")

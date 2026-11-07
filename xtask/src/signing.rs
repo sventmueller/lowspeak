@@ -99,38 +99,55 @@ pub(crate) fn developer_id() -> Result<Identity> {
         .context("no Developer ID Application certificate in the keychain")
 }
 
-/// Signs with the hardened runtime and the entitlements; `None` signs ad hoc.
+/// Signs with the hardened runtime, the app with the entitlements; `None` signs ad hoc. Sparkle's helpers are signed
+/// first, inside out, as its documentation prescribes instead of `--deep`.
 pub(crate) fn sign(app: &Path, identity: Option<&Identity>) -> Result<()> {
-    let entitlements = root().join("assets").join("Lowspeak.entitlements");
-    let mut command = Command::new("codesign");
-    command
-        .args(["--force", "--options", "runtime", "--entitlements"])
-        .arg(&entitlements);
     match identity {
-        Some(identity) => {
-            println!("Signing with {}", identity.name);
-            match &identity.keychain {
-                Some(keychain) => {
-                    command
-                        .args(["--timestamp=none", "--keychain"])
-                        .arg(keychain);
-                }
-                None => {
-                    command.arg("--timestamp");
-                }
-            }
-            command.args(["--sign", &identity.hash]);
-        }
-        None => {
-            println!(
-                "WARNING: no signing certificate — signing ad hoc. macOS then asks for the \
-                 Accessibility permission again after every install. `cargo xtask signing-identity` \
-                 creates a local certificate that avoids this."
-            );
-            command.args(["--sign", "-"]);
-        }
+        Some(identity) => println!("Signing with {}", identity.name),
+        None => println!(
+            "WARNING: no signing certificate — signing ad hoc. macOS then asks for the \
+             Accessibility permission again after every install. `cargo xtask signing-identity` \
+             creates a local certificate that avoids this."
+        ),
     }
-    run(command.arg(app))?;
+    let sparkle = app.join("Contents/Frameworks/Sparkle.framework");
+    let mut parts = Vec::new();
+    if sparkle.exists() {
+        parts.extend([
+            sparkle.join("Versions/B/Autoupdate"),
+            sparkle.join("Versions/B/Updater.app"),
+            sparkle,
+        ]);
+    }
+    parts.push(app.to_path_buf());
+    for part in parts {
+        let mut command = Command::new("codesign");
+        command.args(["--force", "--options", "runtime"]);
+        if part == app {
+            command
+                .arg("--entitlements")
+                .arg(root().join("assets").join("Lowspeak.entitlements"));
+        }
+        match identity {
+            Some(identity) => {
+                match &identity.keychain {
+                    Some(keychain) => {
+                        command
+                            .args(["--timestamp=none", "--keychain"])
+                            .arg(keychain);
+                    }
+                    None => {
+                        command.arg("--timestamp");
+                    }
+                }
+                command.args(["--sign", &identity.hash]);
+            }
+            None => {
+                command.args(["--sign", "-"]);
+            }
+        }
+        run(command.arg(&part))?;
+    }
     run(Command::new("codesign")
         .args(["--verify", "--strict"])
         .arg(app))

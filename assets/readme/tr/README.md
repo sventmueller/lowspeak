@@ -116,14 +116,14 @@ Lowspeak menü çubuğunda yaşar. fn (Dünya) tuşunu basılı tutun ve konuşu
 
 - macOS 14 Sonoma veya üstü. Lowspeak macOS 27’de geliştirilir ve test edilir.
 - Apple Silicon veya Intel işlemcili bir Mac. Yerel metne dönüştürme Apple Silicon için tasarlanmıştır; orada Whisper GPU’da, Parakeet ise Neural Engine’de çalışır. Intel Mac’lerde ikisi de işlemcide ve çok daha yavaş çalışır; bkz. [Intel Mac’ler](#intel-macler).
-- Uygulama için yaklaşık 10 MB, ayrıca indirdiğiniz her yerel model için 75 MB ile 3 GB arası.
+- Uygulama için yaklaşık 17 MB, ayrıca indirdiğiniz her yerel model için 75 MB ile 3 GB arası.
 - Çevrimiçi metne dönüştürme için [OpenAI](https://platform.openai.com/api-keys) ya da [Groq](https://console.groq.com/keys) API anahtarı; ikisi de metne dönüştürdüğünüz kadar ücret alır. Yerel metne dönüştürme için hesap gerekmez.
 
 ## Kurulum
 
 **Disk görüntüsünden.** [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg) dosyasını indirin, açın ve Lowspeak’i Uygulamalar klasörüne sürükleyin. Görüntü bir Developer ID ile imzalanmış ve Apple tarafından notarize edilmiştir; bu yüzden uyarısız açılır.
 
-**Güncellemeler.** Lowspeak kendini güncellemez. Yeni sürümler [sürümler sayfasında](https://github.com/sventmueller/lowspeak/releases) yayımlanır; **Yardım › GitHub’da Lowspeak** oraya götürür. Yeni sürümü eskisinin üzerine kurun; ayarlarınız, anahtarlarınız ve modelleriniz korunur.
+**Güncellemeler.** Disk görüntüsünden kurulan Lowspeak kendini [Sparkle](https://sparkle-project.org) ile güncel tutar. İkinci açılışta, günde bir kez kendiliğinden güncelleme arayıp arayamayacağını sorar. Menüdeki **Güncellemeleri Denetle…** hemen denetler; altındaki **Güncellemeleri Otomatik Olarak Denetle** ve **Güncellemeleri Otomatik Olarak İndir ve Yükle** seçimlerinizi sonradan değiştirir. Siz başka bir uygulamada çalışırken bir denetim yeni bir sürüm bulursa menü çubuğundaki halkada bir nokta belirir ve **Güncellemeleri Denetle…** güncellemeyi öne getirir. Lowspeak bir güncellemeyi yalnızca geliştiricinin imzasını taşıyorsa kurar; ayarlarınız, anahtarlarınız ve modelleriniz korunur. 1.0.0 sürümünde güncelleyici yoktur: daha yeni bir sürümü [sürümler sayfasından](https://github.com/sventmueller/lowspeak/releases) bir kez onun üzerine kurun. Kendi derlemenizde de güncelleyici yoktur.
 
 **Kaynaktan.** Önkoşullar için [Derleme ve dağıtım](../../../docs/development.md#build--deploy) bölümüne bakın, ardından:
 
@@ -170,6 +170,7 @@ Menü çubuğundaki halkaya tıklayın:
 | **Modelleri yönet** | yerel modelleri ilerleme durumuyla birlikte indirme ve silme |
 | **API anahtarını ayarla…** / **API anahtarını güncelle…** | anahtar ekleme, değiştirme ya da kaldırma |
 | **Oturum Açıldığında Aç** | Lowspeak’i Mac’inizle birlikte başlatır; onay işareti açık olduğunu gösterir |
+| **Güncellemeleri Denetle…** | hemen yeni bir sürüm arar; altındaki iki seçenek, Lowspeak’in günde bir kez arayıp aramayacağını ve güncellemeleri sormadan kurup kurmayacağını belirler. Yalnızca disk görüntüsünden kurulan uygulamada |
 | **Yardım** | **Hızlı Başvuru**, **Sorun Bildir…**, **Özellik Öner…**, **GitHub’da Lowspeak** |
 | **Lowspeak Hakkında** | sürüm, telif hakkı, proje sayfası ve lisans |
 | **Lowspeak’ten Çık** | menü açıkken ⌘Q |
@@ -182,6 +183,7 @@ Menü çubuğundaki halkaya tıklayın:
 | Dolu daire | fn basılıyken kayıt |
 | Yuvarlatılmış kare | Kayıt kilitli; fn ya da Shift tuşuna bir sonraki basış kaydı bitirir |
 | Yanıp sönen halka | Metne dönüştürülüyor |
+| Sağ üstte noktalı halka | Yeni bir sürüm bekliyor; bkz. **Güncellemeleri Denetle…** |
 | ↓ 42% | Model indiriliyor |
 
 Lowspeak’in ayarlar penceresi yoktur: her şey bu menüdedir ve Lowspeak her seçiminizi hatırlar.
@@ -379,11 +381,11 @@ Lowspeak, fn basılıyken söylediklerinizi duyar, herhangi bir uygulamaya yazab
 
 - **Sesiniz tek bir yere gider.** Çevrimiçi modda kayıt sıkıştırılmış olarak, sözlüğünüzle birlikte seçtiğiniz sağlayıcıya, OpenAI ya da Groq’a gider. Yerel modda hiçbir şey Mac’inizden çıkmaz. Bir çevrimiçi istek başarısız olduğunda aynı kaydı Mac’inizde bir yerel model metne dönüştürür.
 - **Son işleme**, açarsanız, metne dönüştürülmüş metni ve sözlüğünüzü Groq’a ya da OpenAI’a gönderir. Biçimlendirme modunda dikte ettiğiniz uygulamanın türünü de ekler (kod düzenleyici, terminal, sohbet ya da e-posta); uygulamanın adı gönderilmez.
-- **Telemetri yok, hesap yok.** Lowspeak, metne dönüştürme ve son işleme dışında yalnızca çevrimiçi modda ya da son işleme açıkken fn basılıyken sağlayıcınızla bağlantıyı açmak için ve siz istediğinizde Hugging Face’ten HTTPS üzerinden, sabit bir sürümde ve her dosyayı sağlama toplamıyla denetleyerek bir model indirmek için ağa bağlanır. **Yardım › Sorun Bildir…** tarayıcınızda GitHub’da bir form açar; formun adresi Lowspeak’in sürümünü ve macOS sürümünü taşır, dikte ettiğiniz hiçbir şeyi taşımaz.
+- **Telemetri yok, hesap yok.** Lowspeak, metne dönüştürme ve son işleme dışında yalnızca çevrimiçi modda ya da son işleme açıkken fn basılıyken sağlayıcınızla bağlantıyı açmak için, siz istediğinizde Hugging Face’ten HTTPS üzerinden, sabit bir sürümde ve her dosyayı sağlama toplamıyla denetleyerek bir model indirmek için ve izin verirseniz günde bir kez GitHub’da yeni bir sürüm aramak için ağa bağlanır. Bu istek Lowspeak’in sürümünü taşır, başka hiçbir şeyi taşımaz. **Yardım › Sorun Bildir…** tarayıcınızda GitHub’da bir form açar; formun adresi Lowspeak’in sürümünü ve macOS sürümünü taşır, dikte ettiğiniz hiçbir şeyi taşımaz.
 - **API anahtarları** oturum açma anahtar zincirinizde kalır. Yalnızca kendi sağlayıcılarına gönderilir ve günlüğe herhangi bir şey yazılmadan önce hata iletilerinden çıkarılır.
 - **Dikte edilen metin saklanmaz.** Son on dikte **Son dikteler** için bellekte kalır ve Lowspeak kapandığında silinir. Günlük dosyaları uzunlukları ve süreleri kaydeder, metni asla.
 - **Pano** yapıştırmadan önce kaydedilir ve uygulama metni okuduğunda geri yüklenir; bu arada başka bir uygulama panoyu değiştirdiyse geri yüklenmez. Dikte edilen metin geçici olarak işaretlenir; bu işarete uyan pano geçmişi uygulamaları onu atlar.
-- **Kod imzalama**, Hardened Runtime ile; uygulama yalnızca mikrofon, Erişilebilirlik, bildirimler ve ağ için izin ister.
+- **Kod imzalama**, Hardened Runtime ile; uygulama yalnızca mikrofon, Erişilebilirlik, bildirimler ve ağ için izin ister. Bir güncelleme geliştiricinin imzasını taşımalıdır, aksi hâlde Sparkle onu reddeder.
 
 Bir güvenlik açığını bildirmek için [güvenlik politikasını](../../../SECURITY.md) izleyin.
 
@@ -406,7 +408,7 @@ Apple Silicon’da ölçülmüştür:
 - **Süre sınırları:** fn basılıyken iki dakika, kilitliyken beş dakika.
 - **Mikrofon Modu:** Denetim Merkezi Lowspeak için Ses İzolasyonu ve Geniş Spektrum seçeneklerini sunar ve bunları etkin olarak gösterir; ancak Lowspeak ses işleme olmadan kaydeder, bu yüzden seçimin hiçbir etkisi olmaz.
 - **Son dikteler** yalnızca bellekte tutulur ve çıktıktan sonra silinir.
-- **Tasarım gereği:** Ayarlar penceresi yok, Dock simgesi yok, otomatik güncelleme yok, App Store’da değil.
+- **Tasarım gereği:** Ayarlar penceresi yok, Dock simgesi yok, App Store’da değil.
 
 ## Sorun giderme
 
@@ -449,6 +451,7 @@ Derleme, test, kodun yapısı ve uyduğu kurallar [docs/development.md](../../..
 | [sha1, sha2](https://github.com/RustCrypto/hashes) | 0.11 | model indirmelerinin sağlama toplamları | MIT veya Apache-2.0 |
 | [security-framework](https://github.com/kornelski/rust-security-framework) | 3.7 | anahtar zincirindeki API anahtarları | MIT veya Apache-2.0 |
 | [serde](https://serde.rs), serde_json, anyhow, unicode-general-category | 1 | JSON, hatalar, Parakeet’in sözcük dağarcığı | MIT veya Apache-2.0; Apache-2.0 |
+| [Sparkle](https://sparkle-project.org) | 2.10.1 | disk görüntüsünden kurulan uygulamanın güncellemeleri | MIT; parçaları BSD ve zlib lisansları altında |
 
 Uygulamanın içindeki her şeyin lisans metinleri, uygulamayla birlikte `Contents/Resources/Acknowledgements.txt` olarak gelir.
 

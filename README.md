@@ -136,7 +136,7 @@ Problem…** in Lowspeak's menu: the form opens with your version filled in. If 
 - A Mac with Apple Silicon or an Intel processor. Local transcription is built for Apple Silicon, where Whisper runs
   on the GPU and Parakeet on the Neural Engine; on Intel Macs both run on the processor, much more slowly, see
   [Intel Macs](#intel-macs).
-- About 10 MB for the app, plus 75 MB to 3 GB for each local model you download.
+- About 17 MB for the app, plus 75 MB to 3 GB for each local model you download.
 - For online transcription, an API key from [OpenAI](https://platform.openai.com/api-keys) or
   [Groq](https://console.groq.com/keys); both charge for what you transcribe. Local transcription needs no account.
 
@@ -146,9 +146,14 @@ Problem…** in Lowspeak's menu: the form opens with your version filled in. If 
 open it and drag Lowspeak onto the Applications folder. The image is signed with a Developer ID and notarized by
 Apple, so it opens without warnings.
 
-**Updates.** Lowspeak does not update itself. New versions appear on the
-[releases page](https://github.com/sventmueller/lowspeak/releases); **Help › Lowspeak on GitHub** leads there. Install
-a new version over the old one; your settings, keys and models stay.
+**Updates.** Lowspeak from the disk image keeps itself up to date with [Sparkle](https://sparkle-project.org). On the
+second launch it asks whether it may look for updates on its own, once a day. **Check for Updates…** in the menu looks
+right away; **Check for Updates Automatically** and **Automatically Download and Install Updates** below it change your
+choice later. When a check finds a new version while you work in another app, a dot appears on the ring in the menu
+bar, and **Check for Updates…** brings the update to the front. Lowspeak installs an update only if it carries the
+developer's signature; your settings, keys and models stay. Version 1.0.0 has no updater: install a newer version over
+it once, from the [releases page](https://github.com/sventmueller/lowspeak/releases). A build of your own has no
+updater either.
 
 **From source.** See [Build & Deploy](docs/development.md#build--deploy) for the prerequisites, then:
 
@@ -202,6 +207,7 @@ Click the ring in the menu bar:
 | **Manage Models** | download and delete local models, with progress |
 | **Set API Key…** / **Update API Key…** | add, replace or remove keys |
 | **Open at Login** | start Lowspeak with your Mac; the checkmark shows it is on |
+| **Check for Updates…** | look for a new version now; the two items below it decide whether Lowspeak looks once a day and installs updates without asking. Only in the app from the disk image |
 | **Help** | **Quick Reference**, **Report Problem…**, **Suggest Feature…**, **Lowspeak on GitHub** |
 | **About Lowspeak** | version, copyright, project page and license |
 | **Quit Lowspeak** | ⌘Q while the menu is open |
@@ -214,6 +220,7 @@ The checkmark under **Local**, **OpenAI** and **Groq** marks the model in use. T
 | Filled circle | Recording while fn is held |
 | Rounded square | Recording locked; the next press on fn or Shift ends it |
 | Blinking ring | Transcribing |
+| Ring with a dot at the top right | A new version is waiting, see **Check for Updates…** |
 | ↓ 42 % | Downloading a model |
 
 Lowspeak has no settings window: everything is in this menu, and it remembers every choice.
@@ -482,8 +489,10 @@ can with them.
 - **Post-processing**, if you turn it on, sends the transcribed text and your vocabulary to Groq or OpenAI. In Format
   mode it adds the kind of app you dictate into (code editor, terminal, chat or email); the app's name is not sent.
 - **No telemetry, no account.** Apart from transcription and post-processing, Lowspeak goes online only to open the
-  connection to your provider while fn is held, in online mode or with post-processing on, and to download a model when
-  you ask for one, from Hugging Face over HTTPS, at a fixed version and with every file checked against its checksum.
+  connection to your provider while fn is held, in online mode or with post-processing on, to download a model when
+  you ask for one, from Hugging Face over HTTPS, at a fixed version and with every file checked against its checksum,
+  and to look for a new version on GitHub, once a day if you allow it. That request carries Lowspeak's version and
+  nothing else.
   **Help › Report Problem…** opens a form on GitHub in your browser; its address carries Lowspeak's version and the macOS
   version, nothing you dictated.
 - **API keys** stay in your login keychain. They are sent only to their own provider and removed from error messages
@@ -493,7 +502,7 @@ can with them.
 - **The clipboard** is saved before pasting and restored once the app has read the text, unless another app changed it
   in between. The dictation is marked as transient, so clipboard history apps that respect the marker skip it.
 - **Code signing** with the Hardened Runtime; the app asks only for the microphone, Accessibility, notifications and the
-  network.
+  network. An update must carry the developer's signature, or Sparkle refuses it.
 
 To report a vulnerability, follow the [security policy](SECURITY.md).
 
@@ -522,7 +531,7 @@ Measured on Apple Silicon:
 - **Mic Mode:** Control Center offers Voice Isolation and Wide Spectrum for Lowspeak and reports them as active, but
   Lowspeak records without voice processing, so the choice has no effect.
 - **Recent Dictations** live in memory only and are gone after quitting.
-- **By design:** no settings window, no Dock icon, no automatic updates, not in the App Store.
+- **By design:** no settings window, no Dock icon, not in the App Store.
 
 ## Troubleshooting
 
@@ -578,6 +587,7 @@ Building, testing, the layout of the code and the rules it follows are described
 | [sha1, sha2](https://github.com/RustCrypto/hashes) | 0.11 | checksums of the model downloads | MIT or Apache-2.0 |
 | [security-framework](https://github.com/kornelski/rust-security-framework) | 3.7 | API keys in the keychain | MIT or Apache-2.0 |
 | [serde](https://serde.rs), serde_json, anyhow, unicode-general-category | 1 | JSON, errors, the vocabulary of Parakeet | MIT or Apache-2.0; Apache-2.0 |
+| [Sparkle](https://sparkle-project.org) | 2.10.1 | updates of the app from the disk image | MIT, with parts under BSD and zlib licenses |
 
 The license texts of everything inside the app ship with it as `Contents/Resources/Acknowledgements.txt`.
 

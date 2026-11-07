@@ -19,8 +19,9 @@ const REPORT_LINE: &str = "Something wrong or missing? \
 /// Builds the release app signed with the Developer ID, has Apple notarize it, packs it into a disk image with a
 /// link to /Applications and has Apple notarize the image too, so that Gatekeeper opens both on other Macs, each with
 /// its ticket stapled. Only an image that passed all of this becomes `dist/Lowspeak-<version>.dmg`, next to
-/// `dist/Lowspeak-<version>.md` with the notes of `RELEASE_NOTES.md`; it replaces the older ones there, and the build
-/// number goes up. A failed run leaves `dist/` and VERSION as they were.
+/// `dist/Lowspeak-<version>.md` with the notes of `RELEASE_NOTES.md` and `dist/appcast.xml`, which offers the image to
+/// installed copies once it is on the GitHub release; it replaces the older ones there, and the build number goes up.
+/// A failed run leaves `dist/` and VERSION as they were.
 pub(crate) fn release() -> Result<PathBuf> {
     let version = version()?;
     let dist = root().join("dist");
@@ -39,6 +40,7 @@ pub(crate) fn release() -> Result<PathBuf> {
              `xcrun notarytool store-credentials {NOTARY_PROFILE} --apple-id <Apple ID> --team-id <team ID>`"
         )
     })?;
+    check_update_key()?;
 
     let app = assemble(Build::Distribution, &version)?;
     println!("Signing {version} with {}", identity.name);
@@ -73,6 +75,14 @@ pub(crate) fn release() -> Result<PathBuf> {
         ])
         .arg(&image))?;
 
+    let signature = output(Command::new(sparkle()?.join("bin/sign_update")).arg(&image))?;
+    let date = output(
+        Command::new("date")
+            .env("LC_ALL", "C")
+            .args(["-u", "+%a, %d %b %Y %H:%M:%S +0000"]),
+    )?;
+    let feed = appcast(&version, signature.trim(), date.trim(), notes.trim_end())?;
+
     std::fs::create_dir_all(&dist)?;
     let name = format!("{APP_NAME}-{version}");
     let published = dist.join(format!("{name}.dmg"));
@@ -81,6 +91,7 @@ pub(crate) fn release() -> Result<PathBuf> {
         .with_context(|| format!("copying to {}", published.display()))?;
     std::fs::remove_file(&image)?;
     std::fs::write(dist.join(format!("{name}.md")), &notes)?;
+    std::fs::write(dist.join(FEED), feed)?;
     for entry in std::fs::read_dir(&dist)?.flatten() {
         let file = entry.file_name().to_string_lossy().into_owned();
         if released_version(&file).is_some_and(|other| other != version) {

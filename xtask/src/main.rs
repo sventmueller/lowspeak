@@ -13,12 +13,14 @@ mod licenses;
 mod readme;
 mod release;
 mod signing;
+mod updates;
 
 pub(crate) use assets::*;
 pub(crate) use bundle::*;
 pub(crate) use licenses::*;
 pub(crate) use release::*;
 pub(crate) use signing::*;
+pub(crate) use updates::*;
 
 pub(crate) const APP_NAME: &str = "Lowspeak";
 pub(crate) const BUNDLE_ID: &str = "com.lowspeak.app";
@@ -157,10 +159,26 @@ mod tests {
 
     #[test]
     fn the_bundle_carries_the_version_twice() {
-        let plist = info_plist("1.2.3");
+        let plist = info_plist("1.2.3", false);
         assert!(
             plist.contains("<key>CFBundleShortVersionString</key>\n    <string>1.2.3</string>")
         );
         assert!(plist.contains("<key>CFBundleVersion</key>\n    <string>1.2.3</string>"));
+    }
+
+    #[test]
+    fn only_the_disk_image_looks_for_updates() {
+        assert!(!info_plist("1.2.3", false).contains("SUFeedURL"));
+        let published = info_plist("1.2.3", true);
+        assert!(published.contains(&format!(
+            "<key>SUFeedURL</key>\n    <string>{}</string>",
+            feed_url()
+        )));
+        assert!(published.contains(&format!(
+            "<key>SUPublicEDKey</key>\n    <string>{UPDATE_KEY}</string>"
+        )));
+        assert!(
+            Build::Distribution.updates() && !Build::Release.updates() && !Build::Debug.updates()
+        );
     }
 }

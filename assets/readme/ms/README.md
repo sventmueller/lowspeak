@@ -116,14 +116,14 @@ Lowspeak tinggal dalam bar menu. Tahan kekunci fn (Glob) dan bercakap; apabila a
 
 - macOS 14 Sonoma atau lebih baharu. Lowspeak dibangunkan dan diuji pada macOS 27.
 - Mac dengan Apple Silicon atau pemproses Intel. Transkripsi setempat dibina untuk Apple Silicon, tempat Whisper berjalan pada GPU dan Parakeet pada Neural Engine; pada Mac Intel kedua-duanya berjalan pada pemproses dan jauh lebih perlahan, lihat [Mac Intel](#mac-intel).
-- Kira-kira 10 MB untuk app, ditambah 75 MB hingga 3 GB bagi setiap model setempat yang anda muat turun.
+- Kira-kira 17 MB untuk app, ditambah 75 MB hingga 3 GB bagi setiap model setempat yang anda muat turun.
 - Untuk transkripsi dalam talian, kunci API daripada [OpenAI](https://platform.openai.com/api-keys) atau [Groq](https://console.groq.com/keys); kedua-duanya mengenakan bayaran untuk apa yang anda transkripsi. Transkripsi setempat tidak memerlukan akaun.
 
 ## Pemasangan
 
 **Daripada imej cakera.** Muat turun [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), buka dan seret Lowspeak ke folder Aplikasi. Imej ini ditandatangani dengan Developer ID dan dinotarisasi oleh Apple, jadi ia dibuka tanpa amaran.
 
-**Kemas kini.** Lowspeak tidak mengemas kini dirinya sendiri. Versi baharu muncul di [halaman keluaran](https://github.com/sventmueller/lowspeak/releases); **Bantuan › Lowspeak di GitHub** membawa anda ke sana. Pasang versi baharu di atas versi lama; tetapan, kunci dan model anda kekal.
+**Kemas kini.** Lowspeak daripada imej cakera mengemas kini dirinya sendiri melalui [Sparkle](https://sparkle-project.org). Pada pelancaran kali kedua, ia bertanya sama ada ia boleh mencari kemas kini sendiri, sekali sehari. **Semak Kemas Kini…** dalam menu menyemak serta-merta; **Semak Kemas Kini Secara Automatik** dan **Muat Turun dan Pasang Kemas Kini Secara Automatik** di bawahnya mengubah pilihan anda kemudian. Apabila semakan menemui versi baharu semasa anda bekerja dalam app lain, satu titik muncul pada cincin dalam bar menu, dan **Semak Kemas Kini…** membawa kemas kini itu ke hadapan. Lowspeak memasang kemas kini hanya jika ia membawa tandatangan pembangun; tetapan, kunci dan model anda kekal. Versi 1.0.0 tidak mempunyai pengemas kini: pasang versi yang lebih baharu di atasnya sekali sahaja, daripada [halaman keluaran](https://github.com/sventmueller/lowspeak/releases). Binaan anda sendiri juga tidak mempunyai pengemas kini.
 
 **Daripada kod sumber.** Lihat [Membina & memasang](../../../docs/development.md#build--deploy) untuk prasyarat, kemudian:
 
@@ -170,6 +170,7 @@ Klik cincin dalam bar menu:
 | **Urus Model** | muat turun dan padam model setempat, dengan paparan kemajuan |
 | **Setkan Kunci API…** / **Kemas Kini Kunci API…** | tambah, ganti atau buang kunci |
 | **Buka apabila Log Masuk** | mulakan Lowspeak bersama Mac anda; tanda semak menunjukkan pilihan ini aktif |
+| **Semak Kemas Kini…** | cari versi baharu sekarang; dua item di bawahnya menentukan sama ada Lowspeak menyemak sekali sehari dan memasang kemas kini tanpa bertanya. Hanya dalam app daripada imej cakera |
 | **Bantuan** | **Rujukan Pantas**, **Laporkan Masalah…**, **Cadangkan Ciri…**, **Lowspeak di GitHub** |
 | **Perihal Lowspeak** | versi, hak cipta, halaman projek dan lesen |
 | **Keluar daripada Lowspeak** | ⌘Q semasa menu dibuka |
@@ -182,6 +183,7 @@ Tanda semak di bawah **Setempat**, **OpenAI** dan **Groq** menandakan model yang
 | Bulatan penuh | Merakam semasa fn ditahan |
 | Segi empat bucu bulat | Rakaman dikunci; tekanan seterusnya pada fn atau Shift menamatkannya |
 | Cincin berkelip | Mentranskripsi |
+| Cincin dengan titik di kanan atas | Versi baharu sedang menunggu, lihat **Semak Kemas Kini…** |
 | ↓ 42% | Memuat turun model |
 
 Lowspeak tidak mempunyai tetingkap tetapan: semuanya ada dalam menu ini, dan ia mengingati setiap pilihan.
@@ -379,11 +381,11 @@ Lowspeak mendengar apa yang anda katakan semasa fn ditahan, boleh menaip ke dala
 
 - **Suara anda pergi ke satu tempat sahaja.** Dalam mod dalam talian, rakaman dihantar dalam bentuk termampat kepada penyedia yang anda pilih, OpenAI atau Groq, bersama kosa kata anda. Dalam mod setempat, tiada apa yang meninggalkan Mac anda. Apabila permintaan dalam talian gagal, model setempat mentranskripsi rakaman yang sama pada Mac anda.
 - **Pascapemprosesan**, jika anda menghidupkannya, menghantar teks yang ditranskripsi dan kosa kata anda kepada Groq atau OpenAI. Dalam mod Formatkan, ia turut menghantar jenis app tempat anda membuat perencanaan (penyunting kod, terminal, sembang atau e-mel); nama app tidak dihantar.
-- **Tiada telemetri, tiada akaun.** Selain transkripsi dan pascapemprosesan, Lowspeak hanya menyambung ke internet untuk membuka sambungan kepada penyedia anda semasa fn ditahan, dalam mod dalam talian atau apabila pascapemprosesan dihidupkan, dan untuk memuat turun model apabila anda memintanya, daripada Hugging Face melalui HTTPS, pada versi yang tetap dan dengan setiap fail disemak berbanding hasil tambah semaknya. **Bantuan › Laporkan Masalah…** membuka borang di GitHub dalam pelayar anda; alamatnya membawa versi Lowspeak dan versi macOS, bukan apa-apa daripada perencanaan anda.
+- **Tiada telemetri, tiada akaun.** Selain transkripsi dan pascapemprosesan, Lowspeak hanya menyambung ke internet untuk membuka sambungan kepada penyedia anda semasa fn ditahan, dalam mod dalam talian atau apabila pascapemprosesan dihidupkan, untuk memuat turun model apabila anda memintanya, daripada Hugging Face melalui HTTPS, pada versi yang tetap dan dengan setiap fail disemak berbanding hasil tambah semaknya, dan untuk mencari versi baharu di GitHub, sekali sehari jika anda membenarkannya. Permintaan itu membawa versi Lowspeak dan tiada apa-apa lagi. **Bantuan › Laporkan Masalah…** membuka borang di GitHub dalam pelayar anda; alamatnya membawa versi Lowspeak dan versi macOS, bukan apa-apa daripada perencanaan anda.
 - **Kunci API** kekal dalam rantai kunci log masuk anda. Kunci hanya dihantar kepada penyedianya sendiri dan dibuang daripada mesej ralat sebelum apa-apa ditulis ke log.
 - **Teks perencanaan tidak disimpan.** Sepuluh perencanaan terakhir kekal dalam memori untuk **Perencanaan Terbaharu** dan hilang apabila Lowspeak keluar. Fail log merekodkan panjang dan masa, tidak sekali-kali teksnya.
 - **Papan klip** disimpan sebelum menampal dan dipulihkan sebaik sahaja app membaca teks itu, melainkan app lain mengubahnya di antaranya. Perencanaan ditandakan sebagai sementara, jadi app sejarah papan klip yang mematuhi penanda itu melangkaunya.
-- **Tandatangan kod** dengan Hardened Runtime; app hanya meminta akses kepada mikrofon, Kebolehcapaian, pemberitahuan dan rangkaian.
+- **Tandatangan kod** dengan Hardened Runtime; app hanya meminta akses kepada mikrofon, Kebolehcapaian, pemberitahuan dan rangkaian. Kemas kini mesti membawa tandatangan pembangun; jika tidak, Sparkle menolaknya.
 
 Untuk melaporkan kerentanan, ikut [dasar keselamatan](../../../SECURITY.md).
 
@@ -406,7 +408,7 @@ Diukur pada Apple Silicon:
 - **Had masa:** dua minit semasa fn ditahan, lima minit apabila dikunci.
 - **Mod Mik:** Pusat Kawalan menawarkan Asingkan Suara dan Spektrum Lebar untuk Lowspeak dan melaporkannya sebagai aktif, tetapi Lowspeak merakam tanpa pemprosesan suara, jadi pilihan itu tiada kesan.
 - **Perencanaan Terbaharu** disimpan dalam memori sahaja dan hilang selepas keluar.
-- **Dengan reka bentuk:** tiada tetingkap tetapan, tiada ikon Dock, tiada kemas kini automatik, tiada dalam App Store.
+- **Dengan reka bentuk:** tiada tetingkap tetapan, tiada ikon Dock, tiada dalam App Store.
 
 ## Penyelesaian masalah
 
@@ -449,6 +451,7 @@ Cara membina, menguji, struktur kod dan peraturan yang dipatuhinya diterangkan d
 | [sha1, sha2](https://github.com/RustCrypto/hashes) | 0.11 | hasil tambah semak muat turun model | MIT atau Apache-2.0 |
 | [security-framework](https://github.com/kornelski/rust-security-framework) | 3.7 | kunci API dalam rantai kunci | MIT atau Apache-2.0 |
 | [serde](https://serde.rs), serde_json, anyhow, unicode-general-category | 1 | JSON, ralat, kosa kata Parakeet | MIT atau Apache-2.0; Apache-2.0 |
+| [Sparkle](https://sparkle-project.org) | 2.10.1 | kemas kini app daripada imej cakera | MIT, dengan bahagian di bawah lesen BSD dan zlib |
 
 Teks lesen bagi semua yang ada di dalam app disertakan bersamanya sebagai `Contents/Resources/Acknowledgements.txt`.
 

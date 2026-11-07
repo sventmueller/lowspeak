@@ -116,14 +116,14 @@ Lowspeak živi u traci s izbornicima. Držite tipku fn (globus) i govorite; kad 
 
 - macOS 14 Sonoma ili noviji. Lowspeak se razvija i testira na macOSu 27.
 - Mac s Apple Silicon ili Intelovim procesorom. Lokalna transkripcija izrađena je za Apple Silicon, gdje Whisper radi na GPU-u, a Parakeet na Neural Engineu; na Macovima s Intelom oba rade na procesoru, znatno sporije, vidi [Macovi s Intelom](#macovi-s-intelom).
-- Oko 10 MB za aplikaciju, plus od 75 MB do 3 GB za svaki lokalni model koji preuzmete.
+- Oko 17 MB za aplikaciju, plus od 75 MB do 3 GB za svaki lokalni model koji preuzmete.
 - Za online transkripciju API ključ od [OpenAI-ja](https://platform.openai.com/api-keys) ili [Groqa](https://console.groq.com/keys); oba naplaćuju ono što transkribirate. Lokalnoj transkripciji ne treba račun.
 
 ## Instalacija
 
 **Iz slike diska.** Preuzmite [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), otvorite je i povucite Lowspeak na mapu Aplikacije. Slika je potpisana certifikatom Developer ID i ovjerena (notarizirana) od Applea, pa se otvara bez upozorenja.
 
-**Ažuriranja.** Lowspeak se ne ažurira sam. Nove verzije pojavljuju se na [stranici izdanja](https://github.com/sventmueller/lowspeak/releases); **Pomoć › Lowspeak na GitHubu** vodi onamo. Instalirajte novu verziju preko stare; vaše postavke, ključevi i modeli ostaju.
+**Ažuriranja.** Lowspeak iz slike diska sam se održava ažurnim putem [Sparkla](https://sparkle-project.org). Pri drugom pokretanju pita smije li jednom dnevno sam potražiti ažuriranja. **Potraži ažuriranja…** u izborniku traži odmah; **Automatski traži ažuriranja** i **Automatski preuzmi i instaliraj ažuriranja** ispod nje kasnije mijenjaju vaš odabir. Kad provjera pronađe novu verziju dok radite u drugoj aplikaciji, na prstenu u traci s izbornicima pojavljuje se točka, a **Potraži ažuriranja…** donosi ažuriranje u prvi plan. Lowspeak instalira ažuriranje samo ako nosi potpis razvojnog programera; vaše postavke, ključevi i modeli ostaju. Verzija 1.0.0 nema automatsko ažuriranje: jednom preko nje instalirajte noviju verziju sa [stranice izdanja](https://github.com/sventmueller/lowspeak/releases). Ni vlastita izgradnja nema automatsko ažuriranje.
 
 **Iz izvornog koda.** Preduvjete potražite u odjeljku [Izgradnja i postavljanje](../../../docs/development.md#build--deploy), a zatim:
 
@@ -170,6 +170,7 @@ Kliknite prsten u traci s izbornicima:
 | **Upravljaj modelima** | preuzimanje i brisanje lokalnih modela, s prikazom napretka |
 | **Postavi API ključ…** / **Promijeni API ključ…** | dodavanje, zamjena ili uklanjanje ključeva |
 | **Otvori kod prijave** | pokretanje Lowspeaka zajedno s vašim Macom; kvačica pokazuje da je uključeno |
+| **Potraži ažuriranja…** | traženje nove verzije odmah; dvije stavke ispod nje određuju traži li Lowspeak jednom dnevno i instalira li ažuriranja bez pitanja. Samo u aplikaciji iz slike diska |
 | **Pomoć** | **Kratki pregled**, **Prijavi problem…**, **Predloži značajku…**, **Lowspeak na GitHubu** |
 | **Više o aplikaciji Lowspeak** | verzija, autorska prava, stranica projekta i licenca |
 | **Zatvori Lowspeak** | ⌘Q dok je izbornik otvoren |
@@ -182,6 +183,7 @@ Kvačica pod **Lokalno**, **OpenAI** i **Groq** označava model koji se koristi.
 | Ispunjeni krug | Snimanje dok se drži fn |
 | Zaobljeni kvadrat | Snimanje zaključano; sljedeći pritisak na fn ili Shift završava ga |
 | Prsten koji treperi | Transkribiranje |
+| Prsten s točkom gore desno | Čeka nova verzija, vidi **Potraži ažuriranja…** |
 | ↓ 42 % | Preuzimanje modela |
 
 Lowspeak nema prozor s postavkama: sve je u ovom izborniku, a on pamti svaki vaš odabir.
@@ -379,11 +381,11 @@ Lowspeak čuje što govorite dok se drži fn, može pisati u bilo koju aplikacij
 
 - **Vaš glas ide na jedno mjesto.** U online načinu rada snimka, komprimirana, ide pružatelju usluge kojeg ste odabrali, OpenAI-ju ili Groqu, zajedno s vašim rječnikom. U lokalnom načinu rada ništa ne napušta vaš Mac. Kad online zahtjev ne uspije, lokalni model transkribira istu snimku na vašem Macu.
 - **Naknadna obrada**, ako je uključite, šalje transkribirani tekst i vaš rječnik Groqu ili OpenAI-ju. U načinu Oblikovanje dodaje vrstu aplikacije u koju diktirate (uređivač koda, terminal, chat ili e-pošta); naziv aplikacije ne šalje se.
-- **Bez telemetrije, bez računa.** Osim za transkripciju i naknadnu obradu, Lowspeak se spaja na mrežu samo kako bi otvorio vezu s vašim pružateljem usluge dok se drži fn, u online načinu rada ili s uključenom naknadnom obradom, te kako bi preuzeo model kad to zatražite, s Hugging Facea preko HTTPS-a, u fiksnoj verziji i uz provjeru kontrolnog zbroja svake datoteke. **Pomoć › Prijavi problem…** otvara obrazac na GitHubu u vašem pregledniku; njegova adresa sadrži verziju Lowspeaka i verziju macOS-a, ništa od onoga što ste diktirali.
+- **Bez telemetrije, bez računa.** Osim za transkripciju i naknadnu obradu, Lowspeak se spaja na mrežu samo kako bi otvorio vezu s vašim pružateljem usluge dok se drži fn, u online načinu rada ili s uključenom naknadnom obradom, kako bi preuzeo model kad to zatražite, s Hugging Facea preko HTTPS-a, u fiksnoj verziji i uz provjeru kontrolnog zbroja svake datoteke, te kako bi na GitHubu potražio novu verziju, jednom dnevno ako to dopustite. Taj zahtjev sadrži verziju Lowspeaka i ništa drugo. **Pomoć › Prijavi problem…** otvara obrazac na GitHubu u vašem pregledniku; njegova adresa sadrži verziju Lowspeaka i verziju macOS-a, ništa od onoga što ste diktirali.
 - **API ključevi** ostaju u vašem privjesku ključeva za prijavu. Šalju se samo vlastitom pružatelju usluge i uklanjaju se iz poruka o pogreškama prije nego što se išta zapiše u zapisnik.
 - **Diktirani tekst ne sprema se.** Posljednjih deset diktata ostaje u memoriji za **Nedavni diktati** i nestaje kad se Lowspeak zatvori. Zapisnici bilježe duljine i vremena, nikad tekst.
 - **Međuspremnik** se sprema prije lijepljenja i vraća čim aplikacija pročita tekst, osim ako ga je u međuvremenu promijenila neka druga aplikacija. Diktat je označen kao privremen, pa ga aplikacije za povijest međuspremnika koje poštuju tu oznaku preskaču.
-- **Potpisivanje koda** s Hardened Runtimeom; aplikacija traži samo mikrofon, Pristupačnost, obavijesti i mrežu.
+- **Potpisivanje koda** s Hardened Runtimeom; aplikacija traži samo mikrofon, Pristupačnost, obavijesti i mrežu. Ažuriranje mora nositi potpis razvojnog programera, inače ga Sparkle odbija.
 
 Za prijavu ranjivosti slijedite [sigurnosna pravila](../../../SECURITY.md).
 
@@ -406,7 +408,7 @@ Izmjereno na Apple Siliconu:
 - **Vremenska ograničenja:** dvije minute dok se drži fn, pet minuta kad je snimanje zaključano.
 - **Način rada mikrofona:** Kontrolni centar za Lowspeak nudi Izoliranje glasa i Široki spektar i prikazuje ih kao aktivne, ali Lowspeak snima bez obrade glasa, pa odabir nema učinka.
 - **Nedavni diktati** postoje samo u memoriji i nestaju nakon zatvaranja.
-- **Namjerno:** bez prozora s postavkama, bez ikone u Docku, bez automatskih ažuriranja, nije u App Storeu.
+- **Namjerno:** bez prozora s postavkama, bez ikone u Docku, nije u App Storeu.
 
 ## Rješavanje problema
 
@@ -449,6 +451,7 @@ Izgradnja, testiranje, struktura koda i pravila koja slijedi opisani su u [docs/
 | [sha1, sha2](https://github.com/RustCrypto/hashes) | 0.11 | kontrolni zbrojevi preuzetih modela | MIT ili Apache-2.0 |
 | [security-framework](https://github.com/kornelski/rust-security-framework) | 3.7 | API ključevi u privjesku ključeva | MIT ili Apache-2.0 |
 | [serde](https://serde.rs), serde_json, anyhow, unicode-general-category | 1 | JSON, pogreške, vokabular Parakeeta | MIT ili Apache-2.0; Apache-2.0 |
+| [Sparkle](https://sparkle-project.org) | 2.10.1 | ažuriranja aplikacije iz slike diska | MIT, s dijelovima pod licencama BSD i zlib |
 
 Licencni tekstovi svega što se nalazi u aplikaciji isporučuju se s njom kao `Contents/Resources/Acknowledgements.txt`.
 

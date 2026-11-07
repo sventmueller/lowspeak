@@ -8,8 +8,9 @@ use objc2::rc::Retained;
 use objc2::runtime::{Bool, ProtocolObject, Sel};
 use objc2::{DefinedClass as _, MainThreadOnly, define_class, msg_send, sel};
 use objc2_app_kit::{
-    NSBezierPath, NSCellImagePosition, NSColor, NSControlStateValue, NSControlStateValueOff,
-    NSControlStateValueOn, NSImage, NSMenu, NSMenuDelegate, NSMenuItem, NSStatusBar, NSStatusItem,
+    NSBezierPath, NSCellImagePosition, NSColor, NSCompositingOperation, NSControlStateValue,
+    NSControlStateValueOff, NSControlStateValueOn, NSGraphicsContext, NSImage, NSMenu,
+    NSMenuDelegate, NSMenuItem, NSMenuItemBadge, NSStatusBar, NSStatusItem,
     NSVariableStatusItemLength,
 };
 use objc2_foundation::{
@@ -17,6 +18,7 @@ use objc2_foundation::{
 };
 
 use super::state::{Snapshot, Status};
+use super::updates::UpdateMenu;
 use super::{Action, menu_needs_update, perform};
 use crate::i18n::{self, Texts};
 use crate::models::{
@@ -97,17 +99,39 @@ fn centered(diameter: f64) -> NSRect {
     )
 }
 
+fn draw_idle() {
+    let color = NSColor::controlTextColor();
+    color.setFill();
+    color.setStroke();
+    let line_width = 1.4;
+    let ring = centered(RING_DIAMETER - line_width);
+    let path = NSBezierPath::bezierPathWithOvalInRect(ring);
+    path.setLineWidth(line_width);
+    path.stroke();
+    NSBezierPath::bezierPathWithOvalInRect(centered(5.5)).fill();
+}
+
 pub fn idle_icon() -> Retained<NSImage> {
+    image(draw_idle)
+}
+
+/// The idle icon with a dot at the top right, cut out of the ring, while an update waits.
+pub fn update_icon() -> Retained<NSImage> {
     image(|| {
-        let color = NSColor::controlTextColor();
-        color.setFill();
-        color.setStroke();
-        let line_width = 1.4;
-        let ring = centered(RING_DIAMETER - line_width);
-        let path = NSBezierPath::bezierPathWithOvalInRect(ring);
-        path.setLineWidth(line_width);
-        path.stroke();
-        NSBezierPath::bezierPathWithOvalInRect(centered(5.5)).fill();
+        draw_idle();
+        let dot = |diameter: f64| {
+            let origin = ICON_SIZE - 3.0 - diameter / 2.0;
+            NSBezierPath::bezierPathWithOvalInRect(NSRect::new(
+                NSPoint::new(origin, origin),
+                NSSize::new(diameter, diameter),
+            ))
+        };
+        if let Some(context) = NSGraphicsContext::currentContext() {
+            context.setCompositingOperation(NSCompositingOperation::Clear);
+            dot(9.0).fill();
+            context.setCompositingOperation(NSCompositingOperation::SourceOver);
+        }
+        dot(6.0).fill();
     })
 }
 
@@ -163,6 +187,7 @@ pub fn look(status: Status, hands_free: bool, download: Option<f64>) -> Look {
 
 struct Icons {
     idle: Retained<NSImage>,
+    update: Retained<NSImage>,
     recording: Retained<NSImage>,
     hands_free: Retained<NSImage>,
     blank: Retained<NSImage>,
@@ -184,6 +209,7 @@ pub struct StatusUi {
     shown: Option<Look>,
     pulse_generation: u64,
     pulse_visible: bool,
+    update_waiting: bool,
 }
 
 impl StatusUi {
@@ -203,6 +229,7 @@ impl StatusUi {
             target,
             icons: Icons {
                 idle: idle_icon(),
+                update: update_icon(),
                 recording: recording_icon(),
                 hands_free: hands_free_icon(),
                 blank: blank_icon(),
@@ -210,6 +237,7 @@ impl StatusUi {
             shown: None,
             pulse_generation: 0,
             pulse_visible: true,
+            update_waiting: false,
         };
         ui.show(Status::Idle, false, None);
         ui
@@ -250,15 +278,26 @@ impl StatusUi {
         true
     }
 
+    /// Marks the idle icon while an update waits for the user, see `updates`.
+    pub fn show_update(&mut self, waiting: bool) {
+        self.update_waiting = waiting;
+        self.draw();
+    }
+
     fn draw(&self) {
         let (Some(look), Some(button)) = (&self.shown, self.item.button(self.mtm)) else {
             return;
         };
+        let idle = if self.update_waiting {
+            &self.icons.update
+        } else {
+            &self.icons.idle
+        };
         let image = match look.icon {
-            Icon::Idle => &self.icons.idle,
+            Icon::Idle => idle,
             Icon::Recording => &self.icons.recording,
             Icon::HandsFree => &self.icons.hands_free,
-            Icon::Pulsing if self.pulse_visible => &self.icons.idle,
+            Icon::Pulsing if self.pulse_visible => idle,
             Icon::Pulsing => &self.icons.blank,
         };
         button.setImage(Some(image));
@@ -332,8 +371,33 @@ impl StatusUi {
         self.separator(menu);
         let login = self.action_item(menu, t.open_at_login, Action::ToggleLogin);
         login.setState(checkmark(state.login_item));
+        if let Some(updates) = state.updates {
+            self.separator(menu);
+            self.add_updates(menu, updates, t);
+        }
         self.separator(menu);
         self.add_help(menu, t);
+    }
+
+    fn add_updates(&self, menu: &NSMenu, updates: UpdateMenu, t: &Texts) {
+        let check = self.action_item(menu, t.check_for_updates, Action::CheckForUpdates);
+        check.setEnabled(updates.can_check);
+        if updates.waiting {
+            check.setBadge(Some(&NSMenuItemBadge::updatesWithCount(1)));
+        }
+        let checks = self.action_item(
+            menu,
+            t.check_updates_automatically,
+            Action::ToggleUpdateChecks,
+        );
+        checks.setState(checkmark(updates.checks_automatically));
+        let installs = self.action_item(
+            menu,
+            t.install_updates_automatically,
+            Action::ToggleUpdateInstalls,
+        );
+        installs.setState(checkmark(updates.installs_automatically));
+        installs.setEnabled(updates.can_install_automatically);
     }
 
     fn add_recent(&self, menu: &NSMenu, state: &Snapshot, t: &Texts) {

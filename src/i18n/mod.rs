@@ -64,6 +64,10 @@ pub struct Texts {
     pub set_api_key: &'static str,
     pub update_api_key: &'static str,
     pub open_at_login: &'static str,
+    pub check_for_updates: &'static str,
+    pub check_updates_automatically: &'static str,
+    /// Sparkle downloads and installs on its own only with automatic checks.
+    pub install_updates_automatically: &'static str,
     pub help: &'static str,
     pub quick_reference: &'static str,
     pub report_problem: &'static str,
@@ -393,6 +397,7 @@ mod tests {
                 t.update_api_key.to_owned(),
                 t.report_problem.to_owned(),
                 t.suggest_feature.to_owned(),
+                t.check_for_updates.to_owned(),
                 (t.vocabulary_menu)(0),
                 (t.vocabulary_menu)(3),
             ] {

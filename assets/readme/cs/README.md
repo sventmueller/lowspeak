@@ -116,14 +116,14 @@ Lowspeak sídlí na řádku nabídek. Podržte klávesu fn (Glóbus) a mluvte; j
 
 - macOS 14 Sonoma nebo novější. Lowspeak se vyvíjí a testuje na macOS 27.
 - Mac s Apple Silicon nebo procesorem Intel. Místní přepis je určený pro Apple Silicon, kde Whisper běží na GPU a Parakeet na Neural Engine; na Macích s procesorem Intel běží oba na procesoru, mnohem pomaleji, viz [Macy s procesorem Intel](#macy-s-procesorem-intel).
-- Asi 10 MB pro aplikaci a k tomu 75 MB až 3 GB pro každý stažený místní model.
+- Asi 17 MB pro aplikaci a k tomu 75 MB až 3 GB pro každý stažený místní model.
 - Pro přepis online klíč API od [OpenAI](https://platform.openai.com/api-keys) nebo [Groq](https://console.groq.com/keys); oba si účtují podle toho, co přepíšete. Místní přepis nevyžaduje žádný účet.
 
 ## Instalace
 
 **Z obrazu disku.** Stáhněte si [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), otevřete ho a přetáhněte Lowspeak do složky Aplikace. Obraz je podepsaný certifikátem Developer ID a notarizovaný Applem, takže se otevře bez varování.
 
-**Aktualizace.** Lowspeak se sám neaktualizuje. Nové verze se objevují na [stránce vydání](https://github.com/sventmueller/lowspeak/releases); vede tam **Nápověda › Lowspeak na GitHubu**. Novou verzi nainstalujte přes starou; vaše nastavení, klíče i modely zůstanou zachovány.
+**Aktualizace.** Lowspeak z obrazu disku se aktualizuje sám pomocí [Sparkle](https://sparkle-project.org). Při druhém spuštění se zeptá, zda smí jednou denně sám vyhledávat aktualizace. **Vyhledat aktualizace…** v nabídce vyhledá hned; **Vyhledávat aktualizace automaticky** a **Stahovat a instalovat aktualizace automaticky** pod ní vaši volbu později změní. Když kontrola najde novou verzi, zatímco pracujete v jiné aplikaci, objeví se na kroužku na řádku nabídek tečka a **Vyhledat aktualizace…** přenese aktualizaci do popředí. Lowspeak nainstaluje aktualizaci, jen pokud nese podpis vývojáře; vaše nastavení, klíče i modely zůstanou zachovány. Verze 1.0.0 automatické aktualizace nemá: novější verzi přes ni jednou nainstalujte ze [stránky vydání](https://github.com/sventmueller/lowspeak/releases). Ani vlastní sestavení automatické aktualizace nemá.
 
 **Ze zdrojového kódu.** Předpoklady najdete v části [Sestavení a nasazení](../../../docs/development.md#build--deploy), potom:
 
@@ -170,6 +170,7 @@ Klikněte na kroužek na řádku nabídek:
 | **Spravovat modely** | stahování a mazání místních modelů, s průběhem |
 | **Nastavit klíč API…** / **Změnit klíč API…** | přidání, nahrazení nebo odstranění klíčů |
 | **Otevřít při přihlášení** | spouštění Lowspeaku spolu s Macem; zaškrtnutí ukazuje, že je volba zapnutá |
+| **Vyhledat aktualizace…** | vyhledání nové verze hned teď; dvě položky pod ní rozhodují, zda Lowspeak hledá jednou denně a instaluje aktualizace bez ptaní. Jen v aplikaci z obrazu disku |
 | **Nápověda** | **Stručný přehled**, **Nahlásit problém…**, **Navrhnout funkci…**, **Lowspeak na GitHubu** |
 | **O aplikaci Lowspeak** | verze, copyright, stránka projektu a licence |
 | **Ukončit Lowspeak** | ⌘Q, když je nabídka otevřená |
@@ -182,6 +183,7 @@ Zaškrtnutí v **Místní**, **OpenAI** a **Groq** označuje používaný model.
 | Vyplněný kruh | Nahrávání, dokud držíte fn |
 | Zaoblený čtverec | Nahrávání uzamčeno; další stisknutí fn nebo Shiftu ho ukončí |
 | Blikající kroužek | Přepisování |
+| Kroužek s tečkou vpravo nahoře | Čeká nová verze, viz **Vyhledat aktualizace…** |
 | ↓ 42 % | Stahování modelu |
 
 Lowspeak nemá okno nastavení: vše je v této nabídce a každou volbu si pamatuje.
@@ -379,11 +381,11 @@ Lowspeak slyší, co říkáte, dokud držíte fn, může psát do kterékoli ap
 
 - **Váš hlas jde na jedno místo.** V online režimu jde zkomprimovaná nahrávka k poskytovateli, kterého jste si vybrali, OpenAI nebo Groq, spolu s vaším slovníkem. V místním režimu nic neopustí váš Mac. Když online požadavek selže, místní model přepíše stejnou nahrávku na vašem Macu.
 - **Následné zpracování**, pokud ho zapnete, posílá přepsaný text a váš slovník do Groq nebo OpenAI. V režimu Formátování přidává druh aplikace, do které diktujete (editor kódu, terminál, chat nebo e-mail); název aplikace se neodesílá.
-- **Žádná telemetrie, žádný účet.** Kromě přepisu a následného zpracování se Lowspeak připojuje k internetu jen proto, aby otevřel spojení s vaším poskytovatelem, zatímco držíte fn, v online režimu nebo se zapnutým následným zpracováním, a aby stáhl model, když o to požádáte, z Hugging Face přes HTTPS, v pevně dané verzi a s ověřením každého souboru podle kontrolního součtu. **Nápověda › Nahlásit problém…** otevře v prohlížeči formulář na GitHubu; jeho adresa nese verzi Lowspeaku a verzi macOS, nic z toho, co jste nadiktovali.
+- **Žádná telemetrie, žádný účet.** Kromě přepisu a následného zpracování se Lowspeak připojuje k internetu jen proto, aby otevřel spojení s vaším poskytovatelem, zatímco držíte fn, v online režimu nebo se zapnutým následným zpracováním, aby stáhl model, když o to požádáte, z Hugging Face přes HTTPS, v pevně dané verzi a s ověřením každého souboru podle kontrolního součtu, a aby na GitHubu vyhledal novou verzi, jednou denně, pokud to povolíte. Tento požadavek nese verzi Lowspeaku a nic jiného. **Nápověda › Nahlásit problém…** otevře v prohlížeči formulář na GitHubu; jeho adresa nese verzi Lowspeaku a verzi macOS, nic z toho, co jste nadiktovali.
 - **Klíče API** zůstávají ve vašem svazku klíčů „přihlášení“. Posílají se jen jejich vlastnímu poskytovateli a z chybových zpráv se odstraní dřív, než se cokoli zapíše do protokolu.
 - **Nadiktovaný text se neukládá.** Posledních deset diktátů zůstává v paměti pro **Poslední diktáty** a po ukončení Lowspeaku zmizí. Soubory protokolu zaznamenávají délky a časy, nikdy text.
 - **Schránka** se před vložením uloží a obnoví, jakmile aplikace text přečte, pokud ji mezitím nezměnila jiná aplikace. Diktát je označený jako dočasný, takže ho aplikace s historií schránky, které toto označení respektují, přeskočí.
-- **Podpis kódu** s Hardened Runtime; aplikace žádá jen o mikrofon, Zpřístupnění, oznámení a síť.
+- **Podpis kódu** s Hardened Runtime; aplikace žádá jen o mikrofon, Zpřístupnění, oznámení a síť. Aktualizace musí nést podpis vývojáře, jinak ji Sparkle odmítne.
 
 Chcete-li nahlásit zranitelnost, postupujte podle [bezpečnostních zásad](../../../SECURITY.md).
 
@@ -406,7 +408,7 @@ Měřeno na Apple Silicon:
 - **Časové limity:** dvě minuty při držení fn, pět minut v uzamčeném režimu.
 - **Režim mikrofonu:** Ovládací centrum nabízí pro Lowspeak v části Mikrofon Izolaci hlasu a Široké spektrum a hlásí je jako aktivní, ale Lowspeak nahrává bez zpracování hlasu, takže volba nemá žádný účinek.
 - **Poslední diktáty** existují jen v paměti a po ukončení zmizí.
-- **Záměrně:** žádné okno nastavení, žádná ikona v Docku, žádné automatické aktualizace, ne v App Store.
+- **Záměrně:** žádné okno nastavení, žádná ikona v Docku, ne v App Store.
 
 ## Řešení potíží
 
@@ -449,6 +451,7 @@ Sestavení, testování, struktura kódu a pravidla, kterými se řídí, jsou p
 | [sha1, sha2](https://github.com/RustCrypto/hashes) | 0.11 | kontrolní součty stahovaných modelů | MIT nebo Apache-2.0 |
 | [security-framework](https://github.com/kornelski/rust-security-framework) | 3.7 | klíče API ve svazku klíčů | MIT nebo Apache-2.0 |
 | [serde](https://serde.rs), serde_json, anyhow, unicode-general-category | 1 | JSON, chyby, slovník Parakeet | MIT nebo Apache-2.0; Apache-2.0 |
+| [Sparkle](https://sparkle-project.org) | 2.10.1 | aktualizace aplikace z obrazu disku | MIT, s částmi pod licencemi BSD a zlib |
 
 Licenční texty všeho, co aplikace obsahuje, jsou k ní přiloženy jako `Contents/Resources/Acknowledgements.txt`.
 

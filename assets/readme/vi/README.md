@@ -116,14 +116,14 @@ Lowspeak nằm trên thanh menu. Giữ phím fn (địa cầu) và nói; khi b�
 
 - macOS 14 Sonoma trở lên. Lowspeak được phát triển và thử nghiệm trên macOS 27.
 - Máy Mac dùng Apple Silicon hoặc bộ xử lý Intel. Chép lại cục bộ được xây dựng cho Apple Silicon, nơi Whisper chạy trên GPU và Parakeet trên Neural Engine; trên máy Mac Intel, cả hai chạy trên bộ xử lý và chậm hơn nhiều, xem [Máy Mac Intel](#máy-mac-intel).
-- Khoảng 10 MB cho ứng dụng, cộng thêm 75 MB đến 3 GB cho mỗi mô hình cục bộ bạn tải về.
+- Khoảng 17 MB cho ứng dụng, cộng thêm 75 MB đến 3 GB cho mỗi mô hình cục bộ bạn tải về.
 - Để chép lại trực tuyến, cần một khóa API từ [OpenAI](https://platform.openai.com/api-keys) hoặc [Groq](https://console.groq.com/keys); cả hai đều tính phí theo lượng bạn chép lại. Chép lại cục bộ không cần tài khoản.
 
 ## Cài đặt
 
 **Từ ảnh đĩa.** Tải về [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), mở ra rồi kéo Lowspeak vào thư mục Ứng dụng. Ảnh đĩa được ký bằng Developer ID và được Apple công chứng, nên mở ra mà không có cảnh báo nào.
 
-**Cập nhật.** Lowspeak không tự cập nhật. Các phiên bản mới xuất hiện trên [trang phát hành](https://github.com/sventmueller/lowspeak/releases); **Trợ giúp › Lowspeak trên GitHub** dẫn tới đó. Cài phiên bản mới đè lên bản cũ; cài đặt, khóa và mô hình của bạn vẫn được giữ nguyên.
+**Cập nhật.** Lowspeak cài từ ảnh đĩa tự cập nhật nhờ [Sparkle](https://sparkle-project.org). Ở lần mở thứ hai, Lowspeak hỏi xem nó có được tự tìm bản cập nhật mỗi ngày một lần hay không. **Kiểm tra Bản cập nhật…** trong menu kiểm tra ngay lập tức; **Tự động Kiểm tra Bản cập nhật** và **Tự động Tải về và Cài đặt Bản cập nhật** bên dưới cho phép bạn đổi lựa chọn sau này. Khi một lần kiểm tra tìm thấy phiên bản mới trong lúc bạn đang làm việc trong ứng dụng khác, một dấu chấm xuất hiện trên vòng tròn ở thanh menu, và **Kiểm tra Bản cập nhật…** đưa bản cập nhật lên phía trước. Lowspeak chỉ cài bản cập nhật nếu nó mang chữ ký của nhà phát triển; cài đặt, khóa và mô hình của bạn vẫn được giữ nguyên. Phiên bản 1.0.0 không có trình cập nhật: hãy cài một phiên bản mới hơn đè lên nó một lần, từ [trang phát hành](https://github.com/sventmueller/lowspeak/releases). Bản tự build cũng không có trình cập nhật.
 
 **Từ mã nguồn.** Xem [Xây dựng & triển khai](../../../docs/development.md#build--deploy) để biết các điều kiện cần có, rồi:
 
@@ -170,6 +170,7 @@ Bấm vào vòng tròn trên thanh menu:
 | **Quản lý mô hình** | tải về và xóa mô hình cục bộ, có hiển thị tiến độ |
 | **Đặt khóa API…** / **Cập nhật khóa API…** | thêm, thay thế hoặc xóa khóa |
 | **Mở khi đăng nhập** | khởi động Lowspeak cùng máy Mac; dấu kiểm cho biết tùy chọn đang bật |
+| **Kiểm tra Bản cập nhật…** | tìm phiên bản mới ngay bây giờ; hai mục bên dưới quyết định Lowspeak có tìm mỗi ngày một lần và có cài bản cập nhật mà không hỏi hay không. Chỉ có trong ứng dụng cài từ ảnh đĩa |
 | **Trợ giúp** | **Tham khảo nhanh**, **Báo cáo sự cố…**, **Đề xuất tính năng…**, **Lowspeak trên GitHub** |
 | **Giới thiệu về Lowspeak** | phiên bản, bản quyền, trang dự án và giấy phép |
 | **Thoát Lowspeak** | ⌘Q khi menu đang mở |
@@ -182,6 +183,7 @@ Dấu kiểm trong **Cục bộ**, **OpenAI** và **Groq** đánh dấu mô hìn
 | Hình tròn đặc | Đang ghi âm khi giữ fn |
 | Hình vuông bo góc | Bản ghi âm đã khóa; lần nhấn fn hoặc Shift tiếp theo sẽ kết thúc |
 | Vòng tròn nhấp nháy | Đang chép lại |
+| Vòng tròn có chấm ở góc trên bên phải | Có phiên bản mới đang chờ, xem **Kiểm tra Bản cập nhật…** |
 | ↓ 42% | Đang tải về một mô hình |
 
 Lowspeak không có cửa sổ cài đặt: mọi thứ nằm trong menu này, và nó ghi nhớ mọi lựa chọn.
@@ -379,11 +381,11 @@ Lowspeak nghe những gì bạn nói khi giữ fn, có thể gõ vào bất kỳ
 
 - **Giọng nói của bạn chỉ đi tới một nơi.** Ở chế độ trực tuyến, bản ghi âm được nén và gửi tới nhà cung cấp bạn chọn, OpenAI hoặc Groq, cùng với từ vựng của bạn. Ở chế độ cục bộ, không có gì rời khỏi máy Mac của bạn. Khi một yêu cầu trực tuyến không thành công, một mô hình cục bộ chép lại chính bản ghi âm đó trên máy Mac của bạn.
 - **Hậu xử lý**, nếu bạn bật, sẽ gửi văn bản đã chép lại và từ vựng của bạn tới Groq hoặc OpenAI. Ở chế độ Định dạng, nó gửi kèm loại ứng dụng bạn đang đọc chính tả vào (trình soạn mã, terminal, trò chuyện hoặc thư điện tử); tên ứng dụng không được gửi đi.
-- **Không telemetry, không tài khoản.** Ngoài việc chép lại và hậu xử lý, Lowspeak chỉ kết nối mạng để mở kết nối tới nhà cung cấp của bạn khi giữ fn, ở chế độ trực tuyến hoặc khi hậu xử lý đang bật, và để tải về một mô hình khi bạn yêu cầu, từ Hugging Face qua HTTPS, ở một phiên bản cố định và mọi tệp đều được đối chiếu với kiểm tra tổng của nó. **Trợ giúp › Báo cáo sự cố…** mở một biểu mẫu trên GitHub trong trình duyệt của bạn; địa chỉ của nó chứa phiên bản Lowspeak và phiên bản macOS, không có gì bạn đã đọc chính tả.
+- **Không telemetry, không tài khoản.** Ngoài việc chép lại và hậu xử lý, Lowspeak chỉ kết nối mạng để mở kết nối tới nhà cung cấp của bạn khi giữ fn, ở chế độ trực tuyến hoặc khi hậu xử lý đang bật, để tải về một mô hình khi bạn yêu cầu, từ Hugging Face qua HTTPS, ở một phiên bản cố định và mọi tệp đều được đối chiếu với kiểm tra tổng của nó, và để tìm phiên bản mới trên GitHub, mỗi ngày một lần nếu bạn cho phép. Yêu cầu đó chỉ chứa phiên bản Lowspeak, ngoài ra không có gì khác. **Trợ giúp › Báo cáo sự cố…** mở một biểu mẫu trên GitHub trong trình duyệt của bạn; địa chỉ của nó chứa phiên bản Lowspeak và phiên bản macOS, không có gì bạn đã đọc chính tả.
 - **Khóa API** nằm trong chuỗi khóa đăng nhập của bạn. Chúng chỉ được gửi tới đúng nhà cung cấp của mình và được xóa khỏi thông báo lỗi trước khi bất cứ thứ gì được ghi vào nhật ký.
 - **Văn bản đọc chính tả không được lưu.** Mười bản đọc chính tả gần nhất nằm trong bộ nhớ cho **Đọc chính tả gần đây** và biến mất khi Lowspeak thoát. Các tệp nhật ký ghi lại độ dài và thời gian, không bao giờ ghi văn bản.
 - **Bảng nhớ tạm** được lưu lại trước khi dán và khôi phục khi ứng dụng đã đọc văn bản, trừ khi một ứng dụng khác đã thay đổi nó trong lúc đó. Bản đọc chính tả được đánh dấu là tạm thời, nên các ứng dụng lịch sử bảng nhớ tạm tôn trọng dấu này sẽ bỏ qua nó.
-- **Ký mã** với Hardened Runtime; ứng dụng chỉ xin quyền dùng micrô, Trợ năng, thông báo và mạng.
+- **Ký mã** với Hardened Runtime; ứng dụng chỉ xin quyền dùng micrô, Trợ năng, thông báo và mạng. Bản cập nhật phải mang chữ ký của nhà phát triển, nếu không Sparkle sẽ từ chối nó.
 
 Để báo cáo lỗ hổng bảo mật, hãy làm theo [chính sách bảo mật](../../../SECURITY.md).
 
@@ -406,7 +408,7 @@ Lowspeak nghe những gì bạn nói khi giữ fn, có thể gõ vào bất kỳ
 - **Giới hạn thời gian:** hai phút khi giữ fn, năm phút khi đã khóa.
 - **Chế độ mic:** Trung tâm điều khiển đề xuất Tách lời nói và Âm phổ rộng cho Lowspeak và báo chúng đang hoạt động, nhưng Lowspeak ghi âm không qua xử lý giọng nói, nên lựa chọn đó không có tác dụng.
 - **Đọc chính tả gần đây** chỉ nằm trong bộ nhớ và biến mất sau khi thoát.
-- **Có chủ ý:** không có cửa sổ cài đặt, không có biểu tượng trên Dock, không tự động cập nhật, không có trên App Store.
+- **Có chủ ý:** không có cửa sổ cài đặt, không có biểu tượng trên Dock, không có trên App Store.
 
 ## Khắc phục sự cố
 
@@ -449,6 +451,7 @@ Cách build, kiểm thử, cấu trúc mã nguồn và các quy tắc mà mã tu
 | [sha1, sha2](https://github.com/RustCrypto/hashes) | 0.11 | kiểm tra tổng của các mô hình tải về | MIT hoặc Apache-2.0 |
 | [security-framework](https://github.com/kornelski/rust-security-framework) | 3.7 | khóa API trong chuỗi khóa | MIT hoặc Apache-2.0 |
 | [serde](https://serde.rs), serde_json, anyhow, unicode-general-category | 1 | JSON, lỗi, bộ từ vựng của Parakeet | MIT hoặc Apache-2.0; Apache-2.0 |
+| [Sparkle](https://sparkle-project.org) | 2.10.1 | cập nhật cho ứng dụng cài từ ảnh đĩa | MIT, một phần theo giấy phép BSD và zlib |
 
 Văn bản giấy phép của mọi thành phần bên trong ứng dụng được kèm theo ứng dụng dưới dạng `Contents/Resources/Acknowledgements.txt`.
 

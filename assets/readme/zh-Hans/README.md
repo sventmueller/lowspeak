@@ -116,14 +116,14 @@ Lowspeak 常驻菜单栏。按住 fn（地球仪）键说话，松开后，你�
 
 - macOS 14 Sonoma 或更高版本。Lowspeak 在 macOS 27 上开发和测试。
 - 搭载 Apple 芯片或 Intel 处理器的 Mac。本地转写是为 Apple 芯片打造的：Whisper 在 GPU 上运行，Parakeet 在神经网络引擎上运行；在 Intel Mac 上，两者都在处理器上运行，速度慢得多，参见 [Intel Mac](#intel-mac)。
-- App 本身约 10 MB，每下载一个本地模型另需 75 MB 至 3 GB。
+- App 本身约 17 MB，每下载一个本地模型另需 75 MB 至 3 GB。
 - 在线转写需要 [OpenAI](https://platform.openai.com/api-keys) 或 [Groq](https://console.groq.com/keys) 的 API 密钥；两者都会按转写量收费。本地转写无需账户。
 
 ## 安装
 
 **通过磁盘映像。** 下载 [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg)，打开后将 Lowspeak 拖到“应用程序”文件夹。该映像已使用 Developer ID 签名并经 Apple 公证，因此打开时不会出现警告。
 
-**更新。** Lowspeak 不会自行更新。新版本会发布在[发布页面](https://github.com/sventmueller/lowspeak/releases)上，**帮助 › GitHub 上的 Lowspeak** 可以带你前往。将新版本直接安装在旧版本之上即可，你的设置、密钥和模型都会保留。
+**更新。** 通过磁盘映像安装的 Lowspeak 会借助 [Sparkle](https://sparkle-project.org) 自行保持最新。第二次启动时，它会询问是否可以每天自动检查一次更新。菜单中的 **检查更新…** 会立即检查；之后可通过其下方的 **自动检查更新** 和 **自动下载并安装更新** 更改你的选择。如果在你使用其他 App 时检查到新版本，菜单栏中的圆环上会出现一个圆点，**检查更新…** 会将更新调到最前面。只有带有开发者签名的更新，Lowspeak 才会安装；你的设置、密钥和模型都会保留。1.0.0 版本没有更新功能：请从[发布页面](https://github.com/sventmueller/lowspeak/releases)下载较新的版本，直接安装在它之上，只需这一次。自行构建的版本同样没有更新功能。
 
 **从源代码构建。** 先查看[构建与部署](../../../docs/development.md#build--deploy)了解所需的前提条件，然后执行：
 
@@ -170,6 +170,7 @@ make deploy
 | **管理模型** | 下载和删除本地模型，并显示进度 |
 | **设置 API 密钥…** / **更新 API 密钥…** | 添加、替换或移除密钥 |
 | **登录时打开** | 让 Lowspeak 随 Mac 一起启动；打勾表示已开启 |
+| **检查更新…** | 立即查找新版本；其下方的两个项目决定 Lowspeak 是否每天检查一次、是否不经询问就安装更新。仅限通过磁盘映像安装的 App |
 | **帮助** | **快速参考**、**报告问题…**、**建议功能…**、**GitHub 上的 Lowspeak** |
 | **关于 Lowspeak** | 版本、版权、项目页面和许可证 |
 | **退出 Lowspeak** | 菜单打开时按 ⌘Q |
@@ -182,6 +183,7 @@ make deploy
 | 实心圆 | 按住 fn 时正在录音 |
 | 圆角方块 | 录音已锁定；再按一下 fn 或 Shift 即结束 |
 | 闪烁的圆环 | 正在转写 |
+| 右上角带圆点的圆环 | 有新版本待安装，参见 **检查更新…** |
 | ↓ 42% | 正在下载模型 |
 
 Lowspeak 没有设置窗口：一切都在这个菜单里，而且它会记住你的每一个选择。
@@ -379,11 +381,11 @@ Lowspeak 会在你按住 fn 时听到你说的话，能向任何 App 输入内�
 
 - **你的声音只去一个地方。** 在在线模式下，压缩后的录音会连同你的词汇表一起，发送给你选择的服务提供商 OpenAI 或 Groq。在本地模式下，任何内容都不会离开你的 Mac。在线请求失败时，本地模型会在你的 Mac 上转写同一段录音。
 - **后处理** 如果开启，会把转写的文本和你的词汇表发送给 Groq 或 OpenAI。在“格式化”模式下，还会附上你听写所用 App 的类型（代码编辑器、终端、聊天或邮件）；不会发送 App 的名称。
-- **没有遥测，无需账户。** 除了转写和后处理之外，Lowspeak 只在以下情况下联网：在在线模式或开启后处理时，于你按住 fn 期间建立与服务提供商的连接；以及在你要求时，通过 HTTPS 从 Hugging Face 下载固定版本的模型，并根据校验和核对每个文件。**帮助 › 报告问题…** 会在浏览器中打开 GitHub 上的表单；其地址只带有 Lowspeak 的版本和 macOS 的版本，不含你听写的任何内容。
+- **没有遥测，无需账户。** 除了转写和后处理之外，Lowspeak 只在以下情况下联网：在在线模式或开启后处理时，于你按住 fn 期间建立与服务提供商的连接；在你要求时，通过 HTTPS 从 Hugging Face 下载固定版本的模型，并根据校验和核对每个文件；以及在你允许的情况下，每天一次在 GitHub 上查找新版本，该请求只带有 Lowspeak 的版本，别无其他。**帮助 › 报告问题…** 会在浏览器中打开 GitHub 上的表单；其地址只带有 Lowspeak 的版本和 macOS 的版本，不含你听写的任何内容。
 - **API 密钥** 保存在你的登录钥匙串中。它们只会发送给各自的服务提供商，并且在任何内容写入日志之前就会从错误信息中移除。
 - **听写的文本不会被存储。** 最近的十条听写保留在内存中，供 **最近的听写** 使用，Lowspeak 退出后即消失。日志文件只记录长度和耗时，从不记录文本。
 - **剪贴板** 会在粘贴前保存，并在目标 App 读取文本后恢复，除非在此期间有其他 App 更改了它。听写内容会被标记为临时内容，因此遵循这一标记的剪贴板历史 App 会跳过它。
-- **代码签名** 使用 Hardened Runtime；App 只请求麦克风、无障碍、通知和网络权限。
+- **代码签名** 使用 Hardened Runtime；App 只请求麦克风、无障碍、通知和网络权限。更新必须带有开发者签名，否则 Sparkle 会拒绝它。
 
 如需报告漏洞，请遵循[安全策略](../../../SECURITY.md)。
 
@@ -406,7 +408,7 @@ Lowspeak 会在你按住 fn 时听到你说的话，能向任何 App 输入内�
 - **时间限制：** 按住 fn 时两分钟，锁定时五分钟。
 - **麦克风模式：** 控制中心也为 Lowspeak 提供“语音突显”和“宽谱”，并显示为已启用，但 Lowspeak 录音时不做语音处理，因此该选择不起作用。
 - **最近的听写** 只保存在内存中，退出后即消失。
-- **设计如此：** 没有设置窗口，没有程序坞图标，没有自动更新，不在 App Store 上架。
+- **设计如此：** 没有设置窗口，没有程序坞图标，不在 App Store 上架。
 
 ## 疑难解答
 
@@ -449,6 +451,7 @@ Lowspeak 会在你按住 fn 时听到你说的话，能向任何 App 输入内�
 | [sha1, sha2](https://github.com/RustCrypto/hashes) | 0.11 | 所下载模型的校验和 | MIT 或 Apache-2.0 |
 | [security-framework](https://github.com/kornelski/rust-security-framework) | 3.7 | 钥匙串中的 API 密钥 | MIT 或 Apache-2.0 |
 | [serde](https://serde.rs)、serde_json、anyhow、unicode-general-category | 1 | JSON、错误处理、Parakeet 的词表 | MIT 或 Apache-2.0；Apache-2.0 |
+| [Sparkle](https://sparkle-project.org) | 2.10.1 | 通过磁盘映像安装的 App 的更新 | MIT，部分采用 BSD 和 zlib 许可证 |
 
 App 内所有组件的许可证文本都随 App 一起提供，位于 `Contents/Resources/Acknowledgements.txt`。
 

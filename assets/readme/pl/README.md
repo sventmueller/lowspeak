@@ -116,14 +116,14 @@ Lowspeak mieszka na pasku menu. Przytrzymaj klawisz fn (Globus) i mów; gdy go p
 
 - macOS 14 Sonoma lub nowszy. Lowspeak powstaje i jest testowany na macOS 27.
 - Mac z procesorem Apple Silicon lub Intel. Lokalna transkrypcja jest stworzona z myślą o Apple Silicon, gdzie Whisper działa na GPU, a Parakeet na Neural Engine; na komputerach Mac z procesorem Intel oba działają na procesorze, znacznie wolniej, zobacz [Komputery Mac z procesorem Intel](#komputery-mac-z-procesorem-intel).
-- Około 10 MB na aplikację oraz od 75 MB do 3 GB na każdy pobrany model lokalny.
+- Około 17 MB na aplikację oraz od 75 MB do 3 GB na każdy pobrany model lokalny.
 - Do transkrypcji online klucz API od [OpenAI](https://platform.openai.com/api-keys) lub [Groq](https://console.groq.com/keys); obaj dostawcy pobierają opłaty za to, co transkrybujesz. Lokalna transkrypcja nie wymaga konta.
 
 ## Instalacja
 
 **Z obrazu dysku.** Pobierz [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), otwórz go i przeciągnij Lowspeak do folderu Programy. Obraz jest podpisany certyfikatem Developer ID i poświadczony notarialnie przez Apple, więc otwiera się bez ostrzeżeń.
 
-**Uaktualnienia.** Lowspeak nie uaktualnia się sam. Nowe wersje pojawiają się na [stronie wydań](https://github.com/sventmueller/lowspeak/releases); prowadzi tam **Pomoc › Lowspeak w serwisie GitHub**. Zainstaluj nową wersję w miejsce starej; Twoje ustawienia, klucze i modele pozostaną.
+**Uaktualnienia.** Lowspeak z obrazu dysku sam dba o aktualność dzięki [Sparkle](https://sparkle-project.org). Przy drugim uruchomieniu pyta, czy może raz dziennie samodzielnie szukać uaktualnień. **Sprawdź uaktualnienia…** w menu sprawdza od razu; **Sprawdzaj uaktualnienia automatycznie** i **Pobieraj i instaluj uaktualnienia automatycznie** tuż pod nią pozwalają zmienić decyzję później. Gdy sprawdzanie znajdzie nową wersję, kiedy pracujesz w innej aplikacji, na pierścieniu na pasku menu pojawia się kropka, a **Sprawdź uaktualnienia…** przenosi uaktualnienie na pierwszy plan. Lowspeak instaluje uaktualnienie tylko wtedy, gdy ma ono podpis autora; Twoje ustawienia, klucze i modele pozostaną. Wersja 1.0.0 nie ma mechanizmu uaktualnień: raz zainstaluj nowszą wersję w jej miejsce ze [strony wydań](https://github.com/sventmueller/lowspeak/releases). Własna kompilacja również nie ma mechanizmu uaktualnień.
 
 **Ze źródeł.** Wymagania wstępne znajdziesz w części [Kompilacja i wdrażanie](../../../docs/development.md#build--deploy), potem:
 
@@ -170,6 +170,7 @@ Kliknij pierścień na pasku menu:
 | **Zarządzaj modelami** | pobieranie i usuwanie modeli lokalnych, z widocznym postępem |
 | **Ustaw klucz API…** / **Zmień klucz API…** | dodawanie, zastępowanie lub usuwanie kluczy |
 | **Otwieraj podczas logowania** | uruchamianie Lowspeaka razem z Makiem; znacznik pokazuje, że opcja jest włączona |
+| **Sprawdź uaktualnienia…** | sprawdzenie od razu, czy jest nowa wersja; dwie pozycje pod nią decydują, czy Lowspeak sprawdza raz dziennie i instaluje uaktualnienia bez pytania. Tylko w aplikacji z obrazu dysku |
 | **Pomoc** | **Skrócona instrukcja**, **Zgłoś problem…**, **Zaproponuj funkcję…**, **Lowspeak w serwisie GitHub** |
 | **Lowspeak – informacje** | wersja, prawa autorskie, strona projektu i licencja |
 | **Zakończ Lowspeak** | ⌘Q, gdy menu jest otwarte |
@@ -182,6 +183,7 @@ Znacznik w **Lokalnie**, **OpenAI** i **Groq** wskazuje używany model. Ikona po
 | Wypełnione koło | Nagrywanie, dopóki fn jest przytrzymany |
 | Zaokrąglony kwadrat | Nagrywanie zablokowane; następne naciśnięcie fn lub Shift je kończy |
 | Migający pierścień | Transkrypcja |
+| Pierścień z kropką w prawym górnym rogu | Czeka nowa wersja, zobacz **Sprawdź uaktualnienia…** |
 | ↓ 42 % | Pobieranie modelu |
 
 Lowspeak nie ma okna ustawień: wszystko jest w tym menu, a każdy wybór zostaje zapamiętany.
@@ -379,11 +381,11 @@ Lowspeak słyszy to, co mówisz, gdy trzymasz fn, może pisać w dowolnej aplika
 
 - **Twój głos trafia w jedno miejsce.** W trybie online skompresowane nagranie trafia do wybranego przez Ciebie dostawcy, OpenAI lub Groq, razem z Twoim słownictwem. W trybie lokalnym nic nie opuszcza Twojego Maca. Gdy żądanie online się nie powiedzie, model lokalny przepisuje to samo nagranie na Twoim Macu.
 - **Przetwarzanie końcowe**, jeśli je włączysz, wysyła przepisany tekst i Twoje słownictwo do Groq lub OpenAI. W trybie Formatowanie dodaje rodzaj aplikacji, do której dyktujesz (edytor kodu, terminal, czat lub e-mail); nazwa aplikacji nie jest wysyłana.
-- **Bez telemetrii, bez konta.** Poza transkrypcją i przetwarzaniem końcowym Lowspeak łączy się z siecią tylko po to, aby otworzyć połączenie z Twoim dostawcą, gdy trzymasz fn, w trybie online lub z włączonym przetwarzaniem końcowym, oraz aby pobrać model, gdy o to poprosisz, z Hugging Face przez HTTPS, w ustalonej wersji i ze sprawdzeniem sumy kontrolnej każdego pliku. **Pomoc › Zgłoś problem…** otwiera w przeglądarce formularz w serwisie GitHub; jego adres zawiera wersję Lowspeaka i wersję macOS, nic z tego, co podyktowano.
+- **Bez telemetrii, bez konta.** Poza transkrypcją i przetwarzaniem końcowym Lowspeak łączy się z siecią tylko po to, aby otworzyć połączenie z Twoim dostawcą, gdy trzymasz fn, w trybie online lub z włączonym przetwarzaniem końcowym, aby pobrać model, gdy o to poprosisz, z Hugging Face przez HTTPS, w ustalonej wersji i ze sprawdzeniem sumy kontrolnej każdego pliku, oraz aby raz dziennie, jeśli na to pozwolisz, sprawdzić w serwisie GitHub, czy jest nowa wersja. To żądanie zawiera wersję Lowspeaka i nic poza tym. **Pomoc › Zgłoś problem…** otwiera w przeglądarce formularz w serwisie GitHub; jego adres zawiera wersję Lowspeaka i wersję macOS, nic z tego, co podyktowano.
 - **Klucze API** pozostają w Twoim pęku kluczy logowania. Są wysyłane wyłącznie do swojego dostawcy i usuwane z komunikatów o błędach, zanim cokolwiek trafi do dziennika.
 - **Podyktowany tekst nie jest przechowywany.** Ostatnie dziesięć dyktowań zostaje w pamięci na potrzeby **Ostatnio podyktowane** i znika po zakończeniu Lowspeaka. Pliki dziennika zapisują długości i czasy, nigdy tekst.
 - **Schowek** jest zachowywany przed wklejeniem i przywracany, gdy aplikacja odczyta tekst, chyba że w międzyczasie zmieniła go inna aplikacja. Podyktowany tekst jest oznaczony jako tymczasowy, więc aplikacje z historią schowka, które respektują to oznaczenie, go pomijają.
-- **Podpisanie kodu** z Hardened Runtime; aplikacja prosi tylko o dostęp do mikrofonu, Dostępności, powiadomień i sieci.
+- **Podpisanie kodu** z Hardened Runtime; aplikacja prosi tylko o dostęp do mikrofonu, Dostępności, powiadomień i sieci. Uaktualnienie musi mieć podpis autora, inaczej Sparkle je odrzuca.
 
 Aby zgłosić lukę w zabezpieczeniach, postępuj zgodnie z [zasadami bezpieczeństwa](../../../SECURITY.md).
 
@@ -406,7 +408,7 @@ Zmierzone na Apple Silicon:
 - **Limity czasu:** dwie minuty, gdy fn jest przytrzymany, pięć minut po zablokowaniu.
 - **Tryb mikrofonu:** Centrum sterowania oferuje dla Lowspeaka Izolację głosu i Szerokie spektrum i pokazuje je jako aktywne, ale Lowspeak nagrywa bez przetwarzania głosu, więc ten wybór nie ma żadnego efektu.
 - **Ostatnio podyktowane** istnieją tylko w pamięci i znikają po zakończeniu aplikacji.
-- **Z założenia:** bez okna ustawień, bez ikony w Docku, bez automatycznych uaktualnień, nie w App Store.
+- **Z założenia:** bez okna ustawień, bez ikony w Docku, nie w App Store.
 
 ## Rozwiązywanie problemów
 
@@ -449,6 +451,7 @@ Kompilacja, testowanie, struktura kodu i zasady, których przestrzega, są opisa
 | [sha1, sha2](https://github.com/RustCrypto/hashes) | 0.11 | sumy kontrolne pobieranych modeli | MIT lub Apache-2.0 |
 | [security-framework](https://github.com/kornelski/rust-security-framework) | 3.7 | klucze API w pęku kluczy | MIT lub Apache-2.0 |
 | [serde](https://serde.rs), serde_json, anyhow, unicode-general-category | 1 | JSON, błędy, słownik Parakeet | MIT lub Apache-2.0; Apache-2.0 |
+| [Sparkle](https://sparkle-project.org) | 2.10.1 | uaktualnienia aplikacji z obrazu dysku | MIT, z częściami na licencjach BSD i zlib |
 
 Teksty licencji wszystkiego, co zawiera aplikacja, są do niej dołączone jako `Contents/Resources/Acknowledgements.txt`.
 

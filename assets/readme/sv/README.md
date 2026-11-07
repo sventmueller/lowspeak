@@ -116,14 +116,14 @@ Lowspeak finns i menyraden. Håll ned fn-tangenten (Glob) och tala; när du slä
 
 - macOS 14 Sonoma eller senare. Lowspeak utvecklas och testas på macOS 27.
 - En Mac med Apple Silicon eller en Intel-processor. Lokal transkribering är byggd för Apple Silicon, där Whisper körs på GPU:n och Parakeet på Neural Engine; på Mac-datorer med Intel körs båda på processorn, mycket långsammare, se [Mac-datorer med Intel](#mac-datorer-med-intel).
-- Cirka 10 MB för appen, plus 75 MB till 3 GB för varje lokal modell du hämtar.
+- Cirka 17 MB för appen, plus 75 MB till 3 GB för varje lokal modell du hämtar.
 - För onlinetranskribering en API-nyckel från [OpenAI](https://platform.openai.com/api-keys) eller [Groq](https://console.groq.com/keys); båda tar betalt för det du transkriberar. Lokal transkribering kräver inget konto.
 
 ## Installation
 
 **Från skivavbilden.** Ladda ner [`Lowspeak.dmg`](https://github.com/sventmueller/lowspeak/releases/latest/download/Lowspeak.dmg), öppna den och dra Lowspeak till mappen Appar. Avbilden är signerad med ett Developer ID och notariserad av Apple, så den öppnas utan varningar.
 
-**Uppdateringar.** Lowspeak uppdaterar sig inte själv. Nya versioner publiceras på [sidan med releaser](https://github.com/sventmueller/lowspeak/releases); **Hjälp › Lowspeak på GitHub** leder dit. Installera en ny version över den gamla; dina inställningar, nycklar och modeller finns kvar.
+**Uppdateringar.** Lowspeak från skivavbilden håller sig uppdaterat med [Sparkle](https://sparkle-project.org). Vid andra starten frågar appen om den får leta efter uppdateringar på egen hand, en gång om dagen. **Leta efter uppdateringar…** i menyn letar direkt; **Leta efter uppdateringar automatiskt** och **Hämta och installera uppdateringar automatiskt** strax nedanför ändrar ditt val senare. När en sökning hittar en ny version medan du arbetar i en annan app visas en punkt på ringen i menyraden, och **Leta efter uppdateringar…** tar fram uppdateringen. Lowspeak installerar en uppdatering bara om den bär utvecklarens signatur; dina inställningar, nycklar och modeller finns kvar. Version 1.0.0 har ingen uppdateringsfunktion: installera en nyare version över den en gång, från [sidan med releaser](https://github.com/sventmueller/lowspeak/releases). Ett eget bygge har inte heller någon uppdateringsfunktion.
 
 **Från källkod.** Se [Bygge och driftsättning](../../../docs/development.md#build--deploy) för förutsättningarna och kör sedan:
 
@@ -170,6 +170,7 @@ Klicka på ringen i menyraden:
 | **Hantera modeller** | hämta och radera lokala modeller, med förlopp |
 | **Ange API-nyckel…** / **Ändra API-nyckel…** | lägg till, ersätt eller ta bort nycklar |
 | **Öppna vid inloggning** | starta Lowspeak med din Mac; bocken visar att det är på |
+| **Leta efter uppdateringar…** | leta efter en ny version nu; de två objekten nedanför avgör om Lowspeak letar en gång om dagen och installerar uppdateringar utan att fråga. Bara i appen från skivavbilden |
 | **Hjälp** | **Snabbreferens**, **Rapportera ett problem…**, **Föreslå en funktion…**, **Lowspeak på GitHub** |
 | **Om Lowspeak** | version, upphovsrätt, projektsida och licens |
 | **Avsluta Lowspeak** | ⌘Q när menyn är öppen |
@@ -182,6 +183,7 @@ Bocken under **Lokalt**, **OpenAI** och **Groq** markerar modellen som används.
 | Fylld cirkel | Spelar in medan fn hålls ned |
 | Rundad kvadrat | Inspelningen är låst; nästa tryck på fn eller Shift avslutar den |
 | Blinkande ring | Transkriberar |
+| Ring med en punkt uppe till höger | En ny version väntar, se **Leta efter uppdateringar…** |
 | ↓ 42 % | Hämtar en modell |
 
 Lowspeak har inget inställningsfönster: allt finns i den här menyn, och appen kommer ihåg varje val.
@@ -379,11 +381,11 @@ Lowspeak hör vad du säger medan fn hålls ned, kan skriva i vilken app som hel
 
 - **Din röst går till ett enda ställe.** I onlineläge går inspelningen, komprimerad, till den leverantör du har valt, OpenAI eller Groq, tillsammans med din ordlista. I lokalt läge lämnar ingenting din Mac. Om en onlineförfrågan misslyckas transkriberar en lokal modell samma inspelning på din Mac.
 - **Efterbearbetning**, om du slår på den, skickar den transkriberade texten och din ordlista till Groq eller OpenAI. I läget Formatera skickas också vilken typ av app du dikterar i (kodredigerare, terminal, chatt eller mejl); appens namn skickas inte.
-- **Ingen telemetri, inget konto.** Utöver transkribering och efterbearbetning går Lowspeak bara ut på nätet för att öppna anslutningen till din leverantör medan fn hålls ned, i onlineläge eller med efterbearbetning påslagen, och för att hämta en modell när du ber om det, från Hugging Face över HTTPS, i en fast version och med varje fil kontrollerad mot sin kontrollsumma. **Hjälp › Rapportera ett problem…** öppnar ett formulär på GitHub i webbläsaren; adressen innehåller versionen av Lowspeak och macOS, inget av det du har dikterat.
+- **Ingen telemetri, inget konto.** Utöver transkribering och efterbearbetning går Lowspeak bara ut på nätet för att öppna anslutningen till din leverantör medan fn hålls ned, i onlineläge eller med efterbearbetning påslagen, för att hämta en modell när du ber om det, från Hugging Face över HTTPS, i en fast version och med varje fil kontrollerad mot sin kontrollsumma, och för att leta efter en ny version på GitHub, en gång om dagen om du tillåter det. Den förfrågan innehåller Lowspeaks version och inget annat. **Hjälp › Rapportera ett problem…** öppnar ett formulär på GitHub i webbläsaren; adressen innehåller versionen av Lowspeak och macOS, inget av det du har dikterat.
 - **API-nycklar** ligger kvar i din inloggningsnyckelring. De skickas bara till sin egen leverantör och tas bort ur felmeddelanden innan något skrivs till loggen.
 - **Dikterad text sparas inte.** De tio senaste dikteringarna finns i minnet för **Senaste dikteringar** och försvinner när Lowspeak avslutas. Loggfilerna registrerar längder och tider, aldrig texten.
 - **Urklippet** sparas före inklistringen och återställs så snart den mottagande appen har läst texten, om inte en annan app har ändrat det under tiden. Dikteringen är markerad som tillfällig, så appar för urklippshistorik som respekterar markeringen hoppar över den.
-- **Kodsignering** med Hardened Runtime; appen ber bara om tillgång till mikrofonen, Hjälpmedel, notiser och nätverket.
+- **Kodsignering** med Hardened Runtime; appen ber bara om tillgång till mikrofonen, Hjälpmedel, notiser och nätverket. En uppdatering måste bära utvecklarens signatur, annars avvisar Sparkle den.
 
 Om du vill rapportera en sårbarhet följer du [säkerhetspolicyn](../../../SECURITY.md).
 
@@ -406,7 +408,7 @@ Uppmätt på Apple Silicon:
 - **Tidsgränser:** två minuter medan fn hålls ned, fem minuter när inspelningen är låst.
 - **Mikrofonläge:** Kontrollcenter erbjuder Röstisolering och Brett spektrum för Lowspeak och visar dem som aktiva, men Lowspeak spelar in utan röstbearbetning, så valet har ingen effekt.
 - **Senaste dikteringar** finns bara i minnet och försvinner när appen avslutas.
-- **Avsiktligt:** inget inställningsfönster, ingen symbol i Dock, inga automatiska uppdateringar, inte i App Store.
+- **Avsiktligt:** inget inställningsfönster, ingen symbol i Dock, inte i App Store.
 
 ## Felsökning
 
@@ -449,6 +451,7 @@ Bygge, testning, kodens uppbyggnad och de regler den följer beskrivs i [docs/de
 | [sha1, sha2](https://github.com/RustCrypto/hashes) | 0.11 | kontrollsummor för modellhämtningarna | MIT eller Apache-2.0 |
 | [security-framework](https://github.com/kornelski/rust-security-framework) | 3.7 | API-nycklar i nyckelringen | MIT eller Apache-2.0 |
 | [serde](https://serde.rs), serde_json, anyhow, unicode-general-category | 1 | JSON, fel, Parakeets vokabulär | MIT eller Apache-2.0; Apache-2.0 |
+| [Sparkle](https://sparkle-project.org) | 2.10.1 | uppdateringar av appen från skivavbilden | MIT, med delar under BSD- och zlib-licenser |
 
 Licenstexterna för allt som ingår i appen levereras med den som `Contents/Resources/Acknowledgements.txt`.
 

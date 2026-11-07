@@ -1,6 +1,6 @@
 //! The license texts of everything the app contains, which their licenses ask to go along with it: Lowspeak's own,
-//! those of the crates in its program, of whisper.cpp inside whisper-rs-sys and of the FluidAudio code translated in
-//! `src/transcription/parakeet`.
+//! those of the crates in its program, of whisper.cpp inside whisper-rs-sys, of the FluidAudio code translated in
+//! `src/transcription/parakeet` and of Sparkle where the bundle carries it.
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
@@ -319,8 +319,8 @@ fn tidy(text: &str) -> String {
 }
 
 /// The text of `ACKNOWLEDGEMENTS`: Lowspeak's licenses first, then each license text once, under the components it
-/// covers.
-pub(crate) fn acknowledgements() -> Result<String> {
+/// covers. Sparkle's license comes from `sparkle`, its unpacked release, when the bundle carries the framework.
+pub(crate) fn acknowledgements(sparkle: Option<&Path>) -> Result<String> {
     let root = root();
     let mit = read(&root.join("LICENSE-MIT"))?;
     let mit_terms = mit
@@ -358,7 +358,15 @@ pub(crate) fn acknowledgements() -> Result<String> {
                 .join("LICENSE-FluidAudio"),
         )?,
     );
-    for (label, text) in [whisper_cpp, fluidaudio] {
+    let sparkle = sparkle
+        .map(|dir| {
+            Ok::<_, anyhow::Error>((
+                format!("Sparkle {SPARKLE_VERSION}"),
+                read(&dir.join("LICENSE"))?,
+            ))
+        })
+        .transpose()?;
+    for (label, text) in [whisper_cpp, fluidaudio].into_iter().chain(sparkle) {
         covered.entry(tidy(&text)).or_default().push(label);
     }
     let mut sections: Vec<(Vec<String>, String)> = covered
@@ -383,7 +391,22 @@ mod tests {
 
     #[test]
     fn every_component_of_the_program_comes_with_its_license_text() {
-        let text = acknowledgements().unwrap();
+        let sparkle = std::env::temp_dir().join(format!("lowspeak-sparkle-{}", std::process::id()));
+        std::fs::create_dir_all(&sparkle).unwrap();
+        std::fs::write(
+            sparkle.join("LICENSE"),
+            "Copyright (c) 2006-2013 Andy Matuschak.\n\nThe Sparkle license.\n",
+        )
+        .unwrap();
+        let bundled = acknowledgements(Some(&sparkle));
+        std::fs::remove_dir_all(&sparkle).unwrap();
+        assert!(
+            bundled
+                .unwrap()
+                .contains("\n## Sparkle 2.10.1\n\nCopyright (c) 2006-2013 Andy Matuschak.")
+        );
+        let text = acknowledgements(None).unwrap();
+        assert!(!text.contains("Sparkle"));
         for part in [
             "## Lowspeak",
             "Copyright (c) 2026 Sven Müller",
