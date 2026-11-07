@@ -12,6 +12,28 @@ const RECENT_DICTATIONS: usize = 10;
 
 pub type Result = std::result::Result<Outcome, TranscriptionError>;
 
+/// The dictation as pasted, with a space so that the next dictation does not run into it; Chinese and Japanese put
+/// none between sentences.
+pub fn pasted(text: &str) -> String {
+    match text.chars().last() {
+        Some(last) if !last.is_whitespace() && !written_without_spaces(last) => format!("{text} "),
+        _ => text.to_owned(),
+    }
+}
+
+fn written_without_spaces(c: char) -> bool {
+    matches!(
+        c,
+        '\u{3000}'..='\u{30FF}'
+            | '\u{31F0}'..='\u{31FF}'
+            | '\u{3400}'..='\u{4DBF}'
+            | '\u{4E00}'..='\u{9FFF}'
+            | '\u{F900}'..='\u{FAFF}'
+            | '\u{FF00}'..='\u{FFEF}'
+            | '\u{20000}'..='\u{3FFFF}'
+    )
+}
+
 #[derive(Default)]
 pub struct Delivery {
     queue: Dictations<Result>,
@@ -88,6 +110,21 @@ mod tests {
         assert!(matches!(delivery.next(), Some(Ok(Outcome::NoSpeech))));
         assert!(matches!(delivery.next(), Some(Ok(Outcome::TooShort))));
         assert!(delivery.is_empty());
+    }
+
+    #[test]
+    fn a_space_follows_the_dictation_except_in_chinese_and_japanese() {
+        assert_eq!(pasted("Hello world."), "Hello world. ");
+        assert_eq!(pasted("Привет"), "Привет ");
+        assert_eq!(pasted("안녕하세요."), "안녕하세요. ");
+        assert_eq!(pasted("สวัสดีครับ"), "สวัสดีครับ ");
+        assert_eq!(pasted("already spaced "), "already spaced ");
+        assert_eq!(pasted("你好。"), "你好。");
+        assert_eq!(pasted("你好"), "你好");
+        assert_eq!(pasted("こんにちは"), "こんにちは");
+        assert_eq!(pasted("カタカナ"), "カタカナ");
+        assert_eq!(pasted("本当？"), "本当？");
+        assert_eq!(pasted(""), "");
     }
 
     #[test]

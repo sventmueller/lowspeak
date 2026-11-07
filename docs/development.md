@@ -223,7 +223,8 @@ fn UP   → event tap thread → dispatch → App::fn_up → FnGesture (held: st
 - The dictation carries `org.nspasteboard.TransientType`, so clipboard history apps that follow nspasteboard.org skip it. One that ignores the marker and reads first starts the 500 ms early
 - Both ⌘V events are created before either is posted, so a failure cannot leave a pressed key behind
 - Without Accessibility permission, or when the ⌘V keystroke cannot be created, the text stays in the clipboard and a notification says so
-- Menu → Recent Dictations keeps the last 10 texts in memory only (gone on quit); a click copies one to the clipboard
+- A space follows every pasted dictation, so the next one does not run into it (`delivery::pasted`); not after Chinese or Japanese characters and punctuation, which take none between sentences. Thai and Korean do get one
+- Menu → Recent Dictations keeps the last 10 texts in memory only (gone on quit), without the space; a click copies one to the clipboard
 
 ## Build & Deploy
 

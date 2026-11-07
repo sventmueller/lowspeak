@@ -486,7 +486,7 @@ impl State {
         match result {
             Ok(Outcome::Text(transcript)) => {
                 self.delivery.paste_started();
-                self.push(Effect::Paste(transcript.text.clone()));
+                self.push(Effect::Paste(delivery::pasted(&transcript.text)));
                 let notices: Vec<(&'static str, String)> = self
                     .delivery
                     .notices_after(&transcript, self.settings.mode)
@@ -873,7 +873,7 @@ mod tests {
         );
 
         state.transcribed(1, text("Hello"));
-        assert_eq!(pastes(&effects(&mut state)), ["Hello"]);
+        assert_eq!(pastes(&effects(&mut state)), ["Hello "]);
         state.pasted(Pasted::Yes);
         assert_eq!(state.status(), Status::Idle);
         assert_eq!(state.snapshot().recent, ["Hello"]);
@@ -918,12 +918,12 @@ mod tests {
         state.transcribed(second, text("second"));
         assert!(pastes(&effects(&mut state)).is_empty());
         state.transcribed(first, text("first"));
-        assert_eq!(pastes(&effects(&mut state)), ["first"]);
+        assert_eq!(pastes(&effects(&mut state)), ["first "]);
         state.pasted(Pasted::Yes);
         assert!(effects(&mut state).is_empty(), "waits for the clipboard");
         assert_eq!(state.status(), Status::Transcribing);
         state.clipboard_restored();
-        assert_eq!(pastes(&effects(&mut state)), ["second"]);
+        assert_eq!(pastes(&effects(&mut state)), ["second "]);
         state.pasted(Pasted::Yes);
         state.clipboard_restored();
         assert_eq!(state.status(), Status::Idle);
@@ -940,7 +940,7 @@ mod tests {
         state.transcribed(first, text("first"));
         assert!(pastes(&effects(&mut state)).is_empty());
         state.key(Key::FnUp, start + Duration::from_secs(6));
-        assert_eq!(pastes(&effects(&mut state)), ["first"]);
+        assert_eq!(pastes(&effects(&mut state)), ["first "]);
     }
 
     #[test]
@@ -955,7 +955,7 @@ mod tests {
         state.pasted(Pasted::NeedsAccessibility);
         let next = effects(&mut state);
         assert_eq!(notifications(&next)[0].0, texts().accessibility_required);
-        assert_eq!(pastes(&next), ["second"]);
+        assert_eq!(pastes(&next), ["second "]);
         state.pasted(Pasted::Failed);
         assert_eq!(
             notifications(&effects(&mut state)),
