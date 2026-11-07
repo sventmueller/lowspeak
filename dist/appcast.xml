@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+  <channel>
+    <title>Lowspeak</title>
+    <item>
+      <title>Lowspeak 1.0.1</title>
+      <pubDate>Sat, 07 Nov 2026 11:08:33 +0000</pubDate>
+      <sparkle:version>1.0.1</sparkle:version>
+      <sparkle:shortVersionString>1.0.1</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <description sparkle:format="markdown"><![CDATA[Lowspeak now keeps itself up to date.
+
+- **Updates:** on the second launch, Lowspeak asks whether it may look for a new version once a day. **Check for Updates…** in the menu looks right away; the two items below it turn the daily check and automatic installs on or off. When an update is waiting, a dot appears on the ring in the menu bar.
+- **Coming from 1.0.0?** It has no updater yet, so install this version over it once. Your settings, keys and models stay.
+- **The disk image window** shows both icons with their names, on a background that stays sharp on Retina screens.
+
+Something wrong or missing? [Report it on GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
+      <enclosure url="https://github.com/sventmueller/lowspeak/releases/download/v1.0.1/Lowspeak-1.0.1.dmg" sparkle:edSignature="bP+9WxKoOBAHHpcSavHvHtHgRn/ujix3OidZ3GoFF1P+AlLKESuKyIA8VvT9Ivqy2cLyIT0UBYLDTddj00yfDw==" length="6963371" type="application/octet-stream"/>
+    </item>
+  </channel>
+</rss>
