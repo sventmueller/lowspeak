@@ -3,117 +3,362 @@
   <channel>
     <title>Lowspeak</title>
     <item>
-      <title>Lowspeak 1.0.4</title>
-      <pubDate>Sat, 07 Nov 2026 16:33:45 +0000</pubDate>
-      <sparkle:version>1.0.4</sparkle:version>
-      <sparkle:shortVersionString>1.0.4</sparkle:shortVersionString>
+      <title>Lowspeak 1.0.5</title>
+      <pubDate>Sun, 08 Nov 2026 01:28:04 +0000</pubDate>
+      <sparkle:version>1.0.5</sparkle:version>
+      <sparkle:shortVersionString>1.0.5</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-      <description sparkle:format="markdown" xml:lang="en"><![CDATA[Lowspeak now puts a space after every dictation, so the next one no longer runs into the last word. Chinese and Japanese, which leave no space between sentences, stay without one.
+      <description sparkle:format="markdown" xml:lang="en"><![CDATA[Lowspeak now loses fewer dictations and writes your words more reliably.
+
+- **Retry a failed dictation:** when a transcription fails, Lowspeak keeps the recording in memory. **Retry Failed Dictation** in the menu transcribes it again, for example once the network is back or after you chose another model.
+- **The text stays where you spoke it:** if another app came to the front before the text was ready, Lowspeak leaves the text on the clipboard and tells you, instead of pasting it into the wrong app.
+- **No credit left:** when your OpenAI account has run out of credit, Lowspeak says so instead of asking you to wait, and does not try again in vain.
+- **No invented text:** Whisper sometimes wrote text nobody said into silence, such as the credits of subtitled videos. Lowspeak now leaves it out.
+- **Your vocabulary with Whisper:** Whisper no longer drops a sentence that begins like the one before it.
+- **Your vocabulary with Parakeet:** Parakeet now spells your terms as you wrote them where it came very close, for example Traefik for "Träfig".
 
 Something wrong or missing? [Report it on GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="ar"><![CDATA[يضع Lowspeak الآن مسافة بعد كل إملاء، فلا يلتصق الإملاء التالي بالكلمة الأخيرة. أما الصينية واليابانية، اللتان لا تتركان مسافة بين الجمل، فتبقيان بدونها.
+      <description sparkle:format="markdown" xml:lang="ar"><![CDATA[أصبح Lowspeak يفقد عددًا أقل من الإملاءات ويكتب كلماتك بموثوقية أكبر.
+
+- **إعادة محاولة إملاء فشل:** عندما يفشل النسخ، يحتفظ Lowspeak بالتسجيل في الذاكرة. والعنصر **إعادة نسخ الإملاء الذي فشل** في القائمة ينسخه من جديد، مثلًا بعد عودة الشبكة أو بعد أن تختار نموذجًا آخر.
+- **يبقى النص حيث قلته:** إذا انتقل تطبيق آخر إلى المقدمة قبل أن يصبح النص جاهزًا، يترك Lowspeak النص في الحافظة ويخبرك بذلك، بدلًا من لصقه في التطبيق الخاطئ.
+- **نفاد الرصيد:** عندما ينفد الرصيد في حسابك على OpenAI، يُبلغك Lowspeak بذلك بدلًا من أن يطلب منك الانتظار، ولا يعيد المحاولة عبثًا.
+- **لا نصوص مختلقة:** كان Whisper يكتب أحيانًا في الصمت نصًا لم يقله أحد، مثل شارات النهاية في مقاطع الفيديو المترجمة. ويستبعده Lowspeak الآن.
+- **مفرداتك مع Whisper:** لم يعد Whisper يُسقط جملةً تبدأ كالجملة التي سبقتها.
+- **مفرداتك مع Parakeet:** أصبح Parakeet يتهجّى مصطلحاتك كما كتبتها حيث اقترب منها كثيرًا، كأن يكتب Traefik بدلًا من "Träfig".
 
 هل هناك خطأ أو شيء ناقص؟ [أبلغ عنه على GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="ca"><![CDATA[Ara Lowspeak posa un espai després de cada dictat, de manera que el següent ja no s’enganxa a l’última paraula. El xinès i el japonès, que no deixen espai entre frases, continuen sense.
+      <description sparkle:format="markdown" xml:lang="ca"><![CDATA[El Lowspeak ara perd menys dictats i escriu les teves paraules de manera més fiable.
+
+- **Nou intent per a un dictat fallit:** quan una transcripció falla, el Lowspeak conserva l’enregistrament a la memòria. **Torna a transcriure el dictat fallit**, al menú, el transcriu de nou, per exemple quan torna la xarxa o després que hagis triat un altre model.
+- **El text es queda on has parlat:** si una altra app ha passat al davant abans que el text estigués llest, el Lowspeak el deixa al porta-retalls i t’ho indica, en lloc d’enganxar-lo a l’app equivocada.
+- **Sense saldo:** quan el teu compte d’OpenAI s’ha quedat sense saldo, el Lowspeak t’ho diu en lloc de demanar-te que esperis, i no ho torna a provar en va.
+- **Sense text inventat:** Whisper de vegades escrivia en el silenci un text que ningú no havia dit, com els crèdits de vídeos subtitulats. Ara el Lowspeak l’omet.
+- **El teu vocabulari amb Whisper:** Whisper ja no se salta una frase que comença igual que l’anterior.
+- **El teu vocabulari amb Parakeet:** quan Parakeet s’acosta molt a un dels teus termes, ara l’escriu tal com l’has escrit tu, per exemple Traefik en lloc de «Träfig».
 
 Alguna cosa falla o hi falta? [Comunica-ho a GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="cs"><![CDATA[Lowspeak teď za každý diktát vloží mezeru, takže další už nenavazuje přímo na poslední slovo. Čínština a japonština, které mezi větami mezeru nepíší, zůstávají bez ní.
+      <description sparkle:format="markdown" xml:lang="cs"><![CDATA[Lowspeak teď ztrácí méně diktátů a vaše slova zapisuje spolehlivěji.
+
+- **Opakování neúspěšného diktátu:** když se přepis nezdaří, Lowspeak si nahrávku ponechá v paměti. **Znovu přepsat neúspěšný diktát** v nabídce ji přepíše znovu, třeba až bude síť zase fungovat nebo když zvolíte jiný model.
+- **Text zůstane tam, kde diktujete:** pokud se do popředí dostala jiná aplikace dřív, než byl text hotový, Lowspeak nechá text ve schránce a dá vám vědět, místo aby ho vložil do nesprávné aplikace.
+- **Došel kredit:** když už na vašem účtu OpenAI není žádný kredit, Lowspeak vám to řekne, místo aby vás prosil o strpení, a nezkouší to marně znovu.
+- **Žádný vymyšlený text:** Whisper někdy do ticha napsal text, který nikdo neřekl, například údaje o autorech titulků z videí. Lowspeak ho teď vynechává.
+- **Váš slovník u Whisperu:** Whisper už nevypouští větu, která začíná stejně jako ta předchozí.
+- **Váš slovník u Parakeetu:** tam, kde se Parakeet velmi přiblížil, teď píše vaše výrazy tak, jak je máte zapsané, například Traefik místo „Träfig“.
 
 Něco nefunguje nebo chybí? [Nahlaste to na GitHubu](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="da"><![CDATA[Lowspeak sætter nu et mellemrum efter hver diktering, så den næste ikke længere hænger fast i det sidste ord. Kinesisk og japansk, der ikke bruger mellemrum mellem sætninger, forbliver uden.
+      <description sparkle:format="markdown" xml:lang="da"><![CDATA[Lowspeak mister nu færre dikteringer og skriver dine ord mere pålideligt.
+
+- **Prøv en mislykket diktering igen:** Når en transskription mislykkes, beholder Lowspeak optagelsen i hukommelsen. **Prøv mislykket diktering igen** i menuen transskriberer den igen, for eksempel når netværket er tilbage, eller når du har valgt en anden model.
+- **Teksten bliver, hvor du dikterede den:** Hvis en anden app er kommet i forgrunden, før teksten er klar, lader Lowspeak teksten ligge på udklipsholderen og giver dig besked i stedet for at indsætte den i den forkerte app.
+- **Ingen kredit tilbage:** Når din OpenAI-konto er løbet tør for kredit, siger Lowspeak det i stedet for at bede dig om at vente, og den prøver ikke forgæves igen.
+- **Ingen opdigtet tekst:** Når der var stille, skrev Whisper af og til tekst, som ingen havde sagt, for eksempel krediteringer fra videoer med undertekster. Nu udelader Lowspeak den.
+- **Din ordliste med Whisper:** Whisper springer ikke længere over en sætning, der begynder ligesom den foregående.
+- **Din ordliste med Parakeet:** Hvor Parakeet kom meget tæt på, staver den nu dine termer, som du har skrevet dem, for eksempel Traefik i stedet for ”Träfig”.
 
 Er noget forkert, eller mangler noget? [Rapportér det på GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="de"><![CDATA[Lowspeak setzt jetzt nach jedem Diktat ein Leerzeichen, damit das nächste nicht mehr am letzten Wort klebt. Chinesisch und Japanisch, die zwischen Sätzen kein Leerzeichen setzen, bleiben ohne.
+      <description sparkle:format="markdown" xml:lang="de"><![CDATA[Lowspeak verliert jetzt weniger Diktate und schreibt deine Wörter zuverlässiger.
+
+- **Neuer Versuch für ein fehlgeschlagenes Diktat:** Schlägt eine Transkription fehl, behält Lowspeak die Aufnahme im Arbeitsspeicher. **Fehlgeschlagenes Diktat erneut transkribieren** im Menü transkribiert sie noch einmal, etwa sobald das Netzwerk wieder da ist oder nachdem du ein anderes Modell gewählt hast.
+- **Der Text bleibt, wo du ihn gesprochen hast:** Ist eine andere App in den Vordergrund gekommen, bevor der Text fertig war, lässt Lowspeak ihn in der Zwischenablage und sagt dir Bescheid, statt ihn in die falsche App einzufügen.
+- **Kein Guthaben mehr:** Hat dein OpenAI-Konto kein Guthaben mehr, sagt Lowspeak das, statt dich um Geduld zu bitten, und versucht es nicht vergeblich erneut.
+- **Kein erfundener Text:** Whisper schrieb in Stille manchmal Text, den niemand gesagt hatte, etwa den Abspann untertitelter Videos. Lowspeak lässt ihn jetzt weg.
+- **Dein Vokabular mit Whisper:** Whisper verschluckt keinen Satz mehr, der so beginnt wie der vorherige.
+- **Dein Vokabular mit Parakeet:** Wo Parakeet deine Begriffe knapp verfehlt, schreibt es sie jetzt so, wie du sie eingetragen hast, etwa Traefik statt „Träfig“.
 
 Fehlt etwas oder stimmt etwas nicht? [Melde es auf GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="el"><![CDATA[Το Lowspeak βάζει πλέον ένα κενό μετά από κάθε υπαγόρευση, ώστε η επόμενη να μην κολλάει στην τελευταία λέξη. Τα κινεζικά και τα ιαπωνικά, που δεν αφήνουν κενό ανάμεσα στις προτάσεις, μένουν χωρίς.
+      <description sparkle:format="markdown" xml:lang="el"><![CDATA[Το Lowspeak χάνει πλέον λιγότερες υπαγορεύσεις και γράφει τις λέξεις σας πιο αξιόπιστα.
+
+- **Επανάληψη μιας αποτυχημένης υπαγόρευσης:** όταν μια μεταγραφή αποτυγχάνει, το Lowspeak κρατά την εγγραφή στη μνήμη. Η **Επανάληψη αποτυχημένης υπαγόρευσης** στο μενού τη μεταγράφει ξανά, για παράδειγμα μόλις επανέλθει το δίκτυο ή αφού επιλέξετε άλλο μοντέλο.
+- **Το κείμενο μένει εκεί όπου το είπατε:** αν μια άλλη εφαρμογή ήρθε μπροστά πριν ετοιμαστεί το κείμενο, το Lowspeak αφήνει το κείμενο στο πρόχειρο και σας το λέει, αντί να το επικολλήσει σε λάθος εφαρμογή.
+- **Χωρίς υπόλοιπο:** όταν εξαντληθεί το υπόλοιπο του λογαριασμού σας στο OpenAI, το Lowspeak το λέει αντί να σας ζητά να περιμένετε, και δεν ξαναδοκιμάζει μάταια.
+- **Χωρίς επινοημένο κείμενο:** το Whisper μερικές φορές έγραφε μέσα στη σιωπή κείμενο που δεν είπε κανείς, όπως τους τίτλους τέλους υποτιτλισμένων βίντεο. Το Lowspeak πλέον το αφήνει έξω.
+- **Το λεξιλόγιό σας με το Whisper:** το Whisper δεν παραλείπει πλέον μια πρόταση που αρχίζει όπως η προηγούμενη.
+- **Το λεξιλόγιό σας με το Parakeet:** το Parakeet γράφει πλέον τους όρους σας όπως τους γράψατε, εκεί όπου έπεσε πολύ κοντά, για παράδειγμα Traefik αντί για «Träfig».
 
 Κάτι δεν λειτουργεί ή λείπει; [Αναφέρετέ το στο GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="es"><![CDATA[Lowspeak ahora añade un espacio después de cada dictado, para que el siguiente ya no quede pegado a la última palabra. El chino y el japonés, que no dejan espacio entre frases, siguen sin él.
+      <description sparkle:format="markdown" xml:lang="es"><![CDATA[Lowspeak ahora pierde menos dictados y escribe tus palabras con más fiabilidad.
+
+- **Reintentar un dictado fallido:** cuando una transcripción falla, Lowspeak guarda la grabación en memoria. **Reintentar el dictado fallido**, en el menú, la vuelve a transcribir, por ejemplo cuando vuelve la red o después de elegir otro modelo.
+- **El texto se queda donde hablaste:** si otra app pasó al primer plano antes de que el texto estuviera listo, Lowspeak lo deja en el portapapeles y te avisa, en lugar de pegarlo en la app equivocada.
+- **Sin saldo:** cuando tu cuenta de OpenAI se ha quedado sin saldo, Lowspeak te lo dice en lugar de pedirte que esperes, y no vuelve a intentarlo en vano.
+- **Sin texto inventado:** Whisper a veces escribía en el silencio texto que nadie había dicho, como los créditos de vídeos subtitulados. Ahora Lowspeak lo omite.
+- **Tu vocabulario con Whisper:** Whisper ya no se salta una frase que empieza igual que la anterior.
+- **Tu vocabulario con Parakeet:** cuando Parakeet se queda muy cerca de uno de tus términos, ahora lo escribe tal como lo escribiste, por ejemplo Traefik en lugar de «Träfig».
 
 ¿Algo falla o falta? [Avísanos en GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="fi"><![CDATA[Lowspeak lisää nyt välilyönnin jokaisen sanelun jälkeen, joten seuraava sanelu ei enää tartu viimeiseen sanaan. Kiina ja japani, joissa lauseiden väliin ei jätetä välilyöntiä, jäävät ilman.
+      <description sparkle:format="markdown" xml:lang="fi"><![CDATA[Lowspeak hukkaa nyt vähemmän saneluja ja kirjoittaa sanasi luotettavammin.
+
+- **Epäonnistuneen sanelun uusi yritys:** kun litterointi epäonnistuu, Lowspeak pitää äänityksen muistissa. Valikon kohta **Yritä epäonnistunutta sanelua uudelleen** litteroi sen uudelleen esimerkiksi silloin, kun verkko toimii taas tai kun olet valinnut toisen mallin.
+- **Teksti pysyy siellä, missä sen sanelit:** jos toinen appi siirtyi etualalle ennen kuin teksti oli valmis, Lowspeak ei sijoita tekstiä väärään appiin vaan jättää sen leikepöydälle ja kertoo siitä sinulle.
+- **Ei saldoa jäljellä:** kun OpenAI-tilisi saldo on loppunut, Lowspeak kertoo siitä sen sijaan, että pyytäisi sinua odottamaan, eikä yritä turhaan uudelleen.
+- **Ei keksittyä tekstiä:** Whisper kirjoitti joskus hiljaisuuteen tekstiä, jota kukaan ei ollut sanonut, kuten tekstitettyjen videoiden tekijätietoja. Nyt Lowspeak jättää sen pois.
+- **Sanastosi Whisperin kanssa:** Whisper ei enää ohita lausetta, joka alkaa samalla tavalla kuin edellinen.
+- **Sanastosi Parakeetin kanssa:** kun Parakeet osuu hyvin lähelle, se kirjoittaa nyt termisi niin kuin olet ne kirjoittanut, esimerkiksi Traefik eikä ”Träfig”.
 
 Onko jokin vialla tai puuttuuko jotain? [Ilmoita siitä GitHubissa](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="fr"><![CDATA[Lowspeak ajoute désormais un espace après chaque dictée, pour que la suivante ne colle plus au dernier mot. Le chinois et le japonais, qui ne laissent pas d’espace entre les phrases, restent sans.
+      <description sparkle:format="markdown" xml:lang="fr"><![CDATA[Lowspeak perd désormais moins de dictées et écrit vos mots de façon plus fiable.
+
+- **Réessayer une dictée qui a échoué :** lorsqu’une transcription échoue, Lowspeak garde l’enregistrement en mémoire. **Réessayer la dictée qui a échoué** dans le menu le transcrit à nouveau, par exemple une fois le réseau revenu ou après que vous avez choisi un autre modèle.
+- **Le texte reste là où vous avez parlé :** si une autre app est passée au premier plan avant que le texte soit prêt, Lowspeak le laisse dans le presse-papiers et vous le signale, au lieu de le coller dans la mauvaise app.
+- **Crédit épuisé :** lorsque votre compte OpenAI n’a plus de crédit, Lowspeak vous le dit au lieu de vous demander de patienter, et ne réessaie pas en vain.
+- **Pas de texte inventé :** Whisper écrivait parfois dans le silence du texte que personne n’avait prononcé, comme les crédits de vidéos sous-titrées. Lowspeak écarte désormais ce texte.
+- **Votre vocabulaire avec Whisper :** Whisper ne saute plus une phrase qui commence comme la précédente.
+- **Votre vocabulaire avec Parakeet :** quand Parakeet passe tout près de l’un de vos termes, il l’orthographie désormais comme vous l’avez écrit, par exemple Traefik au lieu de « Träfig ».
 
 Quelque chose ne va pas ou manque ? [Signalez-le sur GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="he"><![CDATA[Lowspeak מוסיף עכשיו רווח אחרי כל הכתבה, כך שההכתבה הבאה כבר לא נצמדת למילה האחרונה. סינית ויפנית, שאין בהן רווח בין משפטים, נשארות בלעדיו.
+      <description sparkle:format="markdown" xml:lang="he"><![CDATA[עכשיו Lowspeak מאבד פחות הכתבות וכותב את המילים שלך בצורה אמינה יותר.
+
+- **ניסיון חוזר להכתבה שנכשלה:** כשהתמלול נכשל, Lowspeak שומר את ההקלטה בזיכרון. הפריט **ניסיון חוזר להכתבה שנכשלה** בתפריט מתמלל אותה שוב, למשל כשהרשת חוזרת או אחרי שבחרת מודל אחר.
+- **הטקסט נשאר במקום שבו אמרת אותו:** אם יישום אחר עבר לחזית לפני שהטקסט היה מוכן, Lowspeak משאיר את הטקסט בלוח הגזירים ומודיע לך על כך, במקום להדביק אותו ביישום הלא נכון.
+- **אין עוד יתרה:** כשנגמרת היתרה בחשבון OpenAI שלך, Lowspeak אומר זאת במקום לבקש ממך להמתין, ואינו מנסה שוב לשווא.
+- **בלי טקסט מומצא:** לפעמים Whisper מילא שקט בטקסט שאיש לא אמר, כמו שורות הקרדיטים של סרטונים עם כתוביות. עכשיו Lowspeak משמיט אותו.
+- **אוצר המילים שלך עם Whisper:** המודל Whisper כבר לא מדלג על משפט שמתחיל כמו המשפט שלפניו.
+- **אוצר המילים שלך עם Parakeet:** המודל Parakeet מאיית עכשיו את המונחים שלך כפי שכתבת אותם, במקומות שבהם הוא היה קרוב מאוד, למשל Traefik במקום ״Träfig״.
 
 משהו לא תקין או חסר? [דווחו על כך ב-GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="hi"><![CDATA[Lowspeak अब हर डिक्टेशन के बाद एक स्पेस लगाता है, ताकि अगला डिक्टेशन आख़िरी शब्द से न चिपके। चीनी और जापानी, जिनमें वाक्यों के बीच स्पेस नहीं होता, बिना स्पेस के ही रहती हैं।
+      <description sparkle:format="markdown" xml:lang="hi"><![CDATA[Lowspeak अब कम डिक्टेशन खोता है और आपके शब्दों को ज़्यादा भरोसेमंद ढंग से लिखता है।
+
+- **किसी विफल डिक्टेशन को फिर से आज़माएँ:** जब ट्रांसक्रिप्शन विफल हो जाता है, तो Lowspeak रिकॉर्डिंग को मेमोरी में रखता है। मेनू में **विफल डिक्टेशन फिर से आज़माएँ** उसे फिर से ट्रांसक्राइब करता है, जैसे नेटवर्क लौट आने पर या कोई दूसरा मॉडल चुनने के बाद।
+- **टेक्स्ट वहीं रहता है जहाँ आपने उसे बोला:** अगर टेक्स्ट तैयार होने से पहले कोई दूसरा ऐप सामने आ गया, तो Lowspeak टेक्स्ट को ग़लत ऐप में पेस्ट करने के बजाय क्लिपबोर्ड पर छोड़ देता है और आपको बता देता है।
+- **कोई क्रेडिट नहीं बचा:** जब आपके OpenAI खाते का क्रेडिट ख़त्म हो जाता है, तो Lowspeak आपसे इंतज़ार करने को कहने के बजाय यही बताता है, और बेकार में दोबारा कोशिश नहीं करता।
+- **कोई गढ़ा हुआ टेक्स्ट नहीं:** Whisper कभी-कभी चुप्पी में ऐसा टेक्स्ट लिख देता था जो किसी ने नहीं बोला, जैसे सबटाइटल वाले वीडियो के क्रेडिट। अब Lowspeak उसे शामिल नहीं करता।
+- **Whisper के साथ आपकी शब्दावली:** Whisper अब ऐसा वाक्य नहीं छोड़ता जो पिछले वाक्य की तरह शुरू होता हो।
+- **Parakeet के साथ आपकी शब्दावली:** जहाँ Parakeet बहुत क़रीब पहुँच जाता है, वहाँ अब वह आपके शब्दों को वैसे ही लिखता है जैसे आपने उन्हें लिखा था, उदाहरण के लिए “Träfig” की जगह Traefik।
 
 कुछ गलत है या कुछ छूट गया है? [GitHub पर बताएँ](https://github.com/sventmueller/lowspeak/issues/new/choose)।]]></description>
-      <description sparkle:format="markdown" xml:lang="hr"><![CDATA[Lowspeak sada stavlja razmak nakon svakog diktata, pa se sljedeći više ne lijepi uz posljednju riječ. Kineski i japanski, koji između rečenica ne stavljaju razmak, ostaju bez njega.
+      <description sparkle:format="markdown" xml:lang="hr"><![CDATA[Lowspeak sada gubi manje diktata i pouzdanije zapisuje vaše riječi.
+
+- **Ponovni pokušaj neuspjelog diktata:** kad transkripcija ne uspije, Lowspeak zadržava snimku u memoriji. **Ponovi neuspjeli diktat** u izborniku ponovno je transkribira, primjerice kad mreža opet proradi ili nakon što odaberete drugi model.
+- **Tekst ostaje ondje gdje diktirate:** ako je druga aplikacija došla u prvi plan prije nego što je tekst bio spreman, Lowspeak ostavlja tekst u međuspremniku i o tome vas obavještava, umjesto da ga zalijepi u pogrešnu aplikaciju.
+- **Nema više kredita:** kad na vašem OpenAI računu ponestane kredita, Lowspeak vam to kaže, umjesto da vas moli za strpljenje, i ne pokušava uzalud ponovno.
+- **Bez izmišljenog teksta:** Whisper je ponekad u tišinu upisao tekst koji nitko nije izgovorio, primjerice navode autora titlova iz videozapisa. Lowspeak ga sada izostavlja.
+- **Vaš rječnik uz Whisper:** Whisper više ne ispušta rečenicu koja počinje jednako kao prethodna.
+- **Vaš rječnik uz Parakeet:** gdje je Parakeet bio vrlo blizu, sada piše vaše pojmove onako kako ste ih upisali, primjerice Traefik umjesto „Träfig”.
 
 Nešto ne radi ili nedostaje? [Prijavite to na GitHubu](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="hu"><![CDATA[A Lowspeak mostantól szóközt tesz minden diktálás után, így a következő már nem tapad az utolsó szóhoz. A kínai és a japán, amelyek nem tesznek szóközt a mondatok közé, továbbra is szóköz nélkül maradnak.
+      <description sparkle:format="markdown" xml:lang="hu"><![CDATA[A Lowspeak mostantól kevesebb diktálást veszít el, és megbízhatóbban írja le az Ön szavait.
+
+- **Sikertelen diktálás újrapróbálása:** ha az átírás nem sikerül, a Lowspeak a memóriában tartja a felvételt. A menü **Sikertelen diktálás újrapróbálása** pontja újra átírja, például amikor ismét van hálózat, vagy miután másik modellt választott.
+- **A szöveg ott marad, ahol elmondta:** ha egy másik app előtérbe került, mielőtt a szöveg elkészült, a Lowspeak a vágólapon hagyja a szöveget, és szól Önnek, ahelyett, hogy rossz appba illesztené be.
+- **Nincs több kredit:** ha az OpenAI-fiókjában elfogyott a kredit, a Lowspeak közli ezt, ahelyett, hogy várakozásra kérné Önt, és nem próbálkozik hiába újra.
+- **Nincs kitalált szöveg:** a Whisper néha olyan szöveget írt a csendbe, amelyet senki sem mondott, például feliratozott videók stáblistáját. A Lowspeak ezt mostantól elhagyja.
+- **Az Ön szókincse a Whisperrel:** a Whisper már nem hagyja ki azt a mondatot, amely ugyanúgy kezdődik, mint az előző.
+- **Az Ön szókincse a Parakeettel:** a Parakeet mostantól úgy írja a kifejezéseit, ahogyan Ön leírta őket, ott, ahol nagyon közel járt hozzájuk, például „Träfig” helyett Traefik.
 
 Valami nem működik vagy hiányzik? [Jelezze a GitHubon](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="id"><![CDATA[Lowspeak kini menambahkan spasi setelah setiap dikte, sehingga dikte berikutnya tidak lagi menempel pada kata terakhir. Bahasa Tionghoa dan Jepang, yang tidak memakai spasi antarkalimat, tetap tanpa spasi.
+      <description sparkle:format="markdown" xml:lang="id"><![CDATA[Lowspeak kini lebih jarang kehilangan dikte dan menuliskan kata-kata Anda dengan lebih andal.
+
+- **Coba lagi dikte yang gagal:** jika transkripsi gagal, Lowspeak menyimpan rekamannya di memori. **Coba Lagi Dikte yang Gagal** di menu mentranskripsinya lagi, misalnya setelah jaringan kembali atau setelah Anda memilih model lain.
+- **Teks tetap di tempat Anda mengucapkannya:** jika app lain muncul di depan sebelum teks siap, Lowspeak membiarkan teks di papan klip dan memberi tahu Anda, alih-alih menempelnya ke app yang salah.
+- **Saldo habis:** jika saldo akun OpenAI Anda habis, Lowspeak menyampaikannya alih-alih meminta Anda menunggu, dan tidak mencoba lagi dengan sia-sia.
+- **Tanpa teks rekaan:** Whisper terkadang menulis teks yang tidak diucapkan siapa pun ke dalam keheningan, seperti kredit dari video bersubtitel. Lowspeak kini membuangnya.
+- **Kosakata Anda dengan Whisper:** Whisper tidak lagi menghilangkan kalimat yang awalnya sama dengan kalimat sebelumnya.
+- **Kosakata Anda dengan Parakeet:** Parakeet kini mengeja istilah Anda seperti yang Anda tulis di tempat hasilnya sudah sangat mirip, misalnya Traefik untuk “Träfig”.
 
 Ada yang salah atau kurang? [Laporkan di GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="it"><![CDATA[Ora Lowspeak aggiunge uno spazio dopo ogni dettatura, così la successiva non si attacca più all’ultima parola. Il cinese e il giapponese, che non lasciano spazi tra le frasi, restano senza.
+      <description sparkle:format="markdown" xml:lang="it"><![CDATA[Ora Lowspeak perde meno dettature e scrive le tue parole in modo più affidabile.
+
+- **Nuovo tentativo per una dettatura non riuscita:** quando una trascrizione non riesce, Lowspeak tiene la registrazione in memoria. **Riprova la dettatura non riuscita** nel menu la trascrive di nuovo, per esempio quando la rete è tornata o dopo che hai scelto un altro modello.
+- **Il testo resta dove hai parlato:** se un’altra app passa in primo piano prima che il testo sia pronto, Lowspeak lo lascia negli appunti e te lo segnala, invece di incollarlo nell’app sbagliata.
+- **Credito esaurito:** quando il tuo account OpenAI non ha più credito, Lowspeak te lo dice invece di chiederti di aspettare, e non riprova inutilmente.
+- **Niente testo inventato:** Whisper a volte scriveva nel silenzio un testo che nessuno aveva detto, come i crediti di video sottotitolati. Ora Lowspeak lo scarta.
+- **Il tuo vocabolario con Whisper:** Whisper non salta più una frase che inizia come quella precedente.
+- **Il tuo vocabolario con Parakeet:** quando Parakeet sfiora uno dei tuoi termini, ora lo scrive come l’hai scritto tu, per esempio Traefik invece di «Träfig».
 
 Qualcosa non va o manca? [Segnalalo su GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="ja"><![CDATA[Lowspeakは音声入力のたびに末尾にスペースを入れるようになり、次の音声入力が直前の単語にくっつかなくなりました。文と文の間にスペースを入れない中国語と日本語は、これまでどおりスペースなしです。
+      <description sparkle:format="markdown" xml:lang="ja"><![CDATA[Lowspeakで音声入力が失われることが減り、話した言葉がより確実に入力されるようになりました。
+
+- **失敗した音声入力をやり直す：** 文字起こしに失敗すると、Lowspeakは録音をメモリ上に保持します。たとえばネットワークが復旧したときや、別のモデルを選んだあとに、メニューの**失敗した音声入力を再試行**でもう一度文字起こしできます。
+- **テキストは話した場所に：** テキストの準備ができる前にほかのAppが前面に来た場合、Lowspeakは間違ったAppにペーストせず、テキストをクリップボードに残してお知らせします。
+- **クレジットが残っていないとき：** OpenAIのアカウントのクレジットがなくなると、Lowspeakは待つよう求める代わりにそのことをお知らせし、むだに再試行することもありません。
+- **架空のテキストなし：** Whisperは、字幕付き動画のクレジットなど、誰も話していないテキストを無音の部分に書き出すことがありました。現在はLowspeakがこれを取り除きます。
+- **お使いの用語集とWhisper：** Whisperで、直前の文と同じように始まる文が抜け落ちなくなりました。
+- **お使いの用語集とParakeet：** Parakeetは、ごく近い語を書いた箇所で、用語を入力したとおりの表記で書くようになりました。たとえば「Träfig」の代わりにTraefikと書きます。
 
 不具合や足りない点がありましたら、[GitHubで報告してください](https://github.com/sventmueller/lowspeak/issues/new/choose)。]]></description>
-      <description sparkle:format="markdown" xml:lang="ko"><![CDATA[이제 Lowspeak는 받아쓰기가 끝날 때마다 공백을 넣어, 다음 받아쓰기가 마지막 단어에 붙지 않습니다. 문장 사이에 공백을 두지 않는 중국어와 일본어는 그대로 공백 없이 입력됩니다.
+      <description sparkle:format="markdown" xml:lang="ko"><![CDATA[이제 Lowspeak는 받아쓰기를 잃는 일이 줄었고, 사용자의 말을 더 확실하게 받아 적습니다.
+
+- **실패한 받아쓰기 다시 시도:** 텍스트 변환에 실패하면 Lowspeak가 녹음을 메모리에 보관합니다. 예를 들어 네트워크가 돌아왔을 때나 다른 모델을 선택한 뒤에 메뉴의 **실패한 받아쓰기 재시도**로 다시 변환할 수 있습니다.
+- **텍스트는 말한 곳에:** 텍스트가 준비되기 전에 다른 앱이 앞으로 나왔다면 Lowspeak는 텍스트를 엉뚱한 앱에 붙여넣지 않고 클립보드에 남긴 뒤 알려 줍니다.
+- **남은 크레딧 없음:** OpenAI 계정에 남은 크레딧이 없으면 Lowspeak는 기다리라고 하는 대신 그렇다고 알려 주며, 소용없이 다시 시도하지도 않습니다.
+- **지어낸 텍스트 없음:** Whisper는 가끔 자막이 달린 동영상의 제작진 표기처럼 아무도 말하지 않은 텍스트를 무음 구간에 써 넣었습니다. 이제 Lowspeak는 이런 텍스트를 제외합니다.
+- **사용자의 어휘와 Whisper:** Whisper가 앞 문장과 같은 말로 시작하는 문장을 더 이상 빠뜨리지 않습니다.
+- **사용자의 어휘와 Parakeet:** Parakeet이 아주 비슷하게 쓴 곳에서는 이제 용어를 사용자가 입력한 표기대로 씁니다. 예를 들어 “Träfig” 대신 Traefik으로 씁니다.
 
 문제가 있거나 빠진 것이 있나요? [GitHub에 알려 주세요](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="ms"><![CDATA[Lowspeak kini meletakkan ruang selepas setiap perencanaan, supaya perencanaan seterusnya tidak lagi melekat pada perkataan terakhir. Bahasa Cina dan Jepun, yang tidak meninggalkan ruang antara ayat, kekal tanpanya.
+      <description sparkle:format="markdown" xml:lang="ms"><![CDATA[Lowspeak kini lebih jarang kehilangan perencanaan dan menulis perkataan anda dengan lebih boleh dipercayai.
+
+- **Cuba semula perencanaan yang gagal:** apabila transkripsi gagal, Lowspeak menyimpan rakamannya dalam memori. **Cuba Semula Perencanaan yang Gagal** dalam menu mentranskripsinya semula, contohnya apabila rangkaian pulih atau selepas anda memilih model lain.
+- **Teks kekal di tempat anda menuturkannya:** jika app lain muncul di hadapan sebelum teks sedia, Lowspeak membiarkan teks dalam papan klip dan memaklumkan anda, dan bukannya menampalnya ke dalam app yang salah.
+- **Tiada baki kredit:** apabila akaun OpenAI anda kehabisan kredit, Lowspeak memaklumkannya dan bukannya meminta anda menunggu, serta tidak mencuba semula dengan sia-sia.
+- **Tiada teks rekaan:** Whisper kadangkala menulis teks yang tidak dituturkan oleh sesiapa ke dalam kesenyapan, seperti kredit video bersari kata. Lowspeak kini membuangnya.
+- **Kosa kata anda dengan Whisper:** Whisper tidak lagi menggugurkan ayat yang bermula sama seperti ayat sebelumnya.
+- **Kosa kata anda dengan Parakeet:** Parakeet kini mengeja istilah anda seperti yang anda tulis di tempat ejaannya sudah sangat hampir sama, contohnya Traefik untuk “Träfig”.
 
 Ada yang salah atau tiada? [Laporkan di GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="nl"><![CDATA[Lowspeak zet nu een spatie na elk dictaat, zodat het volgende niet meer aan het laatste woord vastplakt. Chinees en Japans, die geen spatie tussen zinnen zetten, blijven zonder.
+      <description sparkle:format="markdown" xml:lang="nl"><![CDATA[Lowspeak verliest nu minder dictaten en schrijft je woorden betrouwbaarder op.
+
+- **Nieuwe poging voor een mislukt dictaat:** als een transcriptie mislukt, bewaart Lowspeak de opname in het geheugen. **Mislukt dictaat opnieuw proberen** in het menu transcribeert hem opnieuw, bijvoorbeeld zodra het netwerk terug is of nadat je een ander model hebt gekozen.
+- **De tekst blijft waar je hebt gesproken:** kwam er een andere app op de voorgrond voordat de tekst klaar was, dan laat Lowspeak de tekst op het klembord staan en meldt het je, in plaats van hem in de verkeerde app te plakken.
+- **Geen tegoed meer:** staat er geen tegoed meer op je OpenAI-account, dan zegt Lowspeak dat in plaats van je te vragen te wachten, en probeert het niet tevergeefs opnieuw.
+- **Geen verzonnen tekst:** Whisper schreef in stilte soms tekst die niemand had gezegd, zoals de aftiteling van ondertitelde video's. Lowspeak laat die nu weg.
+- **Je woordenlijst met Whisper:** Whisper slaat geen zin meer over die net zo begint als de vorige.
+- **Je woordenlijst met Parakeet:** zit Parakeet heel dicht bij een van je termen, dan spelt het die nu zoals jij hem hebt geschreven, bijvoorbeeld Traefik in plaats van “Träfig”.
 
 Klopt er iets niet of mist er iets? [Meld het op GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="no"><![CDATA[Lowspeak setter nå inn et mellomrom etter hver diktering, så den neste ikke lenger henger fast i det siste ordet. Kinesisk og japansk, som ikke bruker mellomrom mellom setninger, blir uten.
+      <description sparkle:format="markdown" xml:lang="no"><![CDATA[Lowspeak mister nå færre dikteringer og skriver ordene dine mer pålitelig.
+
+- **Prøv en mislykket diktering på nytt:** Når en transkribering mislykkes, beholder Lowspeak opptaket i minnet. **Prøv mislykket diktering på nytt** i menyen transkriberer det på nytt, for eksempel når nettverket er tilbake, eller etter at du har valgt en annen modell.
+- **Teksten blir der du dikterte den:** Hvis en annen app har kommet i forgrunnen før teksten er klar, lar Lowspeak teksten ligge på utklippstavlen og gir deg beskjed i stedet for å lime den inn i feil app.
+- **Ingen kreditt igjen:** Når OpenAI-kontoen din er tom for kreditt, sier Lowspeak fra i stedet for å be deg om å vente, og den prøver ikke forgjeves igjen.
+- **Ingen oppdiktet tekst:** Når det var stille, skrev Whisper av og til tekst som ingen hadde sagt, for eksempel krediteringer fra videoer med undertekster. Nå utelater Lowspeak den.
+- **Ordlisten din med Whisper:** Whisper hopper ikke lenger over en setning som begynner på samme måte som den forrige.
+- **Ordlisten din med Parakeet:** Der Parakeet kom svært nær, staver den nå begrepene dine slik du har skrevet dem, for eksempel Traefik i stedet for «Träfig».
 
 Er noe feil, eller mangler noe? [Rapporter det på GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="pl"><![CDATA[Lowspeak wstawia teraz spację po każdym dyktowaniu, więc kolejne nie przykleja się już do ostatniego słowa. Chiński i japoński, w których między zdaniami nie ma spacji, pozostają bez niej.
+      <description sparkle:format="markdown" xml:lang="pl"><![CDATA[Lowspeak gubi teraz mniej dyktowań i niezawodniej zapisuje Twoje słowa.
+
+- **Ponowienie nieudanego dyktowania:** gdy transkrypcja się nie powiedzie, Lowspeak zachowuje nagranie w pamięci. **Ponów nieudane dyktowanie** w menu przepisuje je ponownie, na przykład gdy sieć znów działa albo gdy wybierzesz inny model.
+- **Tekst zostaje tam, gdzie go dyktujesz:** jeśli inna aplikacja przeszła na pierwszy plan, zanim tekst był gotowy, Lowspeak zostawia tekst w schowku i informuje Cię o tym, zamiast wklejać go do niewłaściwej aplikacji.
+- **Brak środków na koncie:** gdy na Twoim koncie OpenAI skończą się środki, Lowspeak mówi o tym, zamiast prosić Cię o cierpliwość, i nie próbuje ponownie na próżno.
+- **Bez zmyślonego tekstu:** Whisper czasem zapisywał w miejscu ciszy tekst, którego nikt nie powiedział, na przykład informacje o autorach napisów do filmów. Teraz Lowspeak go pomija.
+- **Twoje słownictwo z Whisperem:** Whisper nie gubi już zdania, które zaczyna się tak samo jak poprzednie.
+- **Twoje słownictwo z Parakeetem:** tam, gdzie Parakeet był bardzo blisko, pisze teraz Twoje terminy tak, jak zostały przez Ciebie zapisane, na przykład Traefik zamiast „Träfig”.
 
 Coś nie działa lub czegoś brakuje? [Zgłoś to na GitHubie](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="pt_BR"><![CDATA[O Lowspeak agora coloca um espaço depois de cada ditado, para que o próximo não fique mais grudado na última palavra. Chinês e japonês, que não usam espaço entre frases, continuam sem.
+      <description sparkle:format="markdown" xml:lang="pt_BR"><![CDATA[O Lowspeak agora perde menos ditados e escreve suas palavras com mais confiabilidade.
+
+- **Nova tentativa para um ditado com falha:** quando uma transcrição falha, o Lowspeak mantém a gravação na memória. **Tentar Novamente o Ditado com Falha** no menu a transcreve de novo, por exemplo quando a rede voltar ou depois que você escolher outro modelo.
+- **O texto fica onde você falou:** se outro app passou para o primeiro plano antes de o texto ficar pronto, o Lowspeak deixa o texto na área de transferência e avisa você, em vez de colá-lo no app errado.
+- **Sem créditos:** quando sua conta da OpenAI fica sem créditos, o Lowspeak diz isso em vez de pedir que você espere, e não tenta de novo em vão.
+- **Sem texto inventado:** às vezes o Whisper escrevia no silêncio um texto que ninguém tinha dito, como os créditos de vídeos legendados. Agora o Lowspeak deixa esse texto de fora.
+- **Seu vocabulário com o Whisper:** o Whisper não pula mais uma frase que começa igual à anterior.
+- **Seu vocabulário com o Parakeet:** quando o Parakeet chega muito perto de um dos seus termos, agora ele o escreve como você o escreveu, por exemplo Traefik em vez de “Träfig”.
 
 Algo errado ou faltando? [Informe no GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="pt_PT"><![CDATA[O Lowspeak passa a colocar um espaço depois de cada ditado, para que o seguinte já não fique colado à última palavra. O chinês e o japonês, que não deixam espaço entre frases, continuam sem ele.
+      <description sparkle:format="markdown" xml:lang="pt_PT"><![CDATA[O Lowspeak passa a perder menos ditados e a escrever as suas palavras de forma mais fiável.
+
+- **Nova tentativa para um ditado falhado:** quando uma transcrição falha, o Lowspeak guarda a gravação na memória. **Tentar novamente o ditado falhado** no menu volta a transcrevê-la, por exemplo quando a rede voltar ou depois de escolher outro modelo.
+- **O texto fica onde falou:** se outra aplicação passou para primeiro plano antes de o texto estar pronto, o Lowspeak deixa o texto no clipboard e avisa-o, em vez de o colar na aplicação errada.
+- **Sem crédito:** quando a sua conta da OpenAI já não tem crédito, o Lowspeak di-lo em vez de lhe pedir que aguarde, e não volta a tentar em vão.
+- **Sem texto inventado:** por vezes, o Whisper escrevia no silêncio texto que ninguém tinha dito, como os créditos de vídeos legendados. O Lowspeak passa a omiti-lo.
+- **O seu vocabulário com o Whisper:** o Whisper já não salta uma frase que começa como a anterior.
+- **O seu vocabulário com o Parakeet:** quando o Parakeet fica muito perto de um dos seus termos, passa a escrevê-lo tal como o introduziu, por exemplo Traefik em vez de “Träfig”.
 
 Algo errado ou em falta? [Comunique-o no GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="ro"><![CDATA[Lowspeak pune acum un spațiu după fiecare dictare, astfel încât următoarea nu se mai lipește de ultimul cuvânt. Chineza și japoneza, care nu lasă spațiu între propoziții, rămân fără.
+      <description sparkle:format="markdown" xml:lang="ro"><![CDATA[Lowspeak pierde acum mai puține dictări și scrie mai fiabil cuvintele dumneavoastră.
+
+- **O nouă încercare pentru o dictare eșuată:** când o transcriere eșuează, Lowspeak păstrează înregistrarea în memorie. **Reîncercați dictarea eșuată** din meniu o transcrie din nou, de exemplu după ce rețeaua revine sau după ce ați ales alt model.
+- **Textul rămâne acolo unde ați vorbit:** dacă altă aplicație a trecut în prim-plan înainte ca textul să fie gata, Lowspeak lasă textul în clipboard și vă anunță, în loc să îl lipească în aplicația greșită.
+- **Credit epuizat:** când contul dumneavoastră OpenAI a rămas fără credit, Lowspeak vă spune acest lucru, în loc să vă ceară să așteptați, și nu mai reîncearcă în zadar.
+- **Fără text inventat:** Whisper umplea uneori liniștea cu text pe care nu l-a rostit nimeni, cum ar fi genericul videoclipurilor subtitrate. Acum Lowspeak îl omite.
+- **Vocabularul dumneavoastră cu Whisper:** Whisper nu mai sare peste o propoziție care începe la fel ca precedenta.
+- **Vocabularul dumneavoastră cu Parakeet:** când Parakeet se apropie foarte mult de unul dintre termenii dumneavoastră, îl scrie acum așa cum l-ați scris, de exemplu Traefik în loc de „Träfig”.
 
 Ceva nu funcționează sau lipsește? [Raportați pe GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="ru"><![CDATA[Теперь Lowspeak ставит пробел после каждой диктовки, и следующая больше не прилипает к последнему слову. В китайском и японском, где между предложениями пробелов не ставят, его по-прежнему нет.
+      <description sparkle:format="markdown" xml:lang="ru"><![CDATA[Lowspeak теперь теряет меньше диктовок и надёжнее записывает ваши слова.
+
+- **Повтор неудачной диктовки:** если распознавание не удалось, Lowspeak хранит запись в памяти. Пункт **Повторить неудачную диктовку** в меню распознаёт её заново — например, когда сеть снова появится или после того, как вы выберете другую модель.
+- **Текст остаётся там, где вы его продиктовали:** если другое приложение вышло на передний план до того, как текст был готов, Lowspeak оставляет текст в буфере обмена и говорит вам об этом, вместо того чтобы вставить его не в то приложение.
+- **На счёте нет средств:** когда на вашем счёте OpenAI закончились средства, Lowspeak так и сообщает, а не просит вас подождать, и не повторяет попытки впустую.
+- **Никакого выдуманного текста:** Whisper иногда писал в тишине текст, которого никто не произносил, например титры видео с субтитрами. Теперь Lowspeak его отбрасывает.
+- **Ваш словарь и Whisper:** Whisper больше не пропускает предложение, которое начинается так же, как предыдущее.
+- **Ваш словарь и Parakeet:** Parakeet теперь пишет ваши термины так, как вы их записали, там, где она почти угадала, например Traefik вместо «Träfig».
 
 Что-то не так или чего-то не хватает? [Сообщите на GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="sk"><![CDATA[Lowspeak teraz za každý diktát vloží medzeru, takže ďalší už nenadväzuje priamo na posledné slovo. Čínština a japončina, ktoré medzi vetami medzeru nepíšu, zostávajú bez nej.
+      <description sparkle:format="markdown" xml:lang="sk"><![CDATA[Lowspeak teraz stráca menej diktátov a vaše slová zapisuje spoľahlivejšie.
+
+- **Opakovanie neúspešného diktátu:** keď prepis zlyhá, Lowspeak si nahrávku ponechá v pamäti. **Znova skúsiť neúspešný diktát** v menu ju prepíše znova, napríklad keď sieť opäť funguje alebo keď zvolíte iný model.
+- **Text zostane tam, kde diktujete:** ak sa do popredia dostala iná aplikácia skôr, ako bol text hotový, Lowspeak nechá text v schránke a dá vám vedieť, namiesto toho, aby ho vložil do nesprávnej aplikácie.
+- **Kredit sa minul:** keď váš účet OpenAI už nemá žiadny kredit, Lowspeak vám to povie, namiesto toho, aby vás prosil o strpenie, a márne to neskúša znova.
+- **Žiadny vymyslený text:** Whisper niekedy do ticha napísal text, ktorý nikto nepovedal, napríklad údaje o autoroch titulkov z videí. Lowspeak ho teraz vynecháva.
+- **Váš slovník pri Whisperi:** Whisper už nezahadzuje vetu, ktorá sa začína rovnako ako tá predchádzajúca.
+- **Váš slovník pri Parakeete:** tam, kde sa Parakeet veľmi priblížil, teraz píše vaše výrazy tak, ako ich máte zapísané, napríklad Traefik namiesto „Träfig“.
 
 Niečo nefunguje alebo chýba? [Nahláste to na GitHube](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="sl"><![CDATA[Lowspeak zdaj za vsakim narekom doda presledek, zato se naslednji ne prilepi več na zadnjo besedo. Kitajščina in japonščina, ki med povedi ne postavljata presledka, ostajata brez njega.
+      <description sparkle:format="markdown" xml:lang="sl"><![CDATA[Lowspeak zdaj izgublja manj narekov in vaše besede zapisuje zanesljiveje.
+
+- **Ponovni poskus neuspelega nareka:** ko prepis ne uspe, Lowspeak posnetek obdrži v pomnilniku. **Znova poskusi neuspeli narek** v meniju ga znova prepiše, na primer ko omrežje spet deluje ali ko izberete drug model.
+- **Besedilo ostane tam, kjer narekujete:** če je v ospredje prišla druga aplikacija, preden je bilo besedilo pripravljeno, Lowspeak besedilo pusti v odložišču in vam to sporoči, namesto da bi ga prilepil v napačno aplikacijo.
+- **Ni več dobroimetja:** ko na vašem računu OpenAI zmanjka dobroimetja, Lowspeak vam to pove, namesto da bi vas prosil za potrpljenje, in ne poskuša zaman znova.
+- **Brez izmišljenega besedila:** Whisper je v tišino včasih zapisal besedilo, ki ga ni nihče izgovoril, na primer navedbe avtorjev podnapisov iz videov. Lowspeak ga zdaj izpušča.
+- **Vaše besedišče pri Whisperju:** Whisper ne zavrže več stavka, ki se začne enako kot prejšnji.
+- **Vaše besedišče pri Parakeetu:** kjer se je Parakeet zelo približal, zdaj zapiše vaše izraze tako, kot ste jih vnesli, na primer Traefik namesto »Träfig«.
 
 Je kaj narobe ali kaj manjka? [Sporočite na GitHubu](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="sv"><![CDATA[Lowspeak sätter nu ett mellanslag efter varje diktering, så att nästa inte längre hänger ihop med det sista ordet. Kinesiska och japanska, som inte har mellanslag mellan meningar, förblir utan.
+      <description sparkle:format="markdown" xml:lang="sv"><![CDATA[Lowspeak förlorar nu färre dikteringar och skriver dina ord mer tillförlitligt.
+
+- **Försök igen med en misslyckad diktering:** När en transkribering misslyckas behåller Lowspeak inspelningen i minnet. **Försök med misslyckad diktering igen** i menyn transkriberar den igen, till exempel när nätverket är tillbaka eller när du har valt en annan modell.
+- **Texten stannar där du dikterade den:** Om en annan app har kommit i förgrunden innan texten är klar låter Lowspeak texten ligga kvar i urklippet och talar om det för dig i stället för att klistra in den i fel app.
+- **Inget saldo kvar:** När saldot på ditt OpenAI-konto har tagit slut säger Lowspeak det i stället för att be dig vänta, och den försöker inte förgäves igen.
+- **Ingen påhittad text:** I tystnad skrev Whisper ibland text som ingen hade sagt, till exempel krediteringar från videor med undertexter. Nu utelämnar Lowspeak den.
+- **Din ordlista med Whisper:** Whisper hoppar inte längre över en mening som börjar likadant som den föregående.
+- **Din ordlista med Parakeet:** Där Parakeet kom mycket nära stavar den nu dina termer som du har skrivit dem, till exempel Traefik i stället för ”Träfig”.
 
 Är något fel, eller saknas något? [Rapportera det på GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="th"><![CDATA[ตอนนี้ Lowspeak เว้นวรรคหลังการป้อนตามคำบอกทุกครั้ง เพื่อให้ครั้งถัดไปไม่ติดกับคำสุดท้ายอีก ส่วนภาษาจีนและภาษาญี่ปุ่นซึ่งไม่เว้นวรรคระหว่างประโยคจะยังคงไม่มีการเว้นวรรคเหมือนเดิม
+      <description sparkle:format="markdown" xml:lang="th"><![CDATA[ตอนนี้ Lowspeak ทำการป้อนตามคำบอกหายน้อยลง และเขียนคำพูดของคุณได้น่าเชื่อถือยิ่งขึ้น
+
+- **ลองใหม่ได้เมื่อการป้อนตามคำบอกไม่สำเร็จ:** เมื่อถอดเสียงไม่สำเร็จ Lowspeak จะเก็บการบันทึกไว้ในหน่วยความจำ และ **ลองถอดเสียงที่ไม่สำเร็จอีกครั้ง** ในเมนูจะถอดเสียงการบันทึกนั้นอีกครั้ง เช่น เมื่อเครือข่ายกลับมาใช้ได้ หรือหลังจากที่คุณเลือกโมเดลอื่น
+- **ข้อความไปลงที่ที่คุณพูด:** หากมีแอปอื่นขึ้นมาอยู่ด้านหน้าก่อนที่ข้อความจะพร้อม Lowspeak จะเก็บข้อความไว้ในคลิปบอร์ดและแจ้งให้คุณทราบ แทนที่จะวางลงในแอปที่ผิด
+- **ไม่มีเครดิตเหลือ:** เมื่อเครดิตในบัญชี OpenAI ของคุณหมด Lowspeak จะแจ้งเรื่องนี้ให้ทราบแทนที่จะขอให้คุณรอ และจะไม่ลองใหม่โดยเปล่าประโยชน์
+- **ไม่มีข้อความที่แต่งขึ้นเอง:** บางครั้ง Whisper เขียนข้อความที่ไม่มีใครพูดลงในช่วงเงียบ เช่น เครดิตท้ายวิดีโอที่มีคำบรรยาย ตอนนี้ Lowspeak ตัดข้อความเหล่านี้ออกแล้ว
+- **คำศัพท์ของคุณกับ Whisper:** Whisper ไม่ข้ามประโยคที่ขึ้นต้นเหมือนประโยคก่อนหน้าอีกต่อไปแล้ว
+- **คำศัพท์ของคุณกับ Parakeet:** ตอนนี้ Parakeet สะกดศัพท์ของคุณตามที่คุณเขียนไว้ในจุดที่เขียนออกมาใกล้เคียงมาก เช่น Traefik แทน “Träfig”
 
 มีอะไรผิดพลาดหรือขาดหายไปไหม [แจ้งบน GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose)]]></description>
-      <description sparkle:format="markdown" xml:lang="tr"><![CDATA[Lowspeak artık her dikteden sonra bir boşluk bırakıyor; böylece bir sonraki dikte son kelimeye yapışmıyor. Cümleler arasında boşluk bırakmayan Çince ve Japonca ise boşluksuz kalıyor.
+      <description sparkle:format="markdown" xml:lang="tr"><![CDATA[Lowspeak artık daha az dikte kaybediyor ve sözcüklerinizi daha güvenilir biçimde yazıyor.
+
+- **Başarısız bir dikteyi yeniden deneyin:** Metne dönüştürme başarısız olduğunda Lowspeak kaydı bellekte tutuyor. Menüdeki **Başarısız dikteyi yeniden dene** onu yeniden metne dönüştürüyor; örneğin ağ geri geldiğinde ya da başka bir model seçtikten sonra.
+- **Metin söylediğiniz yerde kalıyor:** Metin hazır olmadan önce başka bir uygulama öne geldiyse Lowspeak, metni yanlış uygulamaya yapıştırmak yerine panoda bırakıyor ve bunu size bildiriyor.
+- **Kredi kalmadı:** OpenAI hesabınızın kredisi bittiğinde Lowspeak, sizden beklemenizi istemek yerine bunu söylüyor ve boşuna yeniden denemiyor.
+- **Uydurma metin yok:** Whisper bazen sessizliğe kimsenin söylemediği metinler yazıyordu; örneğin altyazılı videoların jenerik yazılarını. Lowspeak artık bunları dışarıda bırakıyor.
+- **Whisper ile sözlüğünüz:** Whisper artık kendinden önceki cümle gibi başlayan bir cümleyi atlamıyor.
+- **Parakeet ile sözlüğünüz:** Parakeet artık çok yaklaştığı yerlerde terimlerinizi sizin yazdığınız gibi yazıyor; örneğin “Träfig” yerine Traefik.
 
 Bir sorun ya da eksik mi var? [GitHub’da bildirin](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="uk"><![CDATA[Тепер Lowspeak ставить пробіл після кожного диктування, тож наступне більше не прилипає до останнього слова. У китайській і японській, де між реченнями пробілів не ставлять, його й надалі немає.
+      <description sparkle:format="markdown" xml:lang="uk"><![CDATA[Lowspeak тепер втрачає менше диктувань і надійніше записує ваші слова.
+
+- **Повтор невдалого диктування:** якщо розпізнавання не вдалося, Lowspeak зберігає запис у пам’яті. Пункт **Повторити невдале диктування** в меню розпізнає його знову — наприклад, коли мережа знову з’явиться або після того, як ви виберете іншу модель.
+- **Текст лишається там, де ви його продиктували:** якщо інша програма перейшла на передній план, перш ніж текст був готовий, Lowspeak залишає текст у буфері обміну й каже вам про це, замість того щоб вставити його не в ту програму.
+- **На рахунку немає коштів:** коли на вашому рахунку OpenAI закінчилися кошти, Lowspeak так і повідомляє, а не просить вас зачекати, і не повторює спроби даремно.
+- **Жодного вигаданого тексту:** Whisper іноді писав у тиші текст, якого ніхто не казав, наприклад, титри відео із субтитрами. Тепер Lowspeak його відкидає.
+- **Ваш словник і Whisper:** Whisper більше не пропускає речення, яке починається так само, як попереднє.
+- **Ваш словник і Parakeet:** Parakeet тепер пише ваші терміни так, як ви їх записали, там, де вона майже вгадала, наприклад, Traefik замість «Träfig».
 
 Щось не так або чогось бракує? [Повідомте на GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="vi"><![CDATA[Giờ đây Lowspeak thêm một dấu cách sau mỗi lần đọc chính tả, để lần tiếp theo không còn dính vào từ cuối cùng. Tiếng Trung và tiếng Nhật, vốn không có dấu cách giữa các câu, vẫn giữ nguyên không có dấu cách.
+      <description sparkle:format="markdown" xml:lang="vi"><![CDATA[Giờ đây Lowspeak ít làm mất các lần đọc chính tả hơn và viết ra lời của bạn một cách đáng tin cậy hơn.
+
+- **Thử lại lần đọc chính tả không thành công:** khi việc chép lại không thành công, Lowspeak giữ bản ghi âm trong bộ nhớ. **Thử lại đọc chính tả không thành công** trong menu sẽ chép lại nó lần nữa, chẳng hạn khi mạng đã có lại hoặc sau khi bạn chọn một mô hình khác.
+- **Văn bản ở đúng nơi bạn đã nói:** nếu một ứng dụng khác đã chuyển lên phía trước trước khi văn bản sẵn sàng, Lowspeak sẽ để văn bản lại trong bảng nhớ tạm và báo cho bạn biết, thay vì dán nó vào nhầm ứng dụng.
+- **Hết số dư:** khi tài khoản OpenAI của bạn đã hết số dư, Lowspeak sẽ cho bạn biết điều đó thay vì bảo bạn chờ, và không thử lại một cách vô ích.
+- **Không có văn bản bịa ra:** Whisper đôi khi viết ra những văn bản không ai nói trong các đoạn im lặng, chẳng hạn như dòng ghi công của các video có phụ đề. Giờ đây Lowspeak loại bỏ những văn bản đó.
+- **Từ vựng của bạn với Whisper:** Whisper không còn bỏ sót một câu bắt đầu giống như câu trước đó.
+- **Từ vựng của bạn với Parakeet:** Parakeet giờ đây viết các thuật ngữ của bạn đúng như bạn đã viết ở những chỗ nó viết ra rất gần giống, chẳng hạn Traefik thay cho “Träfig”.
 
 Có gì sai hoặc còn thiếu? [Báo cáo trên GitHub](https://github.com/sventmueller/lowspeak/issues/new/choose).]]></description>
-      <description sparkle:format="markdown" xml:lang="zh-Hans"><![CDATA[Lowspeak 现在会在每次听写后加一个空格，下一段听写不会再紧贴上一个词。中文和日文的句子之间不加空格，因此保持不变。
+      <description sparkle:format="markdown" xml:lang="zh-Hans"><![CDATA[Lowspeak 现在丢失的听写更少，写下你说的话也更可靠。
+
+- **失败的听写可以重试：** 转写失败时，Lowspeak 会把录音保留在内存中。菜单中的 **重试失败的听写** 会重新转写它，例如在网络恢复后，或在你选择了另一个模型之后。
+- **文本留在你说话的地方：** 如果文本准备好之前已有其他 App 切换到前台，Lowspeak 会把文本留在剪贴板上并告知你，而不是把它粘贴到错误的 App 中。
+- **余额已用完：** 当你的 OpenAI 账户余额用完时，Lowspeak 会说明这一点，而不是让你等待，也不会再白白重试。
+- **没有凭空编造的文本：** Whisper 有时会在静音中写出没有人说过的文本，比如带字幕视频中的署名。Lowspeak 现在会把它去掉。
+- **你的词汇表与 Whisper：** Whisper 不再漏掉开头与上一句相同的句子。
+- **你的词汇表与 Parakeet：** 在写得非常接近的地方，Parakeet 现在会按你写下的样子拼写你的术语，例如用 Traefik 代替“Träfig”。
 
 发现问题或缺少功能？[在 GitHub 上反馈](https://github.com/sventmueller/lowspeak/issues/new/choose)。]]></description>
-      <description sparkle:format="markdown" xml:lang="zh-Hant"><![CDATA[Lowspeak 現在會在每次聽寫後加上一個空格，下一段聽寫不會再緊貼上一個詞。中文和日文的句子之間不加空格，因此維持不變。
+      <description sparkle:format="markdown" xml:lang="zh-Hant"><![CDATA[Lowspeak 現在遺失的聽寫更少，寫下你說的話也更可靠。
+
+- **失敗的聽寫可以重試：** 轉錄失敗時，Lowspeak 會把錄音保留在記憶體中。選單中的 **重試失敗的聽寫** 會重新轉錄它，例如在網路恢復後，或在你選擇了另一個模型之後。
+- **文字留在你說話的地方：** 如果文字準備好之前已有其他 App 切換到最前方，Lowspeak 會把文字留在剪貼板上並通知你，而不是貼到錯誤的 App 中。
+- **餘額已用完：** 當你的 OpenAI 帳號餘額用完時，Lowspeak 會說明這一點，而不是要你等待，也不會再白白重試。
+- **沒有憑空捏造的文字：** Whisper 有時會在靜音中寫出沒有人說過的文字，例如有字幕影片中的署名。Lowspeak 現在會把它去除。
+- **你的詞彙表與 Whisper：** Whisper 不再漏掉開頭與上一句相同的句子。
+- **你的詞彙表與 Parakeet：** 在寫得非常接近的地方，Parakeet 現在會依照你寫下的樣子拼寫你的術語，例如用 Traefik 取代「Träfig」。
 
 發現問題或缺少功能？[在 GitHub 上回報](https://github.com/sventmueller/lowspeak/issues/new/choose)。]]></description>
-      <enclosure url="https://github.com/sventmueller/lowspeak/releases/download/v1.0.4/Lowspeak-1.0.4.dmg" sparkle:edSignature="6SeLhQFsNBIUx0HYQm9yYU7g1gg36hyzQ/4f+o1YSTGHZ3qqfTM5HjadBTTAbwH9i26z/yzMSU1AhfNQ+LfXAg==" length="6989534" type="application/octet-stream"/>
+      <enclosure url="https://github.com/sventmueller/lowspeak/releases/download/v1.0.5/Lowspeak-1.0.5.dmg" sparkle:edSignature="ZTdRCON2WR8HR9Gfz72M4R1ncPsoaFKAsllZ1mvcnuw6ZrxIP4E421IpdfItjCO5D54BhuVAGZnF8MOH9qTTBw==" length="7118082" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
