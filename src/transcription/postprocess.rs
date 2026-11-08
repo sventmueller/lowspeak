@@ -4,7 +4,7 @@ use std::fmt;
 use std::time::Duration;
 
 use super::Api;
-use super::error::StatusClass;
+use super::error::{self, StatusClass};
 use super::online;
 use crate::i18n::Texts;
 use crate::models::{ApiProvider, Language, PostProcessingMode};
@@ -26,6 +26,7 @@ const CLOSE_TAG: &str = "</transcript>";
 pub struct ActiveApp {
     pub bundle_id: Option<String>,
     pub name: Option<String>,
+    pub process_id: Option<i32>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -42,6 +43,7 @@ pub enum Status {
 pub enum Rejection {
     NoApiKey,
     ApiKey(ApiProvider),
+    QuotaExhausted(ApiProvider),
     ModelRetired(ApiProvider),
     Request(ApiProvider, u16),
 }
@@ -54,6 +56,7 @@ impl Rejection {
                 (t.no_post_processing_key)(first.display_name(), second.display_name())
             }
             Self::ApiKey(provider) => (t.key_rejected)(provider.display_name()),
+            Self::QuotaExhausted(provider) => (t.quota_exhausted)(provider.display_name()),
             Self::ModelRetired(provider) => (t.model_retired)(provider.display_name()),
             Self::Request(provider, status) => {
                 (t.request_rejected)(provider.display_name(), status)
@@ -107,13 +110,18 @@ impl std::error::Error for PostProcessError {
 
 impl PostProcessError {
     fn rejection(&self) -> Option<Rejection> {
-        let (provider, status) = match *self {
+        let (provider, status, body) = match self {
             Self::NoApiKey => return Some(Rejection::NoApiKey),
             Self::Api {
-                provider, status, ..
-            } => (provider, status),
+                provider,
+                status,
+                body,
+            } => (*provider, *status, body),
             _ => return None,
         };
+        if (400..500).contains(&status) && error::quota_exhausted(body) {
+            return Some(Rejection::QuotaExhausted(provider));
+        }
         match StatusClass::of(status) {
             StatusClass::KeyRejected => Some(Rejection::ApiKey(provider)),
             StatusClass::ModelRetired => Some(Rejection::ModelRetired(provider)),
@@ -364,7 +372,7 @@ mod tests {
     fn prompt_names_language_and_app_style() {
         let app = ActiveApp {
             bundle_id: Some("com.apple.mail".into()),
-            name: None,
+            ..ActiveApp::default()
         };
         let prompt = system_prompt(PostProcessingMode::Format, Language::De, &app, &[]);
         assert!(prompt.contains("The text is in Deutsch."));

@@ -113,7 +113,7 @@ Lowspeak spricht 35 Sprachen. Es lernt die Namen und Begriffe, die du verwendest
 - **Privat.** Kein Konto, keine Telemetrie. Audio geht nur an den Anbieter, den du gewählt hast, und im lokalen Modus nirgendwohin.
 - **Kein Diktat geht verloren.** Fallen das Netzwerk oder der Onlinedienst aus, transkribiert ein installiertes lokales Modell dieselbe Aufnahme auf deinem Mac.
 - **In deiner Sprache.** Diktieren funktioniert in Dutzenden Sprachen, und Menü, Dialoge und Mitteilungen gibt es in 35.
-- **Deine Wörter, richtig geschrieben.** Ein Vokabular aus Namen und Fachbegriffen leitet OpenAI, Groq, Whisper und die Nachbearbeitung.
+- **Deine Wörter, richtig geschrieben.** Ein Vokabular aus Namen und Fachbegriffen leitet OpenAI, Groq, Whisper und die Nachbearbeitung und korrigiert, wie Parakeet sie schreibt.
 - **Sauberer Text, wenn du willst.** Die optionale Nachbearbeitung entfernt Füllwörter, korrigiert die Grammatik und behält nur deine Korrektur, wenn du dich selbst verbesserst, oder formatiert den Text zusätzlich passend zur Art der App, in die du diktierst.
 - **Deine Zwischenablage bleibt deine.** Lowspeak fügt über die Zwischenablage ein und legt einen Moment später zurück, was vorher darin lag. Die letzten zehn Diktate bleiben im Menü, damit du sie erneut kopieren kannst.
 - **fn halten, sprechen, loslassen.** Der Text wird in die App im Vordergrund getippt, dort, wo der Cursor steht: Mail, Chat, Editor, Terminal oder Browser. Kein Fenster, zu dem du wechseln musst, keine Schaltfläche, die du anklicken musst.
@@ -177,6 +177,7 @@ Klicke auf den Ring in der Menüleiste:
 | Eintrag | Was er tut |
 |---|---|
 | **Letzte Diktate** | die letzten zehn Texte; ein Klick kopiert einen davon erneut in die Zwischenablage |
+| **Fehlgeschlagenes Diktat erneut transkribieren** | transkribiert das letzte fehlgeschlagene Diktat noch einmal, mit dem jetzt gewählten Modell; erscheint nur nach einem Fehlschlag |
 | **Lokal** | die Modelle auf deinem Mac, gruppiert nach Whisper und Parakeet; nicht geladene sind ausgegraut |
 | **OpenAI**, **Groq** | die Onlinemodelle; ohne Schlüssel sind sie ausgegraut, und das Menü bietet **API-Schlüssel festlegen …** an |
 | **Sprache** | die Sprache, in der du diktierst, oder **Automatisch erkennen**; das Menü folgt ihr |
@@ -231,6 +232,8 @@ Eine Aufnahme stoppt von selbst nach zwei Minuten, solange fn gehalten wird, und
 ### Wohin der Text geht
 
 Lowspeak fügt den Text in die App ein, die im Vordergrund war, als du aufgehört hast zu sprechen, an der Cursorposition, über die Zwischenablage und ⌘V. Es sichert alles, was vorher in der Zwischenablage lag, und legt es zurück, eine halbe Sekunde nachdem die App den Text gelesen hat, oder nach zehn Sekunden, falls sie ihn nie liest, sofern nicht eine andere App die Zwischenablage in der Zwischenzeit geändert hat. Der Text ist als flüchtig gekennzeichnet, sodass Apps für den Zwischenablageverlauf, die diese Kennzeichnung beachten, ihn nicht aufzeichnen.
+
+Kommt eine andere App in den Vordergrund, bevor der Text fertig ist, fügt Lowspeak ihn dort nicht ein: Der Text bleibt in der Zwischenablage, und eine Mitteilung sagt Bescheid. Füge ihn mit ⌘V dort ein, wo er hingehört.
 
 Du kannst das nächste Diktat starten, während das letzte noch transkribiert wird. Die Texte werden in der Reihenfolge eingefügt, in der du sie gesprochen hast, und nie, während du aufnimmst oder Shift hältst, sodass ein Einfügen nicht mitten in deinem nächsten Satz landen kann.
 
@@ -288,11 +291,15 @@ Die Aufnahme wird vor dem Hochladen nach AAC komprimiert, etwa 6 KB pro Sekunde 
 
 Schlägt eine Onlinetranskription fehl, weil das Netzwerk ausgefallen ist, der Anbieter ein Problem hat oder der Schlüssel falsch ist, transkribiert ein installiertes lokales Modell dieselbe Aufnahme: das unter **Lokal** gewählte, sonst Parakeet Ultra, dann Whisper Large v3 Turbo, Large v3 und die kleineren Whisper-Modelle, zuletzt Parakeet v2. Eine Mitteilung informiert dich einmal darüber; sie kommt erst wieder, nachdem zwischendurch ein Onlinediktat gelungen ist.
 
-Mit einem lokalen Modell als Rückfallebene gibt Lowspeak der Onlineanfrage 20 Sekunden; ohne versucht es dreimal, jeweils bis zu einer Minute lang. Im Onlinemodus bereitet Lowspeak das Parakeet-Modell für den Ausfall einmal beim Start vor, sodass die erste Ausweichtranskription nicht darauf warten muss.
+Mit einem lokalen Modell als Rückfallebene gibt Lowspeak der Onlineanfrage 20 Sekunden; ohne versucht es dreimal, jeweils bis zu einer Minute lang. Im Onlinemodus bereitet Lowspeak das Parakeet-Modell für den Ausfall einmal beim Start vor, sodass die erste Ausweichtranskription nicht darauf warten muss. Ein ausgelasteter Anbieter, der um eine Pause bittet, bekommt sie, bis zu zehn Sekunden lang; verlangt er eine längere oder meldet er, dass dein Konto kein Guthaben mehr hat, wird die Anfrage nicht wiederholt.
+
+Ein Diktat, das trotzdem fehlschlägt, ist nicht verloren: Lowspeak behält seine Aufnahme im Arbeitsspeicher, und **Fehlgeschlagenes Diktat erneut transkribieren** im Menü transkribiert sie noch einmal, etwa sobald das Netzwerk wieder da ist oder nachdem du ein anderes Modell gewählt hast. Aufbewahrt wird nur die letzte fehlgeschlagene Aufnahme, und keine mehr, nachdem Lowspeak beendet wurde.
 
 ### Wie die Aufnahme vorbereitet wird
 
 Lowspeak nimmt mit der eigenen Abtastrate deines Mikrofons auf und wandelt nach dem Stoppen in die 16 kHz um, die die Modelle erwarten. Vor der Transkription entfernt es tiefes Rumpeln unter 80 Hz, schneidet Stille am Anfang und Ende ab und gleicht die Lautstärke aus, sodass leise und laute Sprecher gleich ankommen. Eine Aufnahme ohne Sprache wird gar nicht erst gesendet. Im lokalen Modus bekommt Parakeet zuerst die unbearbeitete Aufnahme und die vorbereitete nur, wenn dabei kein Text herauskommt.
+
+Whisper schreibt in Stille und Rauschen manchmal Text, den niemand gesagt hat, etwa den Abspann untertitelter Videos oder das Vokabular, das es bekommen hat. Lowspeak verwirft die Passagen, die Whisper selbst als Stille markiert, und entfernt solchen Text vor dem Einfügen.
 
 ### Sprachen je Modell
 
@@ -317,7 +324,7 @@ Lowspeak ist eine Universal-App und läuft auch auf Intel-Macs mit macOS 14. All
 - **GPT Transcribe** erhält sie als Schlüsselwörter.
 - **Whisper** (OpenAI, Groq und auf deinem Mac) liest sie als Hinweis vor der Aufnahme, bis zu 500 Zeichen.
 - **Die Nachbearbeitung** wird angewiesen, sie genau so zu schreiben, wie sie dastehen.
-- **Parakeet** verwendet sie nicht.
+- **Parakeet** hört sie nicht. Wo es etwas sehr Ähnliches geschrieben hat, setzt Lowspeak ihre Schreibweise in den Text ein: Aus „Träfig“ oder „Trafik“ wird Traefik, aus „Los Peak“ wird Lowspeak. Begriffe mit weniger als fünf Buchstaben, Wörter in Adressen und Dateinamen sowie Formen mit einer Endung wie „Lowspeaks“ bleiben unverändert. Um einen Schreibfehler von einem echten Wort zu unterscheiden, fragt Lowspeak die Rechtschreibprüfung von macOS, direkt auf deinem Mac.
 
 ## Nachbearbeitung
 
@@ -353,7 +360,8 @@ Lowspeak arbeitet im Hintergrund und meldet Probleme deshalb als Mitteilungen:
 | **Mikrofon stumm** | fünf Sekunden Stille, siehe [Mikrofon](#mikrofon) |
 | **Zugriff auf Bedienungshilfen erforderlich** | der Text liegt in der Zwischenablage; erlaube den Zugriff auf Bedienungshilfen, damit automatisch eingefügt wird |
 | **Einfügen fehlgeschlagen** | der Text liegt in der Zwischenablage; füge ihn mit ⌘V ein |
-| **Transkription fehlgeschlagen** | mit dem Grund: kein Schlüssel, abgelehnter Schlüssel, Anfragelimit, Server- oder Netzwerkfehler oder kein lokales Modell |
+| **Transkription fehlgeschlagen** | mit dem Grund: kein Schlüssel, abgelehnter Schlüssel, kein Guthaben mehr, Anfragelimit, Server- oder Netzwerkfehler oder kein lokales Modell; die Aufnahme bleibt für **Fehlgeschlagenes Diktat erneut transkribieren** erhalten |
+| **Diktat nicht eingefügt** | eine andere App ist in den Vordergrund gekommen, bevor der Text fertig war; der Text liegt in der Zwischenablage |
 | **Auf diesem Mac transkribiert** | der Onlinedienst ist ausgefallen, und ein lokales Modell hat übernommen |
 | **Nachbearbeitung fehlgeschlagen** | der Anbieter lehnt die Nachbearbeitung ab, oder es ist kein Schlüssel festgelegt; der Text wurde ohne sie eingefügt |
 | **Kein API-Schlüssel** | du hast ein Onlinemodell gewählt, ohne einen Schlüssel für seinen Anbieter zu haben |
@@ -400,7 +408,7 @@ Lowspeak hört, was du sagst, während fn gehalten wird, kann in jede App tippen
 - **Die Nachbearbeitung** sendet, wenn du sie einschaltest, den transkribierten Text und dein Vokabular an Groq oder OpenAI. Im Modus „Formatieren“ kommt die Art der App hinzu, in die du diktierst (Code-Editor, Terminal, Chat oder E-Mail); der Name der App wird nicht gesendet.
 - **Keine Telemetrie, kein Konto.** Abgesehen von Transkription und Nachbearbeitung geht Lowspeak nur online, um die Verbindung zu deinem Anbieter zu öffnen, während fn gehalten wird, im Onlinemodus oder mit eingeschalteter Nachbearbeitung, um ein Modell zu laden, wenn du darum bittest, von Hugging Face über HTTPS, in einer festen Version, wobei jede Datei mit ihrer Prüfsumme abgeglichen wird, und um auf GitHub nach einer neuen Version zu suchen, einmal täglich, wenn du es erlaubst. Diese Anfrage enthält die Version von Lowspeak und sonst nichts. **Hilfe › Problem melden …** öffnet in deinem Browser ein Formular auf GitHub; seine Adresse enthält die Version von Lowspeak und die von macOS, nichts von dem, was du diktiert hast.
 - **API-Schlüssel** bleiben in deinem Schlüsselbund „Anmeldung“. Sie werden nur an ihren eigenen Anbieter gesendet und aus Fehlermeldungen entfernt, bevor etwas ins Log geschrieben wird.
-- **Diktierter Text wird nicht gespeichert.** Die letzten zehn Diktate bleiben für **Letzte Diktate** im Arbeitsspeicher und sind weg, wenn Lowspeak beendet wird. Die Logdateien halten Längen und Zeiten fest, nie den Text.
+- **Diktierter Text wird nicht gespeichert.** Die letzten zehn Diktate bleiben für **Letzte Diktate** im Arbeitsspeicher und sind weg, wenn Lowspeak beendet wird; ebenso die Aufnahme des letzten fehlgeschlagenen Diktats, die für **Fehlgeschlagenes Diktat erneut transkribieren** aufbewahrt wird. Die Logdateien halten Längen und Zeiten fest, nie den Text.
 - **Die Zwischenablage** wird vor dem Einfügen gesichert und wiederhergestellt, sobald die App den Text gelesen hat, sofern nicht eine andere App sie zwischendurch geändert hat. Das Diktat ist als flüchtig gekennzeichnet, sodass Apps für den Zwischenablageverlauf, die diese Kennzeichnung beachten, es überspringen.
 - **Codesignatur** mit der Hardened Runtime; die App fragt nur nach Mikrofon, Bedienungshilfen, Mitteilungen und dem Netzwerk. Ein Update muss die Signatur des Entwicklers tragen, sonst lehnt Sparkle es ab.
 
@@ -420,7 +428,7 @@ Gemessen auf Apple Silicon:
 - **Lokale Modelle auf Intel-Macs** laufen auf dem Prozessor und sind viel langsamer; dort ist die Onlinetranskription die bessere Wahl.
 - **Was du sagst, bevor das Mikrofon bereit ist, geht verloren.** Warte auf das Aufnahmesymbol, besonders mit AirPods.
 - **Die fn-Taste kann von anderen belegt werden.** Wenn die Einstellung der 🌐-Taste in macOS, Warp oder die Diktierfunktion von macOS fn zuerst beanspruchen, sieht Lowspeak sie nicht; siehe [Fehlerbehebung](#fehlerbehebung).
-- **Parakeet** ignoriert das Vokabular und die Sprachwahl und kennt nur europäische Sprachen.
+- **Parakeet** ignoriert die Sprachwahl und kennt nur europäische Sprachen. Das Vokabular korrigiert seine Schreibweise nur nachträglich: Ein Begriff, den es als deutlich anderes Wort gehört hat, bleibt falsch.
 - **Schrift und Variante:** Nur GPT Transcribe lässt sich anweisen, traditionelles Chinesisch zu schreiben; kein Modell lässt sich anweisen, europäisches statt brasilianisches Portugiesisch zu schreiben.
 - **Zeitlimits:** zwei Minuten, solange fn gehalten wird, fünf Minuten, wenn die Aufnahme festgestellt ist.
 - **Mikrofonmodus:** Das Kontrollzentrum bietet für Lowspeak Stimmisolation und Breites Spektrum an und meldet sie als aktiv, aber Lowspeak nimmt ohne Sprachverarbeitung auf, sodass die Wahl keine Wirkung hat.

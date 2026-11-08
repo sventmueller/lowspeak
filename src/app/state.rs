@@ -2,6 +2,8 @@
 //! threads: events go in, `Effect`s come out, and `App` carries them out.
 
 use std::collections::{HashSet, VecDeque};
+use std::fmt;
+use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 use super::delivery::{self, Delivery};
@@ -46,6 +48,22 @@ pub enum Timer {
     Limit(u64, Duration),
 }
 
+/// A recording at 16 kHz, kept in memory to transcribe a failed dictation again.
+#[derive(Clone)]
+pub struct Recorded(pub Arc<Vec<f32>>);
+
+impl fmt::Debug for Recorded {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Recorded({} samples)", self.0.len())
+    }
+}
+
+impl PartialEq for Recorded {
+    fn eq(&self, other: &Self) -> bool {
+        Arc::ptr_eq(&self.0, &other.0)
+    }
+}
+
 #[derive(Debug, PartialEq)]
 pub struct Transcription {
     pub recording: u64,
@@ -54,6 +72,8 @@ pub struct Transcription {
     pub vocabulary: Vec<String>,
     /// Being deleted, so it must not step in for a failed online request.
     pub unavailable: Option<LocalModel>,
+    /// A failed dictation's recording to transcribe again; `None` takes the recorder's.
+    pub audio: Option<Recorded>,
 }
 
 #[derive(Debug, PartialEq)]
@@ -71,7 +91,10 @@ pub enum Effect {
     WarmUp(ApiProvider),
     PlayStartSound,
     /// Answer with `State::pasted`.
-    Paste(String),
+    Paste {
+        recording: u64,
+        text: String,
+    },
     Copy(String),
     Notify {
         title: &'static str,
@@ -125,6 +148,7 @@ pub struct Snapshot {
     pub start_sound: bool,
     /// Newest first.
     pub recent: Vec<String>,
+    pub can_retry: bool,
     pub vocabulary_terms: usize,
     pub login_item: bool,
     /// `None` without Sparkle; `State` leaves it to `App`, which asks Sparkle.
@@ -153,6 +177,8 @@ pub struct State {
     microphone: Option<ChosenMicrophone>,
     recording: Recording,
     delivery: Delivery,
+    /// The latest failed dictation, whose recording is kept in memory for another attempt.
+    failed: Option<(u64, Recorded)>,
     library: ModelLibrary,
     system: System,
     effects: VecDeque<Effect>,
@@ -167,6 +193,7 @@ impl State {
             microphone: launch.microphone,
             recording: Recording::default(),
             delivery: Delivery::default(),
+            failed: None,
             library: ModelLibrary::new(launch.installed),
             system: System::default(),
             effects: VecDeque::new(),
@@ -254,6 +281,7 @@ impl State {
             microphone: self.microphone.clone(),
             start_sound: self.settings.start_sound,
             recent: self.delivery.recent().cloned().collect(),
+            can_retry: self.failed.is_some(),
             vocabulary_terms: self.vocabulary.len(),
             login_item: self.system.login_item,
             updates: None,
@@ -405,11 +433,8 @@ impl State {
     }
 
     pub fn microphone_live(&mut self, id: u64) {
-        if self.recording.go_live(id) {
-            flog!(filelog::AUDIO, "Microphone live");
-            if self.settings.start_sound {
-                self.push(Effect::PlayStartSound);
-            }
+        if self.recording.go_live(id) && self.settings.start_sound {
+            self.push(Effect::PlayStartSound);
         }
     }
 
@@ -440,6 +465,11 @@ impl State {
         let Some(id) = self.recording.end() else {
             return;
         };
+        self.transcribe(id, raw_parakeet_first, None);
+        self.deliver_ready();
+    }
+
+    fn transcribe(&mut self, id: u64, raw_parakeet_first: bool, audio: Option<Recorded>) {
         self.delivery.expect(id);
         let deleting = self.library.deleting();
         if self.settings.mode == TranscriptionMode::Local
@@ -447,10 +477,13 @@ impl State {
         {
             flog!(
                 filelog::APP,
-                "[App] {} is being deleted, the recording is discarded",
+                "[App] {} is being deleted, dictation {id} is not transcribed",
                 self.settings.local_model.raw_value()
             );
-            self.push(Effect::DiscardRecording);
+            match audio {
+                Some(audio) => self.failed = Some((id, audio)),
+                None => self.push(Effect::DiscardRecording),
+            }
             self.delivery
                 .finish(id, Err(TranscriptionError::ModelNotAvailable));
         } else {
@@ -460,13 +493,35 @@ impl State {
                 raw_parakeet_first,
                 vocabulary: self.vocabulary.clone(),
                 unavailable: deleting,
+                audio,
             }));
         }
+    }
+
+    /// `audio` is the dictation's recording; a failed dictation keeps it for another attempt.
+    pub fn transcribed(&mut self, id: u64, result: delivery::Result, audio: Option<Recorded>) {
+        if result.is_err()
+            && let Some(audio) = audio
+            && self.failed.as_ref().is_none_or(|(kept, _)| *kept < id)
+        {
+            self.failed = Some((id, audio));
+        }
+        self.delivery.finish(id, result);
         self.deliver_ready();
     }
 
-    pub fn transcribed(&mut self, id: u64, result: delivery::Result) {
-        self.delivery.finish(id, result);
+    /// Transcribes the kept recording of the latest failed dictation again, with the settings
+    /// chosen now.
+    pub fn retry_failed(&mut self) {
+        let Some((failed, audio)) = self.failed.take() else {
+            return;
+        };
+        let id = self.recording.reserve();
+        flog!(
+            filelog::APP,
+            "[App] Transcribing failed dictation {failed} again as {id}"
+        );
+        self.transcribe(id, policy::raw_parakeet_first(&self.settings), Some(audio));
         self.deliver_ready();
     }
 
@@ -476,17 +531,20 @@ impl State {
         if self.recording.is_active() {
             return;
         }
-        while let Some(result) = self.delivery.next() {
-            self.deliver(result);
+        while let Some((id, result)) = self.delivery.next() {
+            self.deliver(id, result);
         }
     }
 
-    fn deliver(&mut self, result: delivery::Result) {
+    fn deliver(&mut self, id: u64, result: delivery::Result) {
         let t = self.texts();
         match result {
             Ok(Outcome::Text(transcript)) => {
                 self.delivery.paste_started();
-                self.push(Effect::Paste(delivery::pasted(&transcript.text)));
+                self.push(Effect::Paste {
+                    recording: id,
+                    text: delivery::pasted(&transcript.text),
+                });
                 let notices: Vec<(&'static str, String)> = self
                     .delivery
                     .notices_after(&transcript, self.settings.mode)
@@ -511,7 +569,12 @@ impl State {
             Ok(Outcome::TooShort) => flog!(filelog::APP, "[App] Recording too short, skipped"),
             Err(error) => {
                 flog!(filelog::APP, "[App] Transcription FAILED: {error}");
-                self.notify(t.transcription_failed, error.user_facing_description(t));
+                let mut body = error.user_facing_description(t);
+                if self.failed.as_ref().is_some_and(|(kept, _)| *kept == id) {
+                    body.push('\n');
+                    body.push_str(&(t.retry_failed_dictation_info)(t.retry_failed_dictation));
+                }
+                self.notify(t.transcription_failed, body);
             }
         }
     }
@@ -524,6 +587,7 @@ impl State {
                 t.accessibility_required,
                 (t.accessibility_required_info)(t.accessibility_setting()),
             ),
+            Pasted::AppChanged => self.notify(t.not_pasted, t.not_pasted_info),
             Pasted::Failed => self.notify(t.paste_failed, t.paste_failed_info),
         }
         self.delivery.paste_done();
@@ -792,7 +856,7 @@ mod tests {
         effects
             .iter()
             .filter_map(|effect| match effect {
-                Effect::Paste(text) => Some(text.as_str()),
+                Effect::Paste { text, .. } => Some(text.as_str()),
                 _ => None,
             })
             .collect()
@@ -869,10 +933,11 @@ mod tests {
                 raw_parakeet_first: true,
                 vocabulary: vec!["Traefik".into()],
                 unavailable: None,
+                audio: None,
             }
         );
 
-        state.transcribed(1, text("Hello"));
+        state.transcribed(1, text("Hello"), None);
         assert_eq!(pastes(&effects(&mut state)), ["Hello "]);
         state.pasted(Pasted::Yes);
         assert_eq!(state.status(), Status::Idle);
@@ -915,9 +980,9 @@ mod tests {
         let second = dictate(&mut state, start + Duration::from_secs(5));
         effects(&mut state);
 
-        state.transcribed(second, text("second"));
+        state.transcribed(second, text("second"), None);
         assert!(pastes(&effects(&mut state)).is_empty());
-        state.transcribed(first, text("first"));
+        state.transcribed(first, text("first"), None);
         assert_eq!(pastes(&effects(&mut state)), ["first "]);
         state.pasted(Pasted::Yes);
         assert!(effects(&mut state).is_empty(), "waits for the clipboard");
@@ -937,7 +1002,7 @@ mod tests {
         let first = dictate(&mut state, start);
         state.key(Key::FnDown { shift: false }, start + Duration::from_secs(4));
         effects(&mut state);
-        state.transcribed(first, text("first"));
+        state.transcribed(first, text("first"), None);
         assert!(pastes(&effects(&mut state)).is_empty());
         state.key(Key::FnUp, start + Duration::from_secs(6));
         assert_eq!(pastes(&effects(&mut state)), ["first "]);
@@ -949,8 +1014,8 @@ mod tests {
         let start = Instant::now();
         let first = dictate(&mut state, start);
         let second = dictate(&mut state, start + Duration::from_secs(5));
-        state.transcribed(first, text("first"));
-        state.transcribed(second, text("second"));
+        state.transcribed(first, text("first"), None);
+        state.transcribed(second, text("second"), None);
         effects(&mut state);
         state.pasted(Pasted::NeedsAccessibility);
         let next = effects(&mut state);
@@ -974,12 +1039,127 @@ mod tests {
             Err(TranscriptionError::Engine(anyhow::anyhow!(
                 "/Users/someone/model.bin: bad magic"
             ))),
+            None,
         );
         let notified = effects(&mut state);
         assert_eq!(
             notifications(&notified),
             [(texts().transcription_failed, texts().local_model_failed)]
         );
+    }
+
+    fn recorded() -> Recorded {
+        Recorded(Arc::new(vec![0.1; 16_000]))
+    }
+
+    fn quota() -> delivery::Result {
+        Err(TranscriptionError::QuotaExhausted(ApiProvider::OpenAi))
+    }
+
+    #[test]
+    fn a_failed_dictation_keeps_its_recording_for_another_attempt() {
+        let mut state = state_with(settings(TranscriptionMode::Online), &[]);
+        let id = dictate(&mut state, Instant::now());
+        effects(&mut state);
+        let audio = recorded();
+        state.transcribed(id, quota(), Some(audio.clone()));
+        let t = texts();
+        let hint = (t.retry_failed_dictation_info)(t.retry_failed_dictation);
+        let expected = format!(
+            "{}\n{hint}",
+            (t.quota_exhausted)(ApiProvider::OpenAi.display_name())
+        );
+        assert_eq!(
+            notifications(&effects(&mut state)),
+            [(t.transcription_failed, expected.as_str())]
+        );
+        assert!(state.snapshot().can_retry);
+
+        state.select_online(OnlineModel::GroqWhisperLargeV3Turbo);
+        effects(&mut state);
+        state.retry_failed();
+        let retried = effects(&mut state);
+        let job = transcription(&retried);
+        assert_eq!(job.audio, Some(audio));
+        assert_eq!(
+            job.settings.online_model,
+            OnlineModel::GroqWhisperLargeV3Turbo
+        );
+        assert!(job.recording > id);
+        assert!(!retried.contains(&Effect::DiscardRecording));
+        assert!(!state.snapshot().can_retry);
+        assert_eq!(state.status(), Status::Transcribing);
+
+        state.transcribed(job.recording, text("again"), None);
+        assert_eq!(pastes(&effects(&mut state)), ["again "]);
+        state.retry_failed();
+        assert!(effects(&mut state).is_empty(), "nothing is kept any more");
+    }
+
+    #[test]
+    fn a_recording_that_failed_again_can_be_retried_again() {
+        let mut state = state_with(settings(TranscriptionMode::Online), &[]);
+        let id = dictate(&mut state, Instant::now());
+        effects(&mut state);
+        state.transcribed(id, quota(), Some(recorded()));
+        effects(&mut state);
+        state.retry_failed();
+        let retry = transcription(&effects(&mut state)).recording;
+        state.transcribed(retry, quota(), Some(recorded()));
+        effects(&mut state);
+        assert!(state.snapshot().can_retry);
+    }
+
+    #[test]
+    fn only_the_latest_failed_recording_is_kept() {
+        let mut state = state_with(settings(TranscriptionMode::Online), &[]);
+        let start = Instant::now();
+        let first = dictate(&mut state, start);
+        let second = dictate(&mut state, start + Duration::from_secs(5));
+        effects(&mut state);
+        let latest = recorded();
+        state.transcribed(second, quota(), Some(latest.clone()));
+        state.transcribed(first, quota(), Some(recorded()));
+        let failures = effects(&mut state);
+        let t = texts();
+        let plain = (t.quota_exhausted)(ApiProvider::OpenAi.display_name());
+        let notified = notifications(&failures);
+        assert_eq!(notified.len(), 2);
+        assert_eq!(notified[0].1, plain, "the first recording is not kept");
+        assert!(notified[1].1.starts_with(&plain) && notified[1].1.len() > plain.len());
+        state.retry_failed();
+        assert_eq!(transcription(&effects(&mut state)).audio, Some(latest));
+    }
+
+    #[test]
+    fn a_successful_dictation_keeps_nothing() {
+        let mut state = local();
+        let id = dictate(&mut state, Instant::now());
+        effects(&mut state);
+        state.transcribed(id, text("fine"), Some(recorded()));
+        effects(&mut state);
+        assert!(!state.snapshot().can_retry);
+    }
+
+    #[test]
+    fn a_dictation_for_an_app_no_longer_in_front_is_left_on_the_clipboard() {
+        let mut state = local();
+        let start = Instant::now();
+        let first = dictate(&mut state, start);
+        let second = dictate(&mut state, start + Duration::from_secs(5));
+        state.transcribed(first, text("first"), None);
+        state.transcribed(second, text("second"), None);
+        effects(&mut state);
+        state.pasted(Pasted::AppChanged);
+        let next = effects(&mut state);
+        assert_eq!(
+            notifications(&next),
+            [(texts().not_pasted, texts().not_pasted_info)]
+        );
+        assert!(matches!(
+            next.last(),
+            Some(Effect::Paste { recording, text }) if *recording == second && text == "second "
+        ));
     }
 
     #[test]
@@ -1013,7 +1193,7 @@ mod tests {
         state.recorder_failed(id, &StartError::PermissionDenied);
         assert_eq!(notifications(&effects(&mut state)).len(), 1);
         assert_eq!(state.status(), Status::Transcribing);
-        state.transcribed(id, Ok(Outcome::TooShort));
+        state.transcribed(id, Ok(Outcome::TooShort), None);
         assert!(effects(&mut state).is_empty());
         assert_eq!(state.status(), Status::Idle);
     }

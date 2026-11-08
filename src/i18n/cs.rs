@@ -11,6 +11,7 @@ fn plural(n: usize, one: &'static str, few: &'static str, other: &'static str) -
 pub static CS: Texts = Texts {
     recent_dictations: "Poslední diktáty",
     none_yet: "Zatím žádné",
+    retry_failed_dictation: "Znovu přepsat neúspěšný diktát",
     local: "Místní",
     not_installed: |model| format!("{model} (nenainstalováno)"),
     no_key: |provider| format!("{provider} (bez klíče)"),
@@ -75,7 +76,7 @@ pub static CS: Texts = Texts {
     unknown_key_format: "Neznámý formát klíče",
     unknown_key_format_info: "Očekává se klíč začínající sk- (OpenAI) nebo gsk_ (Groq). Zkuste to znovu.",
     vocabulary_title: "Slovník",
-    vocabulary_info: "Vlastní jména a odborné výrazy, které se mají psát přesně takto, oddělené čárkami. Používají je OpenAI, Groq, Whisper na tomto Macu a následné zpracování.",
+    vocabulary_info: "Vlastní jména a odborné výrazy, které se mají psát přesně takto, oddělené čárkami. Používají je OpenAI, Groq, Whisper a Parakeet na tomto Macu a následné zpracování.",
 
     recording_failed: "Nahrávání se nezdařilo",
     microphone_silent: "Mikrofon bez signálu",
@@ -89,6 +90,9 @@ pub static CS: Texts = Texts {
     accessibility_list: "Zpřístupnění",
     device_control_list: "Ovládání zařízení a přístup k datům",
     transcription_failed: "Přepis se nezdařil",
+    retry_failed_dictation_info: |menu_item| {
+        format!("Nahrávka zůstala zachována: v nabídce zvolte „{menu_item}“ a přepište ji znovu.")
+    },
     transcribed_locally: "Přepsáno na tomto Macu",
     transcribed_locally_info: |reason| format!("{reason} Přepis místo toho provedl místní model."),
     post_processing_failed: "Následné zpracování se nezdařilo",
@@ -132,6 +136,11 @@ pub static CS: Texts = Texts {
     },
     network_error: |message| format!("Chyba sítě: {message}"),
     key_rejected: |provider| format!("Služba {provider} odmítla klíč API."),
+    quota_exhausted: |provider| {
+        format!(
+            "Služba {provider} hlásí, že účet nemá žádný kredit. Doplňte kredit ve svém účtu {provider}."
+        )
+    },
     model_retired: |provider| {
         format!("Služba {provider} už nenabízí model pro následné zpracování.")
     },
@@ -151,6 +160,8 @@ pub static CS: Texts = Texts {
     microphone_error: |detail| format!("Mikrofon se nepodařilo spustit: {detail}"),
     paste_failed: "Vložení se nezdařilo",
     paste_failed_info: "Text je ve schránce. Vložte ho pomocí ⌘V.",
+    not_pasted: "Diktát nebyl vložen",
+    not_pasted_info: "Než byl text hotový, přesunula se do popředí jiná aplikace. Text je ve schránce. Vložte ho pomocí ⌘V.",
     request_timed_out: "Časový limit požadavku vypršel.",
     audio_failed: "Nahrávku se nepodařilo zpracovat.",
     local_model_failed: "Místní model nedokázal nahrávku přepsat.",

@@ -17,6 +17,7 @@ use lowspeak::transcription::local::LocalEngine;
 use lowspeak::transcription::model_store::ModelStore;
 use lowspeak::transcription::postprocess::{ActiveApp, Rejection, Status};
 use lowspeak::transcription::service::{self, Job, Outcome, Services, Transcript};
+use lowspeak::transcription::spelling::Lexicon;
 use lowspeak::util::numeric::floor_usize;
 use lowspeak::util::retry::CancelToken;
 use lowspeak::util::url_session::{HttpClient, RequestError, Response};
@@ -101,6 +102,14 @@ fn answer(status: u16, body: &str) -> Result<Response, RequestError> {
     Ok(Response {
         status: Some(status),
         body: body.as_bytes().to_vec(),
+        retry_after: None,
+    })
+}
+
+fn answer_after(status: u16, body: &str, wait: Duration) -> Result<Response, RequestError> {
+    Ok(Response {
+        retry_after: Some(wait),
+        ..answer(status, body)?
     })
 }
 
@@ -213,11 +222,20 @@ fn settings(mode: TranscriptionMode) -> Settings {
 
 fn job(settings: Settings, samples: Vec<f32>) -> Job {
     Job {
-        samples,
+        samples: Arc::new(samples),
         settings,
         active_app: ActiveApp::default(),
         raw_parakeet_first: false,
         vocabulary: Vec::new(),
+    }
+}
+
+/// Knows the listed words and nothing else.
+struct Words(&'static [&'static str]);
+
+impl Lexicon for Words {
+    fn is_word(&self, word: &str, _language: Option<&str>) -> bool {
+        self.0.iter().any(|known| known.eq_ignore_ascii_case(word))
     }
 }
 
@@ -257,6 +275,7 @@ impl World {
                     cancel: &self.cancel,
                     retry_delay: Duration::ZERO,
                 },
+                lexicon: &Words(&["traffic", "Lux"]),
             },
         )
     }
@@ -299,7 +318,7 @@ fn online_transcription_uploads_compressed_audio_with_language_and_vocabulary() 
     assert_eq!(request.header("Authorization"), Some("Bearer gsk_test"));
     assert!(request.body_contains("filename=\"audio.m4a\""));
     assert!(request.body_contains("name=\"language\"\r\n\r\nde\r\n"));
-    assert!(request.body_contains("name=\"prompt\"\r\n\r\nPostgres, Traefik\r\n"));
+    assert!(request.body_contains("name=\"prompt\"\r\n\r\nPostgres, Traefik.\r\n"));
     assert!(world.local.calls.borrow().is_empty());
 }
 
@@ -325,7 +344,7 @@ fn a_failed_online_request_is_tried_once_and_then_transcribed_locally() {
     let calls = world.local.calls.borrow();
     assert_eq!(calls.len(), 1);
     assert_eq!(calls[0].model, LocalModel::ParakeetUltra);
-    assert_eq!(calls[0].prompt.as_deref(), Some("Postgres"));
+    assert_eq!(calls[0].prompt.as_deref(), Some("Postgres."));
 }
 
 #[test]
@@ -565,6 +584,7 @@ fn answers_that_are_no_transcript_are_invalid_responses() {
             Ok(Response {
                 status: None,
                 body: Vec::new(),
+                retry_after: None,
             })
         }),
         &[ApiProvider::Groq],
@@ -709,4 +729,186 @@ fn post_processing_without_any_key_is_reported_as_lasting() {
         transcript.post_processing,
         Status::Rejected(Rejection::NoApiKey)
     );
+}
+
+const NO_CREDIT: &str = r#"{"error": {"message": "You have no credits remaining.", "type": "insufficient_quota", "code": "credit_balance_exhausted"}}"#;
+
+#[test]
+fn an_account_without_credit_is_not_asked_again() {
+    let world = World::new(
+        FakeHttp::in_turn(&[(429, NO_CREDIT)]),
+        &[ApiProvider::OpenAi],
+        &[],
+        FakeLocal::default(),
+    );
+    let mut settings = settings(TranscriptionMode::Online);
+    settings.online_model = OnlineModel::GptTranscribe;
+    let outcome = world.run(job(settings, speech(1.5)));
+    assert!(matches!(
+        outcome,
+        Err(TranscriptionError::QuotaExhausted(ApiProvider::OpenAi))
+    ));
+    assert_eq!(world.http.requests.borrow().len(), 1);
+}
+
+#[test]
+fn an_account_without_credit_hands_over_to_the_local_model() {
+    let world = World::new(
+        FakeHttp::in_turn(&[(429, NO_CREDIT)]),
+        &[ApiProvider::Groq],
+        &[LocalModel::ParakeetUltra],
+        FakeLocal::answering(vec![Ok("lokal".into())]),
+    );
+    let transcript = text(world.run(job(settings(TranscriptionMode::Online), speech(1.5))));
+    assert_eq!(transcript.text, "lokal");
+    assert!(matches!(
+        transcript.local_fallback,
+        Some(TranscriptionError::QuotaExhausted(ApiProvider::Groq))
+    ));
+}
+
+#[test]
+fn a_rate_limit_waits_as_long_as_the_provider_asks() {
+    let next = Cell::new(0);
+    let world = World::new(
+        FakeHttp::new(move |_| {
+            next.set(next.get() + 1);
+            if next.get() == 1 {
+                answer_after(429, "slow down", Duration::from_millis(120))
+            } else {
+                answer(200, r#"{"text": "Hallo"}"#)
+            }
+        }),
+        &[ApiProvider::Groq],
+        &[],
+        FakeLocal::default(),
+    );
+    let started = std::time::Instant::now();
+    let transcript = text(world.run(job(settings(TranscriptionMode::Online), speech(1.5))));
+    assert_eq!(transcript.text, "Hallo");
+    assert!(started.elapsed() >= Duration::from_millis(120));
+    assert_eq!(world.http.requests.borrow().len(), 2);
+}
+
+#[test]
+fn a_rate_limit_for_minutes_is_not_waited_out() {
+    let world = World::new(
+        FakeHttp::new(|_| answer_after(429, "daily limit", Duration::from_secs(420))),
+        &[ApiProvider::Groq],
+        &[],
+        FakeLocal::default(),
+    );
+    let outcome = world.run(job(settings(TranscriptionMode::Online), speech(1.5)));
+    assert!(matches!(
+        outcome,
+        Err(TranscriptionError::Api { status: 429, .. })
+    ));
+    assert_eq!(world.http.requests.borrow().len(), 1);
+}
+
+#[test]
+fn whisper_online_reports_its_segments_and_loses_the_silent_ones() {
+    let world = World::new(
+        FakeHttp::new(|_| {
+            answer(
+                200,
+                &serde_json::json!({
+                    "text": " Bis morgen. Untertitel im Auftrag des ZDF, 2018",
+                    "segments": [
+                        {"text": " Bis morgen.", "no_speech_prob": 0.02, "avg_logprob": -0.25},
+                        {"text": " Untertitel im Auftrag des ZDF, 2018", "no_speech_prob": 0.91, "avg_logprob": -1.3},
+                    ]
+                })
+                .to_string(),
+            )
+        }),
+        &[ApiProvider::Groq],
+        &[],
+        FakeLocal::default(),
+    );
+    let transcript = text(world.run(job(settings(TranscriptionMode::Online), speech(1.5))));
+    assert_eq!(transcript.text, "Bis morgen.");
+    assert!(
+        world.http.requests.borrow()[0]
+            .body_contains("name=\"response_format\"\r\n\r\nverbose_json\r\n")
+    );
+}
+
+#[test]
+fn text_whisper_writes_into_silence_is_no_speech() {
+    for answer_text in [
+        "Untertitel der Amara.org-Community",
+        "Postgres, Traefik, Kubernetes.",
+    ] {
+        let world = World::new(
+            no_requests(),
+            &[],
+            &[LocalModel::LargeV3Turbo],
+            FakeLocal::answering(vec![Ok(answer_text.into())]),
+        );
+        let mut job = job(settings(TranscriptionMode::Local), speech(1.5));
+        job.vocabulary = vec!["Postgres".into(), "Traefik".into(), "Kubernetes".into()];
+        assert!(
+            matches!(world.run(job), Ok(Outcome::NoSpeech)),
+            "{answer_text}"
+        );
+    }
+}
+
+#[test]
+fn post_processing_without_credit_is_reported_as_lasting() {
+    let world = post_processing_world(|| answer(429, NO_CREDIT));
+    let transcript = text(world.run(post_processing_job()));
+    assert_eq!(transcript.text, "ähm hallo");
+    assert_eq!(
+        transcript.post_processing,
+        Status::Rejected(Rejection::QuotaExhausted(ApiProvider::Groq))
+    );
+}
+
+#[test]
+fn parakeet_text_takes_the_spelling_of_the_vocabulary() {
+    let world = World::new(
+        no_requests(),
+        &[],
+        &[LocalModel::ParakeetUltra],
+        FakeLocal::answering(vec![Ok(
+            "Kannst du Los Peak neu starten und die Lux von Träfig prüfen? Der traffic ist hoch."
+                .into(),
+        )]),
+    );
+    let mut settings = settings(TranscriptionMode::Local);
+    settings.local_model = LocalModel::ParakeetUltra;
+    let mut job = job(settings, speech(1.5));
+    job.vocabulary = vec!["Lowspeak".into(), "Traefik".into()];
+    assert_eq!(
+        text(world.run(job)).text,
+        "Kannst du Lowspeak neu starten und die Lux von Traefik prüfen? Der traffic ist hoch."
+    );
+}
+
+#[test]
+fn whisper_text_keeps_its_own_spelling() {
+    let world = World::new(
+        no_requests(),
+        &[],
+        &[LocalModel::LargeV3Turbo],
+        FakeLocal::answering(vec![Ok("Die Logs von Träfig".into())]),
+    );
+    let mut job = job(settings(TranscriptionMode::Local), speech(1.5));
+    job.vocabulary = vec!["Traefik".into()];
+    assert_eq!(text(world.run(job)).text, "Die Logs von Träfig");
+}
+
+#[test]
+fn a_parakeet_fallback_takes_the_spelling_too() {
+    let world = World::new(
+        FakeHttp::new(|_| answer(503, "overloaded")),
+        &[ApiProvider::Groq],
+        &[LocalModel::ParakeetUltra],
+        FakeLocal::answering(vec![Ok("Neustart von Los Peak".into())]),
+    );
+    let mut job = job(settings(TranscriptionMode::Online), speech(1.5));
+    job.vocabulary = vec!["Lowspeak".into()];
+    assert_eq!(text(world.run(job)).text, "Neustart von Lowspeak");
 }

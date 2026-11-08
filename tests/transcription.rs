@@ -3,6 +3,7 @@
 //! The expected Parakeet texts are the output of FluidAudio 0.17.7 for the same audio.
 
 use std::path::Path;
+use std::sync::Arc;
 
 use lowspeak::audio::wav;
 use lowspeak::config::settings::Settings;
@@ -13,6 +14,7 @@ use lowspeak::transcription::model_store::{self, Disk};
 use lowspeak::transcription::parakeet::{Parakeet, Version};
 use lowspeak::transcription::postprocess::ActiveApp;
 use lowspeak::transcription::service::{self, Job, Outcome, Services};
+use lowspeak::transcription::spelling::{self, Lexicon};
 use lowspeak::util::numeric::floor_usize;
 
 fn fixture() -> Vec<f32> {
@@ -81,7 +83,7 @@ fn run_pipeline(
 ) -> Outcome {
     let local = LocalTranscriber::spawn();
     let job = Job {
-        samples,
+        samples: Arc::new(samples),
         settings: local_settings(model),
         active_app: ActiveApp::default(),
         raw_parakeet_first,
@@ -91,8 +93,12 @@ fn run_pipeline(
         local: &local,
         models: &Disk,
         api: Api::SYSTEM,
+        lexicon: &MacosWords,
     };
-    service::run(job, &services).unwrap()
+    let outcome = service::run(job, &services).unwrap();
+    // whisper.cpp aborts in its exit-time destructors while a model is still loaded.
+    local.unload();
+    outcome
 }
 
 #[test]
@@ -336,4 +342,31 @@ fn parakeet_keeps_every_word_across_window_seams() {
         }
     }
     assert!(failures.is_empty(), "{failures:#?}");
+}
+
+#[test]
+#[ignore = "needs Parakeet Ultra installed; speaks through macOS's speech synthesis"]
+fn parakeet_spells_the_vocabulary() {
+    let samples = spoken(
+        "Anna",
+        "Kannst du bitte Lowspeak neu starten? Danach prüfen wir die Logs von Traefik.",
+    );
+    let vocabulary = vec!["Lowspeak".to_owned(), "Traefik".to_owned()];
+    match run_pipeline(LocalModel::ParakeetUltra, samples, true, vocabulary) {
+        Outcome::Text(transcript) => assert!(
+            transcript.text.contains("Lowspeak") && transcript.text.contains("Traefik"),
+            "{}",
+            transcript.text
+        ),
+        _ => panic!("expected text"),
+    }
+}
+
+/// The macOS spell checker, asked on the test's own thread: the test harness runs no main queue.
+struct MacosWords;
+
+impl Lexicon for MacosWords {
+    fn is_word(&self, word: &str, language: Option<&str>) -> bool {
+        spelling::known_to_macos(word, language)
+    }
 }

@@ -11,6 +11,7 @@ fn plural(n: usize, one: &'static str, few: &'static str, other: &'static str) -
 pub static SK: Texts = Texts {
     recent_dictations: "Nedávne diktáty",
     none_yet: "Zatiaľ žiadne",
+    retry_failed_dictation: "Znova skúsiť neúspešný diktát",
     local: "Lokálne",
     not_installed: |model| format!("{model} (nenainštalované)"),
     no_key: |provider| format!("{provider} (bez kľúča)"),
@@ -75,7 +76,7 @@ pub static SK: Texts = Texts {
     unknown_key_format: "Neznámy formát kľúča",
     unknown_key_format_info: "Očakáva sa kľúč začínajúci na sk- (OpenAI) alebo gsk_ (Groq). Skúste to znova.",
     vocabulary_title: "Slovník",
-    vocabulary_info: "Mená a odborné výrazy, ktoré sa majú písať presne takto, oddelené čiarkami. Používajú ich OpenAI, Groq, Whisper na tomto Macu a následné spracovanie.",
+    vocabulary_info: "Mená a odborné výrazy, ktoré sa majú písať presne takto, oddelené čiarkami. Používajú ich OpenAI, Groq, Whisper a Parakeet na tomto Macu a následné spracovanie.",
 
     recording_failed: "Nahrávanie zlyhalo",
     microphone_silent: "Mikrofón bez signálu",
@@ -89,6 +90,9 @@ pub static SK: Texts = Texts {
     accessibility_list: "Prístupnosť",
     device_control_list: "Ovládanie zariadenia a prístup k dátam",
     transcription_failed: "Prepis zlyhal",
+    retry_failed_dictation_info: |menu_item| {
+        format!("Nahrávka zostala uložená: v menu vyberte „{menu_item}“ a prepíšte ju znova.")
+    },
     transcribed_locally: "Prepísané na tomto Macu",
     transcribed_locally_info: |reason| {
         format!("{reason} Prepis namiesto toho vykonal lokálny model.")
@@ -136,6 +140,11 @@ pub static SK: Texts = Texts {
     },
     network_error: |message| format!("Chyba siete: {message}"),
     key_rejected: |provider| format!("Služba {provider} odmietla kľúč API."),
+    quota_exhausted: |provider| {
+        format!(
+            "Služba {provider} hlási, že účet už nemá žiadny kredit. Doplňte kredit vo svojom účte {provider}."
+        )
+    },
     model_retired: |provider| {
         format!("Služba {provider} už neponúka model na následné spracovanie.")
     },
@@ -155,6 +164,8 @@ pub static SK: Texts = Texts {
     microphone_error: |detail| format!("Mikrofón sa nepodarilo spustiť: {detail}"),
     paste_failed: "Vloženie zlyhalo",
     paste_failed_info: "Text je v schránke. Vložte ho pomocou ⌘V.",
+    not_pasted: "Diktát nebol vložený",
+    not_pasted_info: "Kým bol text hotový, do popredia sa dostala iná aplikácia. Text je v schránke. Vložte ho pomocou ⌘V.",
     request_timed_out: "Časový limit požiadavky vypršal.",
     audio_failed: "Nahrávku sa nepodarilo spracovať.",
     local_model_failed: "Lokálny model nedokázal nahrávku prepísať.",

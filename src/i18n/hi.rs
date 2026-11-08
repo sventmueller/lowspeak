@@ -3,6 +3,7 @@ use super::Texts;
 pub static HI: Texts = Texts {
     recent_dictations: "हाल के डिक्टेशन",
     none_yet: "अभी तक कोई नहीं",
+    retry_failed_dictation: "विफल डिक्टेशन फिर से आज़माएँ",
     local: "लोकल",
     not_installed: |model| format!("{model} (इंस्टॉल नहीं है)"),
     no_key: |provider| format!("{provider} (कोई कुंजी नहीं)"),
@@ -64,7 +65,7 @@ pub static HI: Texts = Texts {
     unknown_key_format: "अज्ञात कुंजी फ़ॉर्मैट",
     unknown_key_format_info: "sk- (OpenAI) या gsk_ (Groq) से शुरू होने वाली कुंजी अपेक्षित है। कृपया फिर से कोशिश करें।",
     vocabulary_title: "शब्दावली",
-    vocabulary_info: "ऐसे नाम और तकनीकी शब्द जिनकी वर्तनी ठीक यही रहनी चाहिए, अल्पविराम से अलग करके दर्ज करें। OpenAI, Groq, इस Mac पर Whisper और पोस्ट-प्रोसेसिंग इनका उपयोग करते हैं।",
+    vocabulary_info: "ऐसे नाम और तकनीकी शब्द जिनकी वर्तनी ठीक यही रहनी चाहिए, अल्पविराम से अलग करके दर्ज करें। OpenAI, Groq, इस Mac पर Whisper और Parakeet, और पोस्ट-प्रोसेसिंग इनका उपयोग करते हैं।",
 
     recording_failed: "रिकॉर्डिंग विफल",
     microphone_silent: "माइक्रोफ़ोन से कोई आवाज़ नहीं",
@@ -78,6 +79,9 @@ pub static HI: Texts = Texts {
     accessibility_list: "ऐक्सेसिबिलिटी",
     device_control_list: "डिवाइस नियंत्रण और डेटा ऐक्सेस",
     transcription_failed: "ट्रांसक्रिप्शन विफल",
+    retry_failed_dictation_info: |menu_item| {
+        format!("रिकॉर्डिंग सुरक्षित है: इसे फिर से ट्रांसक्राइब करने के लिए मेनू में “{menu_item}” चुनें।")
+    },
     transcribed_locally: "इस Mac पर ट्रांसक्राइब किया गया",
     transcribed_locally_info: |reason| format!("{reason} इसके बजाय एक लोकल मॉडल ने ट्रांसक्राइब किया।"),
     post_processing_failed: "पोस्ट-प्रोसेसिंग विफल",
@@ -117,6 +121,9 @@ pub static HI: Texts = Texts {
     },
     network_error: |message| format!("नेटवर्क त्रुटि: {message}"),
     key_rejected: |provider| format!("{provider} ने API कुंजी अस्वीकार कर दी।"),
+    quota_exhausted: |provider| {
+        format!("{provider} के अनुसार खाते में कोई क्रेडिट नहीं बचा है। अपने {provider} खाते में क्रेडिट जोड़ें।")
+    },
     model_retired: |provider| format!("{provider} अब पोस्ट-प्रोसेसिंग मॉडल उपलब्ध नहीं कराता।"),
     no_post_processing_key: |first, second| {
         format!("पोस्ट-प्रोसेसिंग के लिए {first} या {second} की API कुंजी चाहिए। इसे मेनू बार से सेट करें।")
@@ -132,6 +139,8 @@ pub static HI: Texts = Texts {
     microphone_error: |detail| format!("माइक्रोफ़ोन शुरू नहीं हो सका: {detail}"),
     paste_failed: "पेस्ट विफल",
     paste_failed_info: "टेक्स्ट क्लिपबोर्ड पर है। ⌘V से पेस्ट करें।",
+    not_pasted: "डिक्टेशन पेस्ट नहीं हुआ",
+    not_pasted_info: "टेक्स्ट तैयार होने से पहले कोई दूसरा ऐप सामने आ गया। टेक्स्ट क्लिपबोर्ड पर है। ⌘V से पेस्ट करें।",
     request_timed_out: "अनुरोध का समय समाप्त हो गया।",
     audio_failed: "रिकॉर्डिंग प्रोसेस नहीं हो सकी।",
     local_model_failed: "लोकल मॉडल रिकॉर्डिंग को ट्रांसक्राइब नहीं कर सका।",

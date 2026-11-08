@@ -113,7 +113,7 @@ El Lowspeak parla 35 idiomes. Aprèn els noms i els termes que fas servir, pot e
 - **Privat.** Sense compte ni telemetria. L’àudio només va al proveïdor que has triat, o enlloc en el mode local.
 - **Cap dictat perdut.** Si la xarxa o el servei en línia fallen, un model local instal·lat transcriu el mateix enregistrament al teu Mac.
 - **En el teu idioma.** El dictat funciona en desenes d’idiomes, i el menú, els diàlegs i les notificacions estan disponibles en 35.
-- **Les teves paraules, ben escrites.** Un vocabulari de noms i termes tècnics guia OpenAI, Groq, Whisper i el postprocessament.
+- **Les teves paraules, ben escrites.** Un vocabulari de noms i termes tècnics guia OpenAI, Groq, Whisper i el postprocessament, i corregeix com els escriu Parakeet.
 - **Text net, si el vols.** El postprocessament opcional elimina les crosses, corregeix la gramàtica i, quan et corregeixes a tu mateix, només en conserva la correcció; o, a més, dona format al text segons el tipus d’app en què dictes.
 - **El teu porta-retalls continua sent teu.** El Lowspeak enganxa a través del porta-retalls i, un moment després, hi torna a posar el que hi havia. Els deu últims dictats es queden al menú per tornar-los a copiar.
 - **Mantén premuda la tecla fn, parla i deixa-la anar.** El text s’escriu a l’app que tens al davant, allà on sigui el cursor: correu, xat, editor, terminal o navegador. Cap finestra a la qual canviar, cap botó on fer clic.
@@ -177,6 +177,7 @@ Fes clic a l’anell de la barra de menús:
 | Ítem | Què fa |
 |---|---|
 | **Dictats recents** | els deu últims textos; un clic en torna a copiar un al porta-retalls |
+| **Torna a transcriure el dictat fallit** | torna a transcriure l’últim dictat fallit, amb el model triat ara; només apareix després d’un error |
 | **Local** | els models del teu Mac, agrupats en Whisper i Parakeet; els que no estan descarregats apareixen atenuats |
 | **OpenAI**, **Groq** | els models en línia; sense clau apareixen atenuats i el menú ofereix **Configura la clau d’API…** |
 | **Idioma** | l’idioma en què dictes, o **Detecció automàtica**; el menú el segueix |
@@ -231,6 +232,8 @@ Un enregistrament s’atura sol al cap de dos minuts mentre es manté premuda la
 ### On va a parar el text
 
 El Lowspeak enganxa el text a l’app que tenies al davant quan vas deixar de parlar, a la posició del cursor, mitjançant el porta-retalls i ⌘V. Desa tot el que hi havia abans al porta-retalls i ho restaura mig segon després que l’app hagi llegit el text, o al cap de deu segons si no el llegeix mai, tret que una altra app hagi canviat el porta-retalls mentrestant. El text es marca com a transitori, de manera que les apps d’historial del porta-retalls que respecten aquesta marca no el registren.
+
+Si una altra app passa al davant abans que el text estigui llest, el Lowspeak no l’enganxa allà: el text es queda al porta-retalls i una notificació t’ho indica. Enganxa’l amb ⌘V on toqui.
 
 Pots començar el dictat següent mentre l’anterior encara s’està transcrivint. Els textos s’enganxen en l’ordre en què els vas dir, i mai mentre estàs enregistrant o mantens premuda la tecla Shift, de manera que un enganxament no pot caure al mig de la teva frase següent.
 
@@ -288,11 +291,15 @@ L’enregistrament es comprimeix en AAC abans de pujar-lo, uns 6 KB per segon de
 
 Si una transcripció en línia falla, perquè la xarxa no funciona, el proveïdor té un problema o la clau és incorrecta, un model local instal·lat transcriu el mateix enregistrament: el que has triat a **Local** o, si no, Parakeet Ultra, després Whisper Large v3 Turbo, Large v3 i els models Whisper més petits, i Parakeet v2 en últim lloc. Una notificació t’ho diu una vegada; només torna a aparèixer després que un dictat en línia hagi funcionat entremig.
 
-Amb un model local de reserva, el Lowspeak dona 20 segons a la sol·licitud en línia; sense, ho intenta tres vegades durant un minut com a màxim cada vegada. En el mode en línia, el Lowspeak prepara una vegada a l’inici el model Parakeet de reserva, perquè la primera vegada que calgui no l’hagi d’esperar.
+Amb un model local de reserva, el Lowspeak dona 20 segons a la sol·licitud en línia; sense, ho intenta tres vegades durant un minut com a màxim cada vegada. En el mode en línia, el Lowspeak prepara una vegada a l’inici el model Parakeet de reserva, perquè la primera vegada que calgui no l’hagi d’esperar. Un proveïdor saturat que demana una pausa l’obté, de fins a deu segons; si en demana una de més llarga, o indica que el teu compte no té saldo, no se li repeteix la sol·licitud.
+
+Un dictat que falla igualment no es perd: el Lowspeak en conserva l’enregistrament a la memòria, i **Torna a transcriure el dictat fallit**, al menú, el transcriu de nou, per exemple quan torna la xarxa o després que hagis triat un altre model. Només es conserva l’últim enregistrament fallit, i cap després de sortir del Lowspeak.
 
 ### Com es prepara l’enregistrament
 
 El Lowspeak enregistra a la freqüència de mostreig pròpia del micròfon i, quan t’atures, el converteix als 16 kHz que esperen els models. Abans de la transcripció elimina el brunzit greu per sota de 80 Hz, retalla el silenci del principi i del final i iguala el volum, de manera que les veus fluixes i les fortes surten igual. Un enregistrament sense veu ni tan sols s’envia. En el mode local, Parakeet rep primer l’enregistrament sense tocar, i el preparat només si aquell no dona cap text.
+
+De vegades Whisper escriu en el silenci i el soroll text que ningú no ha dit, com els crèdits de vídeos subtitulats o el vocabulari que ha rebut. El Lowspeak descarta els fragments que el mateix Whisper marca com a silenci i elimina aquesta mena de text abans d’enganxar.
 
 ### Idiomes per model
 
@@ -317,7 +324,7 @@ El Lowspeak és una app universal i també funciona als Mac amb Intel amb macOS 
 - **GPT Transcribe** els rep com a paraules clau.
 - **Whisper** (OpenAI, Groq i al teu Mac) els llegeix com a pista abans de l’enregistrament, fins a 500 caràcters.
 - **El postprocessament** rep la indicació d’escriure’ls exactament com estan escrits.
-- **Parakeet** no els fa servir.
+- **Parakeet** no els sent. On ha escrit alguna cosa molt semblant, el Lowspeak hi posa la grafia dels termes: «Träfig» o «Trafik» es converteix en Traefik, «Los Peak» es converteix en Lowspeak. Els termes de menys de cinc lletres, les paraules d’adreces i noms de fitxer, i les formes amb una terminació com ara «Lowspeaks» es queden tal com són. Per distingir una paraula mal escrita d’una de real, el Lowspeak consulta el corrector ortogràfic de macOS, al teu Mac.
 
 ## Postprocessament
 
@@ -353,7 +360,8 @@ El Lowspeak treballa en segon pla, així que informa dels problemes amb notifica
 | **Micròfon en silenci** | cinc segons de silenci; consulta [Micròfon](#micròfon) |
 | **Cal el permís d’accessibilitat** | el text és al porta-retalls; concedeix el permís d’accessibilitat per enganxar automàticament |
 | **Error en enganxar** | el text és al porta-retalls; enganxa’l amb ⌘V |
-| **Error de transcripció** | amb el motiu: no hi ha clau, clau rebutjada, límit de sol·licituds, error del servidor o de xarxa, o cap model local |
+| **Error de transcripció** | amb el motiu: no hi ha clau, clau rebutjada, sense saldo, límit de sol·licituds, error del servidor o de xarxa, o cap model local; l’enregistrament es conserva per a **Torna a transcriure el dictat fallit** |
+| **No s’ha enganxat el dictat** | una altra app ha passat al davant abans que el text estigués llest; el text és al porta-retalls |
 | **Transcrit en aquest Mac** | el servei en línia ha fallat i un model local ha pres el relleu |
 | **Error de postprocessament** | el proveïdor rebutja el postprocessament o no hi ha cap clau configurada; el text s’ha enganxat sense |
 | **No hi ha cap clau d’API** | has triat un model en línia sense clau per al seu proveïdor |
@@ -400,7 +408,7 @@ El Lowspeak sent el que dius mentre mantens premuda la tecla fn, pot escriure a 
 - **El postprocessament**, si l’actives, envia el text transcrit i el teu vocabulari a Groq o a OpenAI. En el mode Format hi afegeix el tipus d’app en què dictes (editor de codi, terminal, xat o correu); el nom de l’app no s’envia.
 - **Sense telemetria ni compte.** A part de la transcripció i el postprocessament, el Lowspeak només es connecta a internet per obrir la connexió amb el teu proveïdor mentre mantens premuda la tecla fn, en el mode en línia o amb el postprocessament activat, per descarregar un model quan ho demanes, des de Hugging Face per HTTPS, en una versió fixa i comprovant la suma de verificació de cada fitxer, i per cercar una versió nova a GitHub, un cop al dia si ho permets. Aquesta sol·licitud porta la versió del Lowspeak i res més. **Ajuda › Informa d’un problema…** obre un formulari de GitHub al navegador; la seva adreça porta la versió del Lowspeak i la de macOS, res del que has dictat.
 - **Les claus d’API** es queden al teu clauer d’inici de sessió. Només s’envien al seu propi proveïdor i s’eliminen dels missatges d’error abans d’escriure res al registre.
-- **El text dictat no es desa.** Els deu últims dictats es queden a la memòria per a **Dictats recents** i desapareixen quan surts del Lowspeak. Els fitxers de registre anoten longituds i temps, mai el text.
+- **El text dictat no es desa.** Els deu últims dictats es queden a la memòria per a **Dictats recents** i desapareixen quan surts del Lowspeak; el mateix passa amb l’enregistrament de l’últim dictat fallit, que es conserva per a **Torna a transcriure el dictat fallit**. Els fitxers de registre anoten longituds i temps, mai el text.
 - **El porta-retalls** es desa abans d’enganxar i es restaura un cop l’app ha llegit el text, tret que una altra app l’hagi canviat mentrestant. El dictat es marca com a transitori, de manera que les apps d’historial del porta-retalls que respecten aquesta marca l’ometen.
 - **Signatura de codi** amb el Hardened Runtime; l’app només demana accés al micròfon, a l’accessibilitat, a les notificacions i a la xarxa. Una actualització ha de portar la signatura del desenvolupador; si no, Sparkle la rebutja.
 
@@ -420,7 +428,7 @@ Mesurat amb Apple Silicon:
 - **Els models locals als Mac amb Intel** s’executen al processador i són molt més lents; allà és millor transcriure en línia.
 - **El que dius abans que el micròfon estigui a punt es perd.** Espera la icona d’enregistrament, sobretot amb AirPods.
 - **Altres poden apropiar-se de la tecla fn.** Si l’ajust de la tecla 🌐 de macOS, el Warp o el Dictat de macOS reclamen fn primer, el Lowspeak no la veu; consulta [Resolució de problemes](#resolució-de-problemes).
-- **Parakeet** ignora el vocabulari i l’elecció d’idioma, i només coneix idiomes europeus.
+- **Parakeet** ignora l’elecció d’idioma i només coneix idiomes europeus. El vocabulari només en corregeix la grafia a posteriori: un terme que ha sentit com una paraula força diferent continua mal escrit.
 - **Escriptura i variant:** només a GPT Transcribe se li pot indicar que escrigui en xinès tradicional; a cap model se li pot indicar que escrigui portuguès europeu en lloc de brasiler.
 - **Límits de temps:** dos minuts mentre es manté premuda la tecla fn, cinc minuts quan l’enregistrament està bloquejat.
 - **Mode de micròfon:** el centre de control ofereix Aïllament de veu i Ampli espectre per al Lowspeak i els mostra com a actius, però el Lowspeak enregistra sense processament de veu, de manera que l’elecció no té cap efecte.

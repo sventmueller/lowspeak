@@ -13,6 +13,7 @@ fn plural(n: usize, one: &'static str, few: &'static str, many: &'static str) ->
 pub static HR: Texts = Texts {
     recent_dictations: "Nedavni diktati",
     none_yet: "Još nema",
+    retry_failed_dictation: "Ponovi neuspjeli diktat",
     local: "Lokalno",
     not_installed: |model| format!("{model} (nije instaliran)"),
     no_key: |provider| format!("{provider} (nema ključa)"),
@@ -77,7 +78,7 @@ pub static HR: Texts = Texts {
     unknown_key_format: "Nepoznat format ključa",
     unknown_key_format_info: "Očekuje se ključ koji počinje sa sk- (OpenAI) ili gsk_ (Groq). Pokušajte ponovno.",
     vocabulary_title: "Rječnik",
-    vocabulary_info: "Imena i stručni pojmovi koji se trebaju pisati točno ovako, odvojeni zarezima. Koriste ih OpenAI, Groq, Whisper na ovom Macu i naknadna obrada.",
+    vocabulary_info: "Imena i stručni pojmovi koji se trebaju pisati točno ovako, odvojeni zarezima. Koriste ih OpenAI, Groq, Whisper i Parakeet na ovom Macu te naknadna obrada.",
 
     recording_failed: "Snimanje nije uspjelo",
     microphone_silent: "Mikrofon bez signala",
@@ -91,6 +92,11 @@ pub static HR: Texts = Texts {
     accessibility_list: "Pristupačnost",
     device_control_list: "Upravljanje uređajem i pristup podacima",
     transcription_failed: "Transkripcija nije uspjela",
+    retry_failed_dictation_info: |menu_item| {
+        format!(
+            "Snimka je sačuvana: odaberite „{menu_item}” u izborniku da biste je ponovno transkribirali."
+        )
+    },
     transcribed_locally: "Transkribirano na ovom Macu",
     transcribed_locally_info: |reason| {
         format!("{reason} Umjesto toga transkribirao je lokalni model.")
@@ -136,6 +142,11 @@ pub static HR: Texts = Texts {
     },
     network_error: |message| format!("Pogreška mreže: {message}"),
     key_rejected: |provider| format!("Usluga {provider} odbila je API ključ."),
+    quota_exhausted: |provider| {
+        format!(
+            "Usluga {provider} javlja da na računu više nema kredita. Dodajte kredit na svoj {provider} račun."
+        )
+    },
     model_retired: |provider| format!("Usluga {provider} više ne nudi model za naknadnu obradu."),
     no_post_processing_key: |first, second| {
         format!(
@@ -153,6 +164,8 @@ pub static HR: Texts = Texts {
     microphone_error: |detail| format!("Mikrofon nije moguće pokrenuti: {detail}"),
     paste_failed: "Lijepljenje nije uspjelo",
     paste_failed_info: "Tekst je u međuspremniku. Zalijepite ga pomoću ⌘V.",
+    not_pasted: "Diktat nije zalijepljen",
+    not_pasted_info: "Druga aplikacija došla je u prvi plan prije nego što je tekst bio spreman. Tekst je u međuspremniku. Zalijepite ga pomoću ⌘V.",
     request_timed_out: "Isteklo je vrijeme čekanja na zahtjev.",
     audio_failed: "Snimku nije moguće obraditi.",
     local_model_failed: "Lokalni model nije mogao transkribirati snimku.",

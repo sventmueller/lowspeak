@@ -3,6 +3,7 @@ use super::Texts;
 pub static NL: Texts = Texts {
     recent_dictations: "Recente dictaten",
     none_yet: "Nog geen",
+    retry_failed_dictation: "Mislukt dictaat opnieuw proberen",
     local: "Lokaal",
     not_installed: |model| format!("{model} (niet geïnstalleerd)"),
     no_key: |provider| format!("{provider} (geen sleutel)"),
@@ -68,7 +69,7 @@ pub static NL: Texts = Texts {
     unknown_key_format: "Onbekende sleutelindeling",
     unknown_key_format_info: "De sleutel moet beginnen met sk- (OpenAI) of gsk_ (Groq). Probeer het opnieuw.",
     vocabulary_title: "Woordenlijst",
-    vocabulary_info: "Namen en vaktermen die precies zo gespeld moeten worden, gescheiden door komma's. OpenAI, Groq, Whisper op deze Mac en de nabewerking gebruiken ze.",
+    vocabulary_info: "Namen en vaktermen die precies zo gespeld moeten worden, gescheiden door komma's. OpenAI, Groq, Whisper en Parakeet op deze Mac en de nabewerking gebruiken ze.",
 
     recording_failed: "Opname mislukt",
     microphone_silent: "Geen geluid van microfoon",
@@ -82,6 +83,11 @@ pub static NL: Texts = Texts {
     accessibility_list: "Toegankelijkheid",
     device_control_list: "Apparaatbeheer en gegevenstoegang",
     transcription_failed: "Transcriptie mislukt",
+    retry_failed_dictation_info: |menu_item| {
+        format!(
+            "De opname is bewaard: kies ‘{menu_item}’ in het menu om hem opnieuw te transcriberen."
+        )
+    },
     transcribed_locally: "Getranscribeerd op deze Mac",
     transcribed_locally_info: |reason| {
         format!("{reason} In plaats daarvan heeft een lokaal model getranscribeerd.")
@@ -129,6 +135,11 @@ pub static NL: Texts = Texts {
     },
     network_error: |message| format!("Netwerkfout: {message}"),
     key_rejected: |provider| format!("{provider} heeft de API-sleutel geweigerd."),
+    quota_exhausted: |provider| {
+        format!(
+            "{provider} meldt dat er geen tegoed meer op het account staat. Voeg tegoed toe aan je {provider}-account."
+        )
+    },
     model_retired: |provider| format!("{provider} biedt het nabewerkingsmodel niet meer aan."),
     no_post_processing_key: |first, second| {
         format!(
@@ -146,6 +157,8 @@ pub static NL: Texts = Texts {
     microphone_error: |detail| format!("De microfoon kon niet worden gestart: {detail}"),
     paste_failed: "Plakken mislukt",
     paste_failed_info: "De tekst staat op het klembord. Plak hem met ⌘V.",
+    not_pasted: "Dictaat niet geplakt",
+    not_pasted_info: "Een andere app kwam naar voren voordat de tekst klaar was. De tekst staat op het klembord. Plak hem met ⌘V.",
     request_timed_out: "Er is een time-out opgetreden voor het verzoek.",
     audio_failed: "De opname kon niet worden verwerkt.",
     local_model_failed: "Het lokale model kon de opname niet transcriberen.",

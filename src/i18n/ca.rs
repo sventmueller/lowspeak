@@ -3,6 +3,7 @@ use super::Texts;
 pub static CA: Texts = Texts {
     recent_dictations: "Dictats recents",
     none_yet: "Encara no n’hi ha cap",
+    retry_failed_dictation: "Torna a transcriure el dictat fallit",
     local: "Local",
     not_installed: |model| format!("{model} (no instal·lat)"),
     no_key: |provider| format!("{provider} (sense clau)"),
@@ -68,7 +69,7 @@ pub static CA: Texts = Texts {
     unknown_key_format: "Format de clau desconegut",
     unknown_key_format_info: "S’esperava una clau que comencés per sk- (OpenAI) o gsk_ (Groq). Torna-ho a provar.",
     vocabulary_title: "Vocabulari",
-    vocabulary_info: "Noms i termes tècnics que s’han d’escriure exactament així, separats per comes. Els utilitzen OpenAI, Groq, Whisper en aquest Mac i el postprocessament.",
+    vocabulary_info: "Noms i termes tècnics que s’han d’escriure exactament així, separats per comes. Els utilitzen OpenAI, Groq, Whisper i Parakeet en aquest Mac i el postprocessament.",
 
     recording_failed: "Error d’enregistrament",
     microphone_silent: "Micròfon en silenci",
@@ -82,6 +83,11 @@ pub static CA: Texts = Texts {
     accessibility_list: "Accessibilitat",
     device_control_list: "Control de dispositius i accés a les dades",
     transcription_failed: "Error de transcripció",
+    retry_failed_dictation_info: |menu_item| {
+        format!(
+            "L’enregistrament es conserva: tria «{menu_item}» al menú per tornar-lo a transcriure."
+        )
+    },
     transcribed_locally: "Transcrit en aquest Mac",
     transcribed_locally_info: |reason| format!("{reason} Un model local ha fet la transcripció."),
     post_processing_failed: "Error de postprocessament",
@@ -131,6 +137,11 @@ pub static CA: Texts = Texts {
     },
     network_error: |message| format!("Error de xarxa: {message}"),
     key_rejected: |provider| format!("{provider} ha rebutjat la clau d’API."),
+    quota_exhausted: |provider| {
+        format!(
+            "{provider} indica que el compte no té saldo. Afegeix saldo al teu compte de {provider}."
+        )
+    },
     model_retired: |provider| format!("{provider} ja no ofereix el model de postprocessament."),
     no_post_processing_key: |first, second| {
         format!(
@@ -148,6 +159,8 @@ pub static CA: Texts = Texts {
     microphone_error: |detail| format!("No s’ha pogut iniciar el micròfon: {detail}"),
     paste_failed: "Error en enganxar",
     paste_failed_info: "El text és al porta-retalls. Enganxa’l amb ⌘V.",
+    not_pasted: "No s’ha enganxat el dictat",
+    not_pasted_info: "Una altra app ha passat al davant abans que el text estigués llest. El text és al porta-retalls. Enganxa’l amb ⌘V.",
     request_timed_out: "S’ha esgotat el temps d’espera de la sol·licitud.",
     audio_failed: "No s’ha pogut processar l’enregistrament.",
     local_model_failed: "El model local no ha pogut transcriure l’enregistrament.",

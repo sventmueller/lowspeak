@@ -43,6 +43,8 @@ use crate::models::{Language, LanguageNote, LocalModel, OnlineModel, PostProcess
 pub struct Texts {
     pub recent_dictations: &'static str,
     pub none_yet: &'static str,
+    /// Offered while the recording of a failed dictation is kept.
+    pub retry_failed_dictation: &'static str,
     pub local: &'static str,
     pub not_installed: fn(model: &str) -> String,
     pub no_key: fn(provider: &str) -> String,
@@ -116,6 +118,7 @@ pub struct Texts {
     /// The same list from macOS 27 on, as Apple names it in the language.
     pub device_control_list: &'static str,
     pub transcription_failed: &'static str,
+    pub retry_failed_dictation_info: fn(menu_item: &str) -> String,
     pub transcribed_locally: &'static str,
     pub transcribed_locally_info: fn(reason: &str) -> String,
     pub post_processing_failed: &'static str,
@@ -143,6 +146,7 @@ pub struct Texts {
     pub model_not_available: fn(menu_item: &str) -> String,
     pub network_error: fn(message: &str) -> String,
     pub key_rejected: fn(provider: &str) -> String,
+    pub quota_exhausted: fn(provider: &str) -> String,
     pub model_retired: fn(provider: &str) -> String,
     /// Post-processing works with a key of either provider.
     pub no_post_processing_key: fn(first: &str, second: &str) -> String,
@@ -155,6 +159,9 @@ pub struct Texts {
     pub microphone_error: fn(detail: &str) -> String,
     pub paste_failed: &'static str,
     pub paste_failed_info: &'static str,
+    /// Another app came to the front between the end of the recording and the paste.
+    pub not_pasted: &'static str,
+    pub not_pasted_info: &'static str,
     pub request_timed_out: &'static str,
     pub audio_failed: &'static str,
     pub local_model_failed: &'static str,
@@ -380,6 +387,8 @@ mod tests {
             keeps((t.model_not_available)("‹i›"), "‹i›");
             keeps((t.network_error)("‹e›"), "‹e›");
             keeps((t.key_rejected)("‹p›"), "‹p›");
+            keeps((t.quota_exhausted)("‹p›"), "‹p›");
+            keeps((t.retry_failed_dictation_info)("‹i›"), "‹i›");
             keeps((t.model_retired)("‹p›"), "‹p›");
             let either = (t.no_post_processing_key)("‹a›", "‹b›");
             keeps(either.clone(), "‹a›");
@@ -441,6 +450,9 @@ mod tests {
                 (t.api_keys_not_removed, en::EN.api_keys_not_removed),
                 (t.quick_reference, en::EN.quick_reference),
                 (t.reference_emoji, en::EN.reference_emoji),
+                (t.retry_failed_dictation, en::EN.retry_failed_dictation),
+                (t.not_pasted, en::EN.not_pasted),
+                (t.not_pasted_info, en::EN.not_pasted_info),
             ] {
                 assert_ne!(text, english, "{} is not translated", language.raw_value());
             }
@@ -460,6 +472,11 @@ mod tests {
                 (
                     (t.no_post_processing_key)("a", "b"),
                     (en::EN.no_post_processing_key)("a", "b"),
+                ),
+                ((t.quota_exhausted)("p"), (en::EN.quota_exhausted)("p")),
+                (
+                    (t.retry_failed_dictation_info)("i"),
+                    (en::EN.retry_failed_dictation_info)("i"),
                 ),
             ] {
                 assert_ne!(text, english, "{} is not translated", language.raw_value());

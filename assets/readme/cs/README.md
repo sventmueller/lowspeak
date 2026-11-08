@@ -113,7 +113,7 @@ Lowspeak mluví 35 jazyky. Naučí se jména a výrazy, které používáte, um�
 - **Soukromí.** Žádný účet, žádná telemetrie. Zvuk jde jen k poskytovateli, kterého jste si vybrali, a v místním režimu nikam.
 - **Žádný diktát se neztratí.** Když selže síť nebo online služba, nainstalovaný místní model přepíše stejnou nahrávku na vašem Macu.
 - **Ve vašem jazyce.** Diktování funguje v desítkách jazyků a nabídka, dialogy a oznámení jsou k dispozici v 35.
-- **Vaše slova, správně napsaná.** Slovník jmen a odborných výrazů vede OpenAI, Groq, Whisper i následné zpracování.
+- **Vaše slova, správně napsaná.** Slovník jmen a odborných výrazů vede OpenAI, Groq, Whisper i následné zpracování a opravuje, jak je píše Parakeet.
 - **Čistý text, pokud o něj stojíte.** Volitelné následné zpracování odstraní vycpávková slova, opraví gramatiku, a když se opravíte, ponechá jen opravu; případně text také naformátuje podle druhu aplikace, do které diktujete.
 - **Schránka zůstane vaše.** Lowspeak vkládá přes schránku a chvíli nato do ní vrátí to, co v ní bylo. Posledních deset diktátů zůstává v nabídce, abyste je mohli znovu zkopírovat.
 - **Podržte fn, mluvte, pusťte.** Text se napíše do aplikace v popředí, tam, kde je kurzor: do pošty, chatu, editoru, terminálu nebo prohlížeče. Žádné okno, na které byste se museli přepínat, žádné tlačítko ke kliknutí.
@@ -177,6 +177,7 @@ Klikněte na kroužek na řádku nabídek:
 | Položka | Co dělá |
 |---|---|
 | **Poslední diktáty** | posledních deset textů; kliknutím jeden z nich znovu zkopírujete do schránky |
+| **Znovu přepsat neúspěšný diktát** | znovu přepíše poslední neúspěšný diktát právě zvoleným modelem; zobrazí se jen po selhání |
 | **Místní** | modely na vašem Macu, seskupené na Whisper a Parakeet; nestažené jsou zašedlé |
 | **OpenAI**, **Groq** | online modely; bez klíče jsou zašedlé a nabídka místo nich ukazuje **Nastavit klíč API…** |
 | **Jazyk** | jazyk, ve kterém diktujete, nebo **Rozpoznat automaticky**; nabídka se jím řídí |
@@ -231,6 +232,8 @@ Nahrávání se samo zastaví po dvou minutách, když držíte fn, a po pěti m
 ### Kam se text vloží
 
 Lowspeak vloží text do aplikace, která byla v popředí, když jste přestali mluvit, na místo kurzoru, přes schránku a ⌘V. Uloží vše, co bylo předtím ve schránce, a vrátí to zpět půl sekundy poté, co aplikace text přečte, nebo po deseti sekundách, když ho nepřečte vůbec, pokud mezitím schránku nezměnila jiná aplikace. Text je označený jako dočasný, takže ho aplikace s historií schránky, které toto označení respektují, nezaznamenají.
+
+Pokud se do chvíle, kdy je text hotový, dostane do popředí jiná aplikace, Lowspeak ho do ní nevloží: text zůstane ve schránce a oznámení vám to sdělí. Vložte ho pomocí ⌘V tam, kam patří.
 
 Další diktát můžete začít, zatímco se předchozí ještě přepisuje. Texty se vkládají v pořadí, v jakém jste je vyslovili, a nikdy během nahrávání nebo když držíte Shift, takže vložený text nemůže skončit uprostřed vaší další věty.
 
@@ -288,11 +291,15 @@ Nahrávka se před odesláním zkomprimuje do AAC, asi 6 KB na sekundu řeči, t
 
 Pokud online přepis selže, protože nefunguje síť, poskytovatel má problém nebo je klíč chybný, přepíše stejnou nahrávku nainstalovaný místní model: ten zvolený v části **Místní**, jinak Parakeet Ultra, potom Whisper Large v3 Turbo, Large v3 a menší modely Whisper a jako poslední Parakeet v2. Oznámení vás na to upozorní jednou; znovu se objeví až poté, co mezitím uspěje online diktát.
 
-S místním modelem v záloze dává Lowspeak online požadavku 20 sekund; bez něj to zkusí třikrát, pokaždé až minutu. V online režimu Lowspeak při spuštění jednou připraví záložní model Parakeet, aby na něj první záskok nemusel čekat.
+S místním modelem v záloze dává Lowspeak online požadavku 20 sekund; bez něj to zkusí třikrát, pokaždé až minutu. V online režimu Lowspeak při spuštění jednou připraví záložní model Parakeet, aby na něj první záskok nemusel čekat. Přetížený poskytovatel, který požádá o pauzu, ji dostane, a to nejvýše na deset sekund; na toho, který žádá delší nebo hlásí, že na vašem účtu už není kredit, se Lowspeak znovu neobrací.
+
+Diktát, který přesto selže, se neztratí: Lowspeak si jeho nahrávku ponechá v paměti a **Znovu přepsat neúspěšný diktát** v nabídce ji přepíše znovu, třeba až bude síť zase fungovat nebo když zvolíte jiný model. Uchovává se jen poslední neúspěšná nahrávka a po ukončení Lowspeaku žádná.
 
 ### Jak se nahrávka připravuje
 
 Lowspeak nahrává ve vlastní vzorkovací frekvenci vašeho mikrofonu a po skončení převede nahrávku na 16 kHz, které modely očekávají. Před přepisem odstraní hluboké hučení pod 80 Hz, ořízne ticho na začátku a na konci a vyrovná hlasitost, takže tiší i hlasití mluvčí vyjdou stejně. Nahrávka bez řeči se vůbec neodešle. V místním režimu dostane Parakeet nejprve nedotčenou nahrávku a připravenou jen tehdy, když z té první nevznikne žádný text.
+
+Whisper někdy do ticha a šumu napíše text, který nikdo neřekl, například údaje o autorech titulků z videí nebo slovník, který dostal. Lowspeak zahodí úseky, které Whisper sám označí jako ticho, a takový text před vložením odstraní.
 
 ### Jazyky podle modelu
 
@@ -317,7 +324,7 @@ Lowspeak je univerzální aplikace a běží i na Macích s procesorem Intel se 
 - **GPT Transcribe** je dostane jako klíčová slova.
 - **Whisper** (OpenAI, Groq i na vašem Macu) je čte jako nápovědu před nahrávkou, až 500 znaků.
 - **Následné zpracování** dostane pokyn psát je přesně tak, jak jsou zapsané.
-- **Parakeet** je nepoužívá.
+- **Parakeet** je neslyší. Kde napsal něco velmi podobného, nahradí to Lowspeak v jeho textu jejich zápisem: „Träfig“ nebo „Trafik“ se změní na Traefik, „Los Peak“ na Lowspeak. Výrazy kratší než pět písmen, slova v adresách a názvech souborů a tvary s koncovkou, například „Lowspeaks“, zůstanou tak, jak byly napsány. Aby Lowspeak odlišil chybný zápis od skutečného slova, ptá se kontroly pravopisu v macOS, a to na vašem Macu.
 
 ## Následné zpracování
 
@@ -353,7 +360,8 @@ Lowspeak pracuje na pozadí, takže problémy hlásí formou oznámení:
 | **Mikrofon bez signálu** | pět sekund ticha, viz [Mikrofon](#mikrofon) |
 | **Je vyžadováno oprávnění pro zpřístupnění** | text je ve schránce; povolte Zpřístupnění, aby se vkládalo automaticky |
 | **Vložení se nezdařilo** | text je ve schránce; vložte ho pomocí ⌘V |
-| **Přepis se nezdařil** | s uvedením důvodu: chybí klíč, odmítnutý klíč, limit požadavků, chyba serveru nebo sítě, nebo chybí místní model |
+| **Přepis se nezdařil** | s uvedením důvodu: chybí klíč, odmítnutý klíč, vyčerpaný kredit, limit požadavků, chyba serveru nebo sítě, nebo chybí místní model; nahrávka zůstane uchována pro **Znovu přepsat neúspěšný diktát** |
+| **Diktát nebyl vložen** | než byl text hotový, přesunula se do popředí jiná aplikace; text je ve schránce |
 | **Přepsáno na tomto Macu** | online služba selhala a práci převzal místní model |
 | **Následné zpracování se nezdařilo** | poskytovatel odmítá následné zpracování nebo není nastavený klíč; text byl vložen bez něj |
 | **Chybí klíč API** | zvolili jste online model bez klíče pro jeho poskytovatele |
@@ -400,7 +408,7 @@ Lowspeak slyší, co říkáte, dokud držíte fn, může psát do kterékoli ap
 - **Následné zpracování**, pokud ho zapnete, posílá přepsaný text a váš slovník do Groq nebo OpenAI. V režimu Formátování přidává druh aplikace, do které diktujete (editor kódu, terminál, chat nebo e-mail); název aplikace se neodesílá.
 - **Žádná telemetrie, žádný účet.** Kromě přepisu a následného zpracování se Lowspeak připojuje k internetu jen proto, aby otevřel spojení s vaším poskytovatelem, zatímco držíte fn, v online režimu nebo se zapnutým následným zpracováním, aby stáhl model, když o to požádáte, z Hugging Face přes HTTPS, v pevně dané verzi a s ověřením každého souboru podle kontrolního součtu, a aby na GitHubu vyhledal novou verzi, jednou denně, pokud to povolíte. Tento požadavek nese verzi Lowspeaku a nic jiného. **Nápověda › Nahlásit problém…** otevře v prohlížeči formulář na GitHubu; jeho adresa nese verzi Lowspeaku a verzi macOS, nic z toho, co jste nadiktovali.
 - **Klíče API** zůstávají ve vašem svazku klíčů „přihlášení“. Posílají se jen jejich vlastnímu poskytovateli a z chybových zpráv se odstraní dřív, než se cokoli zapíše do protokolu.
-- **Nadiktovaný text se neukládá.** Posledních deset diktátů zůstává v paměti pro **Poslední diktáty** a po ukončení Lowspeaku zmizí. Soubory protokolu zaznamenávají délky a časy, nikdy text.
+- **Nadiktovaný text se neukládá.** Posledních deset diktátů zůstává v paměti pro **Poslední diktáty** a po ukončení Lowspeaku zmizí, stejně jako nahrávka posledního neúspěšného diktátu, uchovávaná pro **Znovu přepsat neúspěšný diktát**. Soubory protokolu zaznamenávají délky a časy, nikdy text.
 - **Schránka** se před vložením uloží a obnoví, jakmile aplikace text přečte, pokud ji mezitím nezměnila jiná aplikace. Diktát je označený jako dočasný, takže ho aplikace s historií schránky, které toto označení respektují, přeskočí.
 - **Podpis kódu** s Hardened Runtime; aplikace žádá jen o mikrofon, Zpřístupnění, oznámení a síť. Aktualizace musí nést podpis vývojáře, jinak ji Sparkle odmítne.
 
@@ -420,7 +428,7 @@ Měřeno na Apple Silicon:
 - **Místní modely na Macích s procesorem Intel** běží na procesoru a jsou mnohem pomalejší; tam je lepší volbou přepis online.
 - **Co řeknete, než je mikrofon připravený, se ztratí.** Počkejte na ikonu nahrávání, zvlášť s AirPods.
 - **Klávesu fn si mohou zabrat jiní.** Když si fn dřív zabere nastavení klávesy 🌐 v macOS, Warp nebo Diktování v macOS, Lowspeak ji nevidí; viz [Řešení potíží](#řešení-potíží).
-- **Parakeet** ignoruje slovník i volbu jazyka a zná jen evropské jazyky.
+- **Parakeet** ignoruje volbu jazyka a zná jen evropské jazyky. Slovník jeho zápis jen dodatečně opravuje: výraz, který model slyšel jako značně odlišné slovo, zůstane chybný.
 - **Písmo a varianta:** jen GPT Transcribe lze říct, aby psal tradiční čínštinou; žádnému modelu nelze říct, aby psal evropskou portugalštinou místo brazilské.
 - **Časové limity:** dvě minuty při držení fn, pět minut v uzamčeném režimu.
 - **Režim mikrofonu:** Ovládací centrum nabízí pro Lowspeak v části Mikrofon Izolaci hlasu a Široké spektrum a hlásí je jako aktivní, ale Lowspeak nahrává bez zpracování hlasu, takže volba nemá žádný účinek.

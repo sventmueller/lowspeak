@@ -9,7 +9,7 @@ use objc2::runtime::ProtocolObject;
 use objc2::{AnyThread as _, DefinedClass as _, define_class, msg_send};
 use objc2_app_kit::{
     NSPasteboard, NSPasteboardItem, NSPasteboardItemDataProvider, NSPasteboardType,
-    NSPasteboardTypeString, NSPasteboardWriting,
+    NSPasteboardTypeString, NSPasteboardWriting, NSWorkspace,
 };
 use objc2_application_services::AXIsProcessTrusted;
 use objc2_core_foundation::CFRetained;
@@ -202,8 +202,23 @@ pub enum Pasted {
     Yes,
     /// Without Accessibility permission the text is left on the clipboard for a manual ⌘V.
     NeedsAccessibility,
+    /// The app in front is not the one that was in front when the recording stopped; the text is
+    /// left on the clipboard.
+    AppChanged,
     /// The ⌘V keystroke could not be created; the text is left on the clipboard.
     Failed,
+}
+
+/// The process ID of the app in front, which a ⌘V reaches.
+pub fn frontmost_app() -> Option<i32> {
+    NSWorkspace::sharedWorkspace()
+        .frontmostApplication()
+        .map(|app| app.processIdentifier())
+}
+
+/// Whether the ⌘V would reach another app than `target`, the one the dictation is for.
+fn app_changed(target: Option<i32>, frontmost: Option<i32>) -> bool {
+    matches!((target, frontmost), (Some(target), Some(frontmost)) if target != frontmost)
 }
 
 /// A paste whose clipboard is not restored yet.
@@ -231,10 +246,11 @@ fn command_v() -> Option<[CFRetained<CGEvent>; 2]> {
     Some([key(true)?, key(false)?])
 }
 
-/// Call on the main thread. `restored` runs there once the clipboard holds its previous content
-/// again, and only for `Pasted::Yes`: a paste before that would save this text as the content to
-/// restore.
-pub fn paste(text: &str, restored: impl FnOnce() + 'static) -> Pasted {
+/// Call on the main thread. `target` is the process the text is meant for; with another app in
+/// front, the text stays on the clipboard. `restored` runs on the main thread once the clipboard
+/// holds its previous content again, and only for `Pasted::Yes`: a paste before that would save
+/// this text as the content to restore.
+pub fn paste(text: &str, target: Option<i32>, restored: impl FnOnce() + 'static) -> Pasted {
     // SAFETY: plain permission query.
     if !unsafe { AXIsProcessTrusted() } {
         copy(text);
@@ -243,6 +259,14 @@ pub fn paste(text: &str, restored: impl FnOnce() + 'static) -> Pasted {
             "Accessibility permission not granted — text left in clipboard"
         );
         return Pasted::NeedsAccessibility;
+    }
+    if app_changed(target, frontmost_app()) {
+        copy(text);
+        flog!(
+            filelog::APP,
+            "Another app came to the front since the recording stopped — text left in clipboard"
+        );
+        return Pasted::AppChanged;
     }
     let Some(keys) = command_v() else {
         copy(text);
@@ -391,6 +415,17 @@ mod tests {
         assert_eq!(clock.decide(start + LONGEST_WAIT, false), Decision::Restore);
         clock.read(start + LONGEST_WAIT - Duration::from_millis(10));
         assert_eq!(clock.due(), start + LONGEST_WAIT);
+    }
+
+    #[test]
+    fn the_text_goes_only_to_the_app_it_was_dictated_for() {
+        assert!(!app_changed(Some(501), Some(501)));
+        assert!(app_changed(Some(501), Some(733)));
+        assert!(
+            !app_changed(None, Some(733)),
+            "no app was in front at the stop"
+        );
+        assert!(!app_changed(Some(501), None), "no app is in front now");
     }
 
     #[test]

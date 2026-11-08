@@ -6,14 +6,16 @@ use std::time::Instant;
 
 use super::Api;
 use super::error::TranscriptionError;
+use super::hallucination;
 use super::local::LocalEngine;
 use super::model_store::ModelStore;
 use super::online::{self, Patience, Upload};
 use super::postprocess::{self, ActiveApp};
+use super::spelling::{self, Lexicon};
 use crate::audio::{MIN_SAMPLES, SAMPLE_RATE, aac, preprocess, vad, wav};
 use crate::config::settings::Settings;
 use crate::config::vocabulary;
-use crate::models::{LocalModel, TranscriptionMode};
+use crate::models::{LocalModel, ModelFamily, TranscriptionMode};
 use crate::util::filelog;
 
 /// Below the lowest fundamental of speech (about 85 Hz): it removes rumble and mains hum, not voice.
@@ -28,10 +30,13 @@ pub struct Services<'a> {
     pub local: &'a dyn LocalEngine,
     pub models: &'a dyn ModelStore,
     pub api: Api<'a>,
+    /// Tells Parakeet's misspellings of the vocabulary from real words.
+    pub lexicon: &'a dyn Lexicon,
 }
 
 pub struct Job {
-    pub samples: Vec<f32>,
+    /// Shared, so the caller keeps the recording for another attempt without a copy.
+    pub samples: Arc<Vec<f32>>,
     pub settings: Settings,
     pub active_app: ActiveApp,
     /// Parakeet first gets the untouched recording; the preprocessed pipeline is the fallback.
@@ -68,14 +73,20 @@ pub fn run(mut job: Job, services: &Services) -> Result<Outcome, TranscriptionEr
     if too_short(&job.samples) {
         return Ok(Outcome::TooShort);
     }
-    let raw = Arc::new(std::mem::take(&mut job.samples));
+    let raw = std::mem::take(&mut job.samples);
     if job.raw_parakeet_first
         && let Some(text) = parakeet_on_raw_audio(&job, Arc::clone(&raw), services)
     {
         return Ok(finish(&job, services.api, &text, None));
     }
+    let preparing = Instant::now();
     let audio = prepared(&raw, job.settings.preprocessing);
     drop(raw);
+    flog!(
+        filelog::APP,
+        "Prepared the recording in {:.0}ms",
+        preparing.elapsed().as_secs_f64() * 1000.0
+    );
     if too_short(&audio) {
         return Ok(Outcome::TooShort);
     }
@@ -95,15 +106,18 @@ pub fn run(mut job: Job, services: &Services) -> Result<Outcome, TranscriptionEr
         started.elapsed().as_secs_f64() * 1000.0,
         recognised.text.chars().count()
     );
-    if recognised.text.trim().is_empty() {
+    let text = hallucination::without_phantoms(&recognised.text, &job.vocabulary);
+    let removed = (recognised.text.trim().chars().count()).saturating_sub(text.chars().count());
+    if removed > 0 {
+        flog!(
+            filelog::APP,
+            "Removed {removed} chars that Whisper wrote without speech"
+        );
+    }
+    if text.is_empty() {
         return Ok(Outcome::NoSpeech);
     }
-    Ok(finish(
-        &job,
-        services.api,
-        &recognised.text,
-        recognised.local_fallback,
-    ))
+    Ok(finish(&job, services.api, &text, recognised.local_fallback))
 }
 
 /// The one length check of the pipeline; no engine gets less than `MIN_SAMPLES`.
@@ -129,7 +143,7 @@ fn parakeet_on_raw_audio(job: &Job, raw: Arc<Vec<f32>>, services: &Services) -> 
                 started.elapsed().as_secs_f64() * 1000.0,
                 text.chars().count()
             );
-            Some(text)
+            Some(spelled(job, settings.local_model, text, services))
         }
         Ok(_) => {
             flog!(
@@ -222,12 +236,36 @@ fn transcribe_locally(
     audio: Vec<f32>,
     services: &Services,
 ) -> Result<String, TranscriptionError> {
-    services.local.transcribe(
+    let text = services.local.transcribe(
         audio,
         model,
         job.settings.language.code(),
         vocabulary::prompt(&job.vocabulary),
-    )
+    )?;
+    Ok(spelled(job, model, text, services))
+}
+
+/// Parakeet hears no vocabulary, so its text takes the terms' spelling afterwards; Whisper reads
+/// them as its prompt.
+fn spelled(job: &Job, model: LocalModel, text: String, services: &Services) -> String {
+    if model.family() != ModelFamily::Parakeet || job.vocabulary.is_empty() {
+        return text;
+    }
+    let spelled = spelling::with_vocabulary(
+        &text,
+        &job.vocabulary,
+        job.settings.language.code(),
+        services.lexicon,
+    );
+    if spelled != text {
+        flog!(
+            filelog::APP,
+            "Spelled vocabulary terms in Parakeet's text ({} → {} chars)",
+            text.chars().count(),
+            spelled.chars().count()
+        );
+    }
+    spelled
 }
 
 /// The recording as uploaded: AAC, or WAV where the system encoder fails.
@@ -239,12 +277,20 @@ struct Encoded {
 
 impl Encoded {
     fn new(samples: &[f32]) -> Self {
+        let started = Instant::now();
         match aac::compress_to_m4a(samples, SAMPLE_RATE) {
-            Ok(data) => Self {
-                data,
-                file_name: "audio.m4a",
-                mime_type: "audio/mp4",
-            },
+            Ok(data) => {
+                flog!(
+                    filelog::AUDIO,
+                    "Encoded AAC in {:.0}ms",
+                    started.elapsed().as_secs_f64() * 1000.0
+                );
+                Self {
+                    data,
+                    file_name: "audio.m4a",
+                    mime_type: "audio/mp4",
+                }
+            }
             Err(error) => {
                 flog!(filelog::AUDIO, "AAC compression failed: {error:#}");
                 let data = wav::encode(samples, SAMPLE_RATE);
@@ -273,6 +319,7 @@ impl Encoded {
 
 fn finish(job: &Job, api: Api, text: &str, local_fallback: Option<TranscriptionError>) -> Outcome {
     let settings = job.settings;
+    let started = Instant::now();
     let processed = postprocess::process(
         api,
         text,
@@ -281,6 +328,13 @@ fn finish(job: &Job, api: Api, text: &str, local_fallback: Option<TranscriptionE
         &job.active_app,
         &job.vocabulary,
     );
+    if processed.status != postprocess::Status::Skipped {
+        flog!(
+            filelog::APP,
+            "Post-processing took {:.0}ms",
+            started.elapsed().as_secs_f64() * 1000.0
+        );
+    }
     Outcome::Text(Transcript {
         text: without_trailing_line_breaks(processed.text),
         local_fallback,

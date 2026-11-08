@@ -128,7 +128,7 @@ Problem…** in Lowspeak's menu: the form opens with your version filled in. If 
   recording on your Mac.
 - **In your language.** Dictation works in dozens of languages, and the menu, dialogs and notifications come in 35.
 - **Your words, spelled right.** A vocabulary of names and technical terms guides OpenAI, Groq, Whisper and
-  post-processing.
+  post-processing, and corrects how Parakeet spells them.
 - **Clean text if you want it.** Optional post-processing removes filler words, fixes grammar and keeps only your
   correction when you correct yourself, or also formats the text for the kind of app you dictate into.
 - **Your clipboard stays yours.** Lowspeak pastes through the clipboard and puts back what was on it a moment later. The
@@ -219,6 +219,7 @@ Click the ring in the menu bar:
 | Item | What it does |
 |---|---|
 | **Recent Dictations** | the last ten texts; a click copies one to the clipboard again |
+| **Retry Failed Dictation** | transcribes the last failed dictation again, with the model chosen now; shown only after a failure |
 | **Local** | the models on your Mac, grouped into Whisper and Parakeet; those not downloaded are greyed out |
 | **OpenAI**, **Groq** | the online models; without a key they are greyed out and the menu offers **Set API Key…** |
 | **Language** | the language you dictate in, or **Auto-Detect**; the menu follows it |
@@ -284,6 +285,9 @@ Lowspeak pastes the text into the app that was in front when you stopped speakin
 and ⌘V. It saves everything that was on the clipboard before and puts it back half a second after the app has read the
 text, or after ten seconds if it never does, unless another app changed the clipboard in between. The text is marked as
 transient, so clipboard history apps that respect the marker do not record it.
+
+If another app has come to the front by the time the text is ready, Lowspeak does not paste it there: the text stays on
+the clipboard, and a notification says so. Paste it with ⌘V where it belongs.
 
 You can start the next dictation while the last one is still being transcribed. The texts are pasted in the order you
 spoke them, and never while you are recording or holding Shift, so a paste cannot land in the middle of your next
@@ -363,7 +367,12 @@ it comes again only after an online dictation has succeeded in between.
 
 With a local model to fall back on, Lowspeak gives the online request 20 seconds; without one, it tries three times for
 up to a minute each. In online mode, Lowspeak prepares the fallback Parakeet model once at launch, so the first fallback
-does not wait for it.
+does not wait for it. A busy provider that asks for a pause gets it, up to ten seconds; one that asks for longer, or
+reports that your account has no credit left, is not asked again.
+
+A dictation that fails all the same is not lost: Lowspeak keeps its recording in memory, and **Retry Failed Dictation**
+in the menu transcribes it again, for example once the network is back or after you chose another model. Only the
+latest failed recording is kept, and none after Lowspeak quits.
 
 ### How the recording is prepared
 
@@ -371,6 +380,10 @@ Lowspeak records at your microphone's own rate and converts to the 16 kHz the mo
 transcription it removes low rumble below 80 Hz, trims silence at the start and end, and evens out the volume, so quiet
 and loud speakers come out alike. A recording without speech is not sent at all. In local mode, Parakeet first gets the
 untouched recording and the prepared one only if that yields no text.
+
+Whisper sometimes writes text that nobody said into silence and noise, such as the credits of subtitled videos or the
+vocabulary it was given. Lowspeak drops the passages Whisper itself marks as silence and removes such text before
+pasting.
 
 ### Languages per model
 
@@ -402,7 +415,10 @@ technical terms. Up to 100 terms of up to 60 characters each; `<` and `>` are re
 - **GPT Transcribe** receives them as keywords.
 - **Whisper** (OpenAI, Groq and on your Mac) reads them as a hint before the recording, up to 500 characters.
 - **Post-processing** is told to spell them exactly as written.
-- **Parakeet** does not use them.
+- **Parakeet** does not hear them. Lowspeak puts their spelling into its text where it wrote something very close:
+  "Träfig" or "Trafik" becomes Traefik, "Los Peak" becomes Lowspeak. Terms shorter than five letters, words in addresses
+  and file names, and forms with an ending such as "Lowspeaks" stay as written. To tell a misspelling from a real word,
+  Lowspeak asks the macOS spell checker, on your Mac.
 
 ## Post-processing
 
@@ -452,7 +468,8 @@ Lowspeak works in the background, so it reports problems as notifications:
 | **Microphone Silent** | five seconds of silence, see [Microphone](#microphone) |
 | **Accessibility Permission Required** | the text is on the clipboard; allow Accessibility to paste automatically |
 | **Paste Failed** | the text is on the clipboard; paste it with ⌘V |
-| **Transcription Failed** | with the reason: no key, rejected key, rate limit, server or network error, or no local model |
+| **Transcription Failed** | with the reason: no key, rejected key, no credit left, rate limit, server or network error, or no local model; the recording is kept for **Retry Failed Dictation** |
+| **Dictation Not Pasted** | another app came to the front before the text was ready; the text is on the clipboard |
 | **Transcribed on This Mac** | the online service failed and a local model took over |
 | **Post-Processing Failed** | the provider refuses post-processing or no key is set; the text was pasted without it |
 | **No API Key** | you chose an online model without a key for its provider |
@@ -520,7 +537,8 @@ can with them.
 - **API keys** stay in your login keychain. They are sent only to their own provider and removed from error messages
   before anything is written to the log.
 - **Dictated text is not stored.** The last ten dictations stay in memory for **Recent Dictations** and are gone when
-  Lowspeak quits. The log files record lengths and timings, never the text.
+  Lowspeak quits; so does the recording of the latest failed dictation, kept for **Retry Failed Dictation**. The log
+  files record lengths and timings, never the text.
 - **The clipboard** is saved before pasting and restored once the app has read the text, unless another app changed it
   in between. The dictation is marked as transient, so clipboard history apps that respect the marker skip it.
 - **Code signing** with the Hardened Runtime; the app asks only for the microphone, Accessibility, notifications and the
@@ -546,7 +564,8 @@ Measured on Apple Silicon:
 - **What you say before the microphone is ready is lost.** Wait for the recording icon, especially with AirPods.
 - **The fn key can be taken by others.** When macOS's 🌐 key setting, Warp or macOS Dictation claim fn first, Lowspeak
   does not see it; see [Troubleshooting](#troubleshooting).
-- **Parakeet** ignores the vocabulary and the language choice, and knows only European languages.
+- **Parakeet** ignores the language choice and knows only European languages. The vocabulary only corrects its
+  spelling afterwards: a term it heard as a quite different word stays wrong.
 - **Script and variant:** only GPT Transcribe can be told to write Traditional Chinese; no model can be told to write
   European rather than Brazilian Portuguese.
 - **Time limits:** two minutes while fn is held, five minutes when locked.

@@ -113,7 +113,7 @@ Lowspeak snakker 35 språk. Den lærer navnene og begrepene du bruker, kan fjern
 - **Privat.** Ingen konto, ingen telemetri. Lyden går bare til leverandøren du har valgt, eller ingen steder i det hele tatt i lokal modus.
 - **Ingen diktering går tapt.** Hvis nettverket eller nettjenesten svikter, transkriberer en installert lokal modell det samme opptaket på Macen din.
 - **På ditt språk.** Diktering fungerer på dusinvis av språk, og menyen, dialogrutene og varslingene finnes på 35.
-- **Ordene dine, riktig stavet.** En ordliste med navn og faguttrykk styrer OpenAI, Groq, Whisper og etterbehandlingen.
+- **Ordene dine, riktig stavet.** En ordliste med navn og faguttrykk styrer OpenAI, Groq, Whisper og etterbehandlingen, og retter hvordan Parakeet staver dem.
 - **Ryddig tekst hvis du vil.** Valgfri etterbehandling fjerner fyllord, retter grammatikken og beholder bare rettelsen når du retter deg selv, eller formaterer i tillegg teksten etter hva slags app du dikterer i.
 - **Utklippstavlen forblir din.** Lowspeak limer inn via utklippstavlen og legger tilbake det som lå der, et øyeblikk senere. De ti siste dikteringene blir liggende i menyen, så du kan kopiere dem igjen.
 - **Hold inne fn, snakk, slipp.** Teksten skrives inn i appen som ligger foran, der markøren står: e-post, chat, redigeringsprogram, terminal eller nettleser. Ingen vinduer å bytte til, ingen knapp å klikke på.
@@ -177,6 +177,7 @@ Klikk på ringen i menylinjen:
 | Valg | Hva det gjør |
 |---|---|
 | **Nylige dikteringer** | de ti siste tekstene; et klikk kopierer en av dem til utklippstavlen igjen |
+| **Prøv mislykket diktering på nytt** | transkriberer den siste mislykkede dikteringen på nytt med modellen som er valgt nå; vises bare etter en feil |
 | **Lokalt** | modellene på Macen din, gruppert i Whisper og Parakeet; de som ikke er lastet ned, er nedtonet |
 | **OpenAI**, **Groq** | nettmodellene; uten nøkkel er de nedtonet, og menyen tilbyr **Angi API-nøkkel…** |
 | **Språk** | språket du dikterer på, eller **Gjenkjenn automatisk**; menyen følger det |
@@ -231,6 +232,8 @@ Et opptak stopper av seg selv etter to minutter mens fn holdes inne, og etter fe
 ### Hvor teksten havner
 
 Lowspeak limer inn teksten i appen som lå foran da du sluttet å snakke, der markøren står, via utklippstavlen og ⌘V. Appen lagrer alt som lå på utklippstavlen fra før, og legger det tilbake et halvt sekund etter at appen som mottar teksten, har lest den, eller etter ti sekunder hvis det aldri skjer, med mindre en annen app har endret utklippstavlen i mellomtiden. Teksten er merket som midlertidig, så apper for utklippshistorikk som respekterer merket, ikke registrerer den.
+
+Har en annen app kommet i forgrunnen når teksten er klar, limer Lowspeak den ikke inn der: teksten blir liggende på utklippstavlen, og en varsling sier fra. Lim den inn med ⌘V der den hører hjemme.
 
 Du kan starte neste diktering mens den forrige fortsatt transkriberes. Tekstene limes inn i den rekkefølgen du sa dem, og aldri mens du tar opp eller holder inne Shift, så en innliming kan ikke havne midt i neste setning.
 
@@ -288,11 +291,15 @@ Opptaket komprimeres til AAC før opplastingen, rundt 6 KB per sekund tale, så 
 
 Hvis en transkribering på nett mislykkes, fordi nettverket er nede, leverandøren har et problem eller nøkkelen er feil, transkriberer en installert lokal modell det samme opptaket: den som er valgt under **Lokalt**, ellers Parakeet Ultra, deretter Whisper Large v3 Turbo, Large v3 og de mindre Whisper-modellene, med Parakeet v2 sist. En varsling sier fra én gang; den kommer først igjen når en diktering på nett har lyktes i mellomtiden.
 
-Med en lokal modell å falle tilbake på gir Lowspeak forespørselen på nett 20 sekunder; uten en slik modell prøver appen tre ganger med opptil ett minutt hver. I nettmodus klargjør Lowspeak reservemodellen Parakeet én gang ved oppstart, så den første reservetranskriberingen ikke må vente på den.
+Med en lokal modell å falle tilbake på gir Lowspeak forespørselen på nett 20 sekunder; uten en slik modell prøver appen tre ganger med opptil ett minutt hver. I nettmodus klargjør Lowspeak reservemodellen Parakeet én gang ved oppstart, så den første reservetranskriberingen ikke må vente på den. En overbelastet leverandør som ber om en pause, får den, opptil ti sekunder; en som ber om lengre tid eller melder at kontoen din ikke har mer kreditt, får ingen ny forespørsel.
+
+En diktering som likevel mislykkes, går ikke tapt: Lowspeak holder på opptaket i minnet, og **Prøv mislykket diktering på nytt** i menyen transkriberer det på nytt, for eksempel når nettverket er tilbake, eller etter at du har valgt en annen modell. Bare det siste mislykkede opptaket tas vare på, og det forsvinner når Lowspeak avsluttes.
 
 ### Slik klargjøres opptaket
 
 Lowspeak tar opp med mikrofonens egen samplingsfrekvens og konverterer til de 16 kHz som modellene forventer, når du stopper. Før transkriberingen fjerner appen lavfrekvent rumling under 80 Hz, klipper bort stillhet i begynnelsen og slutten og jevner ut volumet, så stille og høylytte talere kommer ut likt. Et opptak uten tale sendes ikke i det hele tatt. I lokal modus får Parakeet først det ubehandlede opptaket, og det klargjorte bare hvis det første ikke gir noen tekst.
+
+Whisper skriver noen ganger tekst som ingen har sagt, når det er stillhet eller støy, for eksempel krediteringer fra videoer med undertekster eller ordlisten den har fått. Lowspeak forkaster passasjene som Whisper selv markerer som stillhet, og fjerner slik tekst før den limes inn.
 
 ### Språk per modell
 
@@ -317,7 +324,7 @@ Lowspeak er en universell app og kjører også på Mac-maskiner med Intel og mac
 - **GPT Transcribe** får dem som nøkkelord.
 - **Whisper** (OpenAI, Groq og på Macen din) leser dem som et hint før opptaket, opptil 500 tegn.
 - **Etterbehandlingen** får beskjed om å stave dem nøyaktig slik de er skrevet.
-- **Parakeet** bruker dem ikke.
+- **Parakeet** hører dem ikke. Der modellen har skrevet noe svært likt, setter Lowspeak inn stavemåten deres i teksten: «Träfig» eller «Trafik» blir til Traefik, «Los Peak» blir til Lowspeak. Begreper på under fem bokstaver, ord i adresser og filnavn og former med endelse, som «Lowspeaks», blir stående slik de er skrevet. For å skille en stavefeil fra et ekte ord spør Lowspeak stavekontrollen i macOS, lokalt på Macen din.
 
 ## Etterbehandling
 
@@ -353,7 +360,8 @@ Lowspeak jobber i bakgrunnen, så appen melder problemer som varslinger:
 | **Ingen lyd fra mikrofonen** | fem sekunder med stillhet, se [Mikrofon](#mikrofon) |
 | **Tillatelse for tilgjengelighet kreves** | teksten ligger på utklippstavlen; tillat Tilgjengelighet for å lime inn automatisk |
 | **Innliming mislyktes** | teksten ligger på utklippstavlen; lim den inn med ⌘V |
-| **Transkriberingen mislyktes** | med årsaken: ingen nøkkel, avvist nøkkel, grensen for antall forespørsler, server- eller nettverksfeil, eller ingen lokal modell |
+| **Transkriberingen mislyktes** | med årsaken: ingen nøkkel, avvist nøkkel, ingen kreditt igjen, grensen for antall forespørsler, server- eller nettverksfeil, eller ingen lokal modell; opptaket tas vare på for **Prøv mislykket diktering på nytt** |
+| **Dikteringen ble ikke limt inn** | en annen app kom i forgrunnen før teksten var klar; teksten ligger på utklippstavlen |
 | **Transkribert på denne Macen** | nettjenesten sviktet, og en lokal modell tok over |
 | **Etterbehandlingen mislyktes** | leverandøren avviser etterbehandlingen eller ingen nøkkel er angitt; teksten ble limt inn uten |
 | **Ingen API-nøkkel** | du valgte en nettmodell uten nøkkel for leverandøren dens |
@@ -400,7 +408,7 @@ Lowspeak hører hva du sier mens fn holdes inne, kan skrive i hvilken som helst 
 - **Etterbehandling**, hvis du slår den på, sender den transkriberte teksten og ordlisten din til Groq eller OpenAI. I modusen Formater sendes også hva slags app du dikterer i (kodeeditor, terminal, chat eller e-post); navnet på appen sendes ikke.
 - **Ingen telemetri, ingen konto.** Bortsett fra transkribering og etterbehandling går Lowspeak bare på nett for å åpne forbindelsen til leverandøren din mens fn holdes inne, i nettmodus eller med etterbehandling slått på, for å laste ned en modell når du ber om det, fra Hugging Face over HTTPS, i en fast versjon og med hver fil kontrollert mot sjekksummen sin, og for å søke etter en ny versjon på GitHub, én gang om dagen hvis du tillater det. Den forespørselen inneholder versjonen av Lowspeak og ingenting annet. **Hjelp › Rapporter et problem…** åpner et skjema på GitHub i nettleseren; adressen inneholder versjonen av Lowspeak og macOS, ingenting av det du har diktert.
 - **API-nøkler** blir liggende på påloggingsnøkkelringen din. De sendes bare til sin egen leverandør og fjernes fra feilmeldinger før noe skrives til loggen.
-- **Diktert tekst lagres ikke.** De ti siste dikteringene ligger i minnet for **Nylige dikteringer** og forsvinner når Lowspeak avsluttes. Loggfilene registrerer lengder og tider, aldri teksten.
+- **Diktert tekst lagres ikke.** De ti siste dikteringene ligger i minnet for **Nylige dikteringer** og forsvinner når Lowspeak avsluttes; det samme gjør opptaket av den siste mislykkede dikteringen, som tas vare på for **Prøv mislykket diktering på nytt**. Loggfilene registrerer lengder og tider, aldri teksten.
 - **Utklippstavlen** lagres før innlimingen og gjenopprettes så snart appen som mottar teksten, har lest den, med mindre en annen app har endret utklippstavlen i mellomtiden. Dikteringen er merket som midlertidig, så apper for utklippshistorikk som respekterer merket, hopper over den.
 - **Kodesignering** med Hardened Runtime; appen ber bare om tilgang til mikrofonen, Tilgjengelighet, varslinger og nettverket. En oppdatering må ha utviklerens signatur, ellers avviser Sparkle den.
 
@@ -420,7 +428,7 @@ Målt på Apple Silicon:
 - **Lokale modeller på Mac-maskiner med Intel** kjører på prosessoren og er mye langsommere; der er transkribering på nett det beste valget.
 - **Det du sier før mikrofonen er klar, går tapt.** Vent på opptakssymbolet, særlig med AirPods.
 - **fn-tasten kan bli tatt av andre.** Når innstillingen for 🌐-tasten i macOS, Warp eller diktering i macOS tar fn først, ser ikke Lowspeak den; se [Feilsøking](#feilsøking).
-- **Parakeet** ignorerer ordlisten og språkvalget, og kan bare europeiske språk.
+- **Parakeet** ignorerer språkvalget og kan bare europeiske språk. Ordlisten retter bare stavemåten dens i etterkant: et begrep modellen hørte som et helt annet ord, forblir feil.
 - **Skriftsystem og variant:** bare GPT Transcribe kan få beskjed om å skrive tradisjonell kinesisk; ingen modell kan få beskjed om å skrive europeisk i stedet for brasiliansk portugisisk.
 - **Tidsgrenser:** to minutter mens fn holdes inne, fem minutter når opptaket er låst.
 - **Mikrofonmodus:** Kontrollsenter tilbyr Stemmeisolasjon og Bredt spektrum for Lowspeak under **Mikrofon** og viser dem som aktive, men Lowspeak tar opp uten stemmebehandling, så valget har ingen virkning.

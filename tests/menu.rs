@@ -154,6 +154,7 @@ fn main() {
             "Kurz.".into(),
             "Ein sehr langes Diktat, das im Menü auf eine Zeile gekürzt wird,\nmit Umbruch.".into(),
         ],
+        can_retry: false,
         vocabulary_terms: 3,
         login_item: true,
         updates: None,
@@ -321,6 +322,20 @@ fn main() {
     let count = root.numberOfItems();
     ui.rebuild(&root, &state);
     assert_eq!(root.numberOfItems(), count);
+
+    // After a failed dictation, its recording can be transcribed again.
+    ui.rebuild(
+        &root,
+        &Snapshot {
+            can_retry: true,
+            ..state.clone()
+        },
+    );
+    assert_eq!(
+        &titles(&root)[..3],
+        ["Recent Dictations", "Retry Failed Dictation", ""]
+    );
+    assert!(find(&root, "Retry Failed Dictation").isEnabled());
 
     let empty = Snapshot {
         recent: Vec::new(),

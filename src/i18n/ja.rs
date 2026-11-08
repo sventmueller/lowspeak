@@ -3,6 +3,7 @@ use super::Texts;
 pub static JA: Texts = Texts {
     recent_dictations: "最近の音声入力",
     none_yet: "まだありません",
+    retry_failed_dictation: "失敗した音声入力を再試行",
     local: "ローカル",
     not_installed: |model| format!("{model} (未インストール)"),
     no_key: |provider| format!("{provider} (キーなし)"),
@@ -64,7 +65,7 @@ pub static JA: Texts = Texts {
     unknown_key_format: "不明なキー形式",
     unknown_key_format_info: "sk-（OpenAI）またはgsk_（Groq）で始まるキーが必要です。もう一度お試しください。",
     vocabulary_title: "用語集",
-    vocabulary_info: "正確に表記したい名前や専門用語をカンマで区切って入力します。OpenAI、Groq、このMacのWhisper、および後処理で使用されます。",
+    vocabulary_info: "正確に表記したい名前や専門用語をカンマで区切って入力します。OpenAI、Groq、このMacのWhisperとParakeet、および後処理で使用されます。",
 
     recording_failed: "録音に失敗しました",
     microphone_silent: "マイクが無音です",
@@ -78,6 +79,11 @@ pub static JA: Texts = Texts {
     accessibility_list: "アクセシビリティ",
     device_control_list: "デバイスの制御とデータへのアクセス",
     transcription_failed: "文字起こしに失敗しました",
+    retry_failed_dictation_info: |menu_item| {
+        format!(
+            "録音は保持されています。もう一度文字起こしするには、メニューの「{menu_item}」を選択してください。"
+        )
+    },
     transcribed_locally: "このMacで文字起こししました",
     transcribed_locally_info: |reason| {
         format!("{reason}代わりにローカルモデルで文字起こししました。")
@@ -127,6 +133,11 @@ pub static JA: Texts = Texts {
     },
     network_error: |message| format!("ネットワークエラー：{message}"),
     key_rejected: |provider| format!("{provider}がAPIキーを拒否しました。"),
+    quota_exhausted: |provider| {
+        format!(
+            "{provider}によると、アカウントのクレジットが残っていません。{provider}のアカウントでクレジットを追加してください。"
+        )
+    },
     model_retired: |provider| format!("{provider}は後処理用モデルの提供を終了しました。"),
     no_post_processing_key: |first, second| {
         format!(
@@ -144,6 +155,8 @@ pub static JA: Texts = Texts {
     microphone_error: |detail| format!("マイクを開始できませんでした：{detail}"),
     paste_failed: "ペーストに失敗しました",
     paste_failed_info: "テキストはクリップボードにあります。⌘Vでペーストしてください。",
+    not_pasted: "音声入力をペーストしませんでした",
+    not_pasted_info: "テキストの準備ができる前に別のアプリが前面に来ました。テキストはクリップボードにあります。⌘Vでペーストしてください。",
     request_timed_out: "リクエストがタイムアウトしました。",
     audio_failed: "録音を処理できませんでした。",
     local_model_failed: "ローカルモデルで録音を文字起こしできませんでした。",

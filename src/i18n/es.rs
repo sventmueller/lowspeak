@@ -3,6 +3,7 @@ use super::Texts;
 pub static ES: Texts = Texts {
     recent_dictations: "Dictados recientes",
     none_yet: "Ninguno todavía",
+    retry_failed_dictation: "Reintentar el dictado fallido",
     local: "Local",
     not_installed: |model| format!("{model} (no instalado)"),
     no_key: |provider| format!("{provider} (sin clave)"),
@@ -68,7 +69,7 @@ pub static ES: Texts = Texts {
     unknown_key_format: "Formato de clave desconocido",
     unknown_key_format_info: "La clave debe empezar por sk- (OpenAI) o gsk_ (Groq). Inténtalo de nuevo.",
     vocabulary_title: "Vocabulario",
-    vocabulary_info: "Nombres y términos técnicos que deben escribirse tal cual, separados por comas. Los usan OpenAI, Groq, Whisper en este Mac y el posprocesado.",
+    vocabulary_info: "Nombres y términos técnicos que deben escribirse tal cual, separados por comas. Los usan OpenAI, Groq, Whisper y Parakeet en este Mac y el posprocesado.",
 
     recording_failed: "Error de grabación",
     microphone_silent: "Micrófono sin señal",
@@ -82,6 +83,11 @@ pub static ES: Texts = Texts {
     accessibility_list: "Accesibilidad",
     device_control_list: "Control de dispositivos y acceso a datos",
     transcription_failed: "Error de transcripción",
+    retry_failed_dictation_info: |menu_item| {
+        format!(
+            "La grabación se conserva: elige “{menu_item}” en el menú para transcribirla de nuevo."
+        )
+    },
     transcribed_locally: "Transcrito en este Mac",
     transcribed_locally_info: |reason| {
         format!("{reason} Ha transcrito un modelo local en su lugar.")
@@ -133,6 +139,11 @@ pub static ES: Texts = Texts {
     },
     network_error: |message| format!("Error de red: {message}"),
     key_rejected: |provider| format!("{provider} ha rechazado la clave de API."),
+    quota_exhausted: |provider| {
+        format!(
+            "{provider} indica que la cuenta no tiene saldo. Añade saldo en tu cuenta de {provider}."
+        )
+    },
     model_retired: |provider| format!("{provider} ya no ofrece el modelo de posprocesado."),
     no_post_processing_key: |first, second| {
         format!(
@@ -150,6 +161,8 @@ pub static ES: Texts = Texts {
     microphone_error: |detail| format!("No se ha podido iniciar el micrófono: {detail}"),
     paste_failed: "Error al pegar",
     paste_failed_info: "El texto está en el portapapeles. Pégalo con ⌘V.",
+    not_pasted: "Dictado no pegado",
+    not_pasted_info: "Otra app pasó al primer plano antes de que el texto estuviera listo. El texto está en el portapapeles. Pégalo con ⌘V.",
     request_timed_out: "Se ha agotado el tiempo de espera de la solicitud.",
     audio_failed: "No se ha podido procesar la grabación.",
     local_model_failed: "El modelo local no ha podido transcribir la grabación.",

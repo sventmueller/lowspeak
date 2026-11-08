@@ -14,6 +14,7 @@ fn counted(count: usize, [one, two, few, many, other]: [&str; 5]) -> String {
 pub static AR: Texts = Texts {
     recent_dictations: "الإملاءات الأخيرة",
     none_yet: "لا شيء بعد",
+    retry_failed_dictation: "إعادة نسخ الإملاء الذي فشل",
     local: "محلي",
     not_installed: |model| format!("{model} (غير مثبت)"),
     no_key: |provider| format!("{provider} (بلا مفتاح)"),
@@ -78,7 +79,7 @@ pub static AR: Texts = Texts {
     unknown_key_format: "تنسيق مفتاح غير معروف",
     unknown_key_format_info: "يجب أن يبدأ المفتاح بـ sk- (OpenAI) أو gsk_ (Groq). حاول مرة أخرى.",
     vocabulary_title: "المفردات",
-    vocabulary_info: "أسماء ومصطلحات تقنية تُكتب كما هي تمامًا، مفصولة بفواصل. يستخدمها OpenAI وGroq وWhisper على جهاز Mac هذا والمعالجة اللاحقة.",
+    vocabulary_info: "أسماء ومصطلحات تقنية تُكتب كما هي تمامًا، مفصولة بفواصل. يستخدمها OpenAI وGroq وWhisper وParakeet على جهاز Mac هذا والمعالجة اللاحقة.",
 
     recording_failed: "فشل التسجيل",
     microphone_silent: "الميكروفون صامت",
@@ -92,6 +93,9 @@ pub static AR: Texts = Texts {
     accessibility_list: "تسهيلات الاستخدام",
     device_control_list: "التحكم في الأجهزة والوصول إلى البيانات",
     transcription_failed: "فشل النسخ",
+    retry_failed_dictation_info: |menu_item| {
+        format!("تم الاحتفاظ بالتسجيل: اختر \"{menu_item}\" في القائمة لنسخه مرة أخرى.")
+    },
     transcribed_locally: "تم النسخ على جهاز Mac هذا",
     transcribed_locally_info: |reason| format!("{reason} تولّى نموذج محلي النسخ بدلًا من ذلك."),
     post_processing_failed: "فشلت المعالجة اللاحقة",
@@ -129,6 +133,11 @@ pub static AR: Texts = Texts {
     model_not_available: |menu_item| format!("النموذج المحلي غير متوفر. نزّله عبر \"{menu_item}\"."),
     network_error: |message| format!("خطأ في الشبكة: {message}"),
     key_rejected: |provider| format!("رفضت خدمة {provider} مفتاح API."),
+    quota_exhausted: |provider| {
+        format!(
+            "تفيد خدمة {provider} بأن الحساب لم يعد فيه رصيد. أضف رصيدًا إلى حسابك في {provider}."
+        )
+    },
     model_retired: |provider| format!("لم تعد خدمة {provider} توفر نموذج المعالجة اللاحقة."),
     no_post_processing_key: |first, second| {
         format!("تحتاج المعالجة اللاحقة إلى مفتاح API من {first} أو {second}. عيّنه من شريط القوائم.")
@@ -144,6 +153,8 @@ pub static AR: Texts = Texts {
     microphone_error: |detail| format!("تعذر تشغيل الميكروفون: {detail}"),
     paste_failed: "فشل اللصق",
     paste_failed_info: "النص موجود في الحافظة. الصقه باستخدام \u{200E}⌘V.",
+    not_pasted: "لم يتم لصق الإملاء",
+    not_pasted_info: "انتقل تطبيق آخر إلى المقدمة قبل أن يصبح النص جاهزًا. النص موجود في الحافظة. الصقه باستخدام \u{200E}⌘V.",
     request_timed_out: "انتهت مهلة الطلب.",
     audio_failed: "تعذرت معالجة التسجيل.",
     local_model_failed: "تعذر على النموذج المحلي نسخ التسجيل.",

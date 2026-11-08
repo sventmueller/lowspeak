@@ -3,6 +3,7 @@ use super::Texts;
 pub static ZH: Texts = Texts {
     recent_dictations: "最近的听写",
     none_yet: "暂无",
+    retry_failed_dictation: "重试失败的听写",
     local: "本地",
     not_installed: |model| format!("{model} (未安装)"),
     no_key: |provider| format!("{provider} (无密钥)"),
@@ -64,7 +65,7 @@ pub static ZH: Texts = Texts {
     unknown_key_format: "未知的密钥格式",
     unknown_key_format_info: "密钥应以 sk-（OpenAI）或 gsk_（Groq）开头。请重试。",
     vocabulary_title: "词汇表",
-    vocabulary_info: "需要准确拼写的名称和专业术语，用逗号分隔。OpenAI、Groq、这台 Mac 上的 Whisper 以及后处理都会使用它们。",
+    vocabulary_info: "需要准确拼写的名称和专业术语，用逗号分隔。OpenAI、Groq、这台 Mac 上的 Whisper 和 Parakeet 以及后处理都会使用它们。",
 
     recording_failed: "录音失败",
     microphone_silent: "麦克风无声",
@@ -78,6 +79,9 @@ pub static ZH: Texts = Texts {
     accessibility_list: "辅助功能",
     device_control_list: "设备控制和数据访问",
     transcription_failed: "转写失败",
+    retry_failed_dictation_info: |menu_item| {
+        format!("录音已保留：请选择菜单中的“{menu_item}”重新转写。")
+    },
     transcribed_locally: "已在这台 Mac 上转写",
     transcribed_locally_info: |reason| format!("{reason}已改用本地模型转写。"),
     post_processing_failed: "后处理失败",
@@ -109,6 +113,9 @@ pub static ZH: Texts = Texts {
     model_not_available: |menu_item| format!("本地模型不可用。请通过“{menu_item}”下载。"),
     network_error: |message| format!("网络错误：{message}"),
     key_rejected: |provider| format!("{provider} 拒绝了 API 密钥。"),
+    quota_exhausted: |provider| {
+        format!("{provider} 报告该账户已没有余额。请在你的 {provider} 账户中充值。")
+    },
     model_retired: |provider| format!("{provider} 已不再提供后处理模型。"),
     no_post_processing_key: |first, second| {
         format!("后处理需要 {first} 或 {second} 的 API 密钥。请通过菜单栏设置。")
@@ -122,6 +129,8 @@ pub static ZH: Texts = Texts {
     microphone_error: |detail| format!("无法启动麦克风：{detail}"),
     paste_failed: "粘贴失败",
     paste_failed_info: "文本已在剪贴板中。请按 ⌘V 粘贴。",
+    not_pasted: "听写未粘贴",
+    not_pasted_info: "文本准备好之前，另一个应用已切换到前台。文本已在剪贴板中。请按 ⌘V 粘贴。",
     request_timed_out: "请求超时。",
     audio_failed: "无法处理录音。",
     local_model_failed: "本地模型无法转写录音。",

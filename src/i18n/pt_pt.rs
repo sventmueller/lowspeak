@@ -3,6 +3,7 @@ use super::Texts;
 pub static PT_PT: Texts = Texts {
     recent_dictations: "Ditados recentes",
     none_yet: "Ainda nenhum",
+    retry_failed_dictation: "Tentar novamente o ditado falhado",
     local: "Local",
     not_installed: |model| format!("{model} (não instalado)"),
     no_key: |provider| format!("{provider} (sem chave)"),
@@ -68,7 +69,7 @@ pub static PT_PT: Texts = Texts {
     unknown_key_format: "Formato de chave desconhecido",
     unknown_key_format_info: "A chave deve começar por sk- (OpenAI) ou gsk_ (Groq). Volte a tentar.",
     vocabulary_title: "Vocabulário",
-    vocabulary_info: "Nomes e termos técnicos a escrever exatamente assim, separados por vírgulas. OpenAI, Groq, Whisper neste Mac e o pós-processamento utilizam-nos.",
+    vocabulary_info: "Nomes e termos técnicos a escrever exatamente assim, separados por vírgulas. OpenAI, Groq, Whisper e Parakeet neste Mac e o pós-processamento utilizam-nos.",
 
     recording_failed: "Falha na gravação",
     microphone_silent: "Microfone sem sinal",
@@ -82,6 +83,11 @@ pub static PT_PT: Texts = Texts {
     accessibility_list: "Acessibilidade",
     device_control_list: "Controlo do dispositivo e acesso a dados",
     transcription_failed: "Falha na transcrição",
+    retry_failed_dictation_info: |menu_item| {
+        format!(
+            "A gravação foi guardada: escolha “{menu_item}” no menu para a transcrever novamente."
+        )
+    },
     transcribed_locally: "Transcrito neste Mac",
     transcribed_locally_info: |reason| {
         format!("{reason} Em vez disso, a transcrição foi feita por um modelo local.")
@@ -133,6 +139,11 @@ pub static PT_PT: Texts = Texts {
     },
     network_error: |message| format!("Erro de rede: {message}"),
     key_rejected: |provider| format!("{provider} recusou a chave de API."),
+    quota_exhausted: |provider| {
+        format!(
+            "{provider} indica que a conta já não tem crédito. Adicione crédito na sua conta {provider}."
+        )
+    },
     model_retired: |provider| {
         format!("{provider} já não disponibiliza o modelo de pós-processamento.")
     },
@@ -152,6 +163,8 @@ pub static PT_PT: Texts = Texts {
     microphone_error: |detail| format!("Não foi possível iniciar o microfone: {detail}"),
     paste_failed: "Falha ao colar",
     paste_failed_info: "O texto está no clipboard. Cole-o com ⌘V.",
+    not_pasted: "Ditado não colado",
+    not_pasted_info: "Outra aplicação passou para a frente antes de o texto estar pronto. O texto está no clipboard. Cole-o com ⌘V.",
     request_timed_out: "O pedido excedeu o tempo limite.",
     audio_failed: "Não foi possível processar a gravação.",
     local_model_failed: "O modelo local não conseguiu transcrever a gravação.",

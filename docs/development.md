@@ -30,7 +30,7 @@ Xcode.
 | `src/hotkey.rs` | fn key detection via event tap |
 | `src/models.rs` | the settings enums and the model catalogue (`LocalModel::spec`); how a model runs and where it comes from is in `transcription/catalog.rs` |
 | `src/audio/` | `mod.rs` sample rate and minimum length; `recorder.rs` capture, `vad.rs` silence trimming, `preprocess.rs` resampling, HPF and normalisation, `aac.rs` M4A encoding, `mp4.rs` M4A padding removal, `wav.rs` |
-| `src/transcription/` | `service.rs` pipeline (`Services`), `mod.rs` `Api` (HTTP client, key store, cancellation, retry delay), `online.rs`, `postprocess.rs`, `local.rs` model thread (`LocalEngine`, `ModelLoader`), `whisper.rs`, `parakeet/` (CoreML port of FluidAudio), `catalog.rs` engine and pinned repository commit of each model, `model_store.rs` paths/download/delete (`ModelStore`, `Library`), `hf.rs` checked Hugging Face downloads (`Hub`), `error.rs`, `test_server.rs` local HTTP server for the download tests |
+| `src/transcription/` | `service.rs` pipeline (`Services`), `mod.rs` `Api` (HTTP client, key store, cancellation, retry delay), `online.rs`, `postprocess.rs`, `hallucination.rs` (text Whisper writes without speech), `local.rs` model thread (`LocalEngine`, `ModelLoader`), `whisper.rs`, `parakeet/` (CoreML port of FluidAudio), `catalog.rs` engine and pinned repository commit of each model, `model_store.rs` paths/download/delete (`ModelStore`, `Library`), `hf.rs` checked Hugging Face downloads (`Hub`), `error.rs`, `test_server.rs` local HTTP server for the download tests |
 | `src/config/` | `settings.rs` (NSUserDefaults), `vocabulary.rs` (terms to spell exactly), `api_keys.rs` (keychain), `login_item.rs` |
 | `src/i18n/` | `mod.rs` the `Texts` table and language choice; one file per language with menu, dialog, notification and error texts |
 | `src/paste.rs` | clipboard backup, the dictation handed out on request, simulated ⌘V, restore after the read |
@@ -57,6 +57,8 @@ Xcode.
 - `LocalTranscriber` owns the loaded model on one thread and handles preload/transcribe/unload in order. CoreML objects are not `Send`, which is why they stay on that thread. A panic in a command drops the loaded model and becomes an error; the thread keeps serving. `ModelLoader` is the seam its tests use
 - Each transcription runs on its own thread (`service::run`), then dispatches the result back for pasting. A panic there becomes an `Engine` error, so the queue below never stalls.
 - fn starts the next dictation while earlier ones are still transcribing. `policy::Dictations` hands the results over in recording order; pasting waits until no recording runs (no ⌘V while fn or Shift is held) and until the previous paste has restored the clipboard.
+- `App` notes the process in front when a recording stops (`Destination`) and hands it to the paste, which leaves the text on the clipboard when another app is in front by then (`Pasted::AppChanged`)
+- A failed dictation hands its 16 kHz recording back (`state::Recorded`, shared with the pipeline through an `Arc`, no copy); `State` keeps the latest one in memory, the menu offers Retry Failed Dictation, and the retry runs as a new dictation with the settings chosen then (`Transcription::audio`)
 - `service::run` reaches everything outside itself through `Services`: `LocalEngine` (the model thread), `ModelStore` (installed models), and `Api` with an `HttpClient` (the shared URLSession) and a `KeyStore` (the keychain). The app passes `Disk` and `Api::SYSTEM`; `tests/pipeline.rs` passes substitutes.
 
 ### Data flow
@@ -70,9 +72,10 @@ fn UP   → event tap thread → dispatch → App::fn_up → FnGesture (held: st
     → HPF → VAD trim → normalise → too short? skip
     → Online: AAC (WAV fallback) → OpenAI/Groq with the vocabulary; failure → installed local model
     → Local: LocalTranscriber (Whisper with the vocabulary as prompt, or Parakeet)
+    → without subtitle credits and an echoed vocabulary (hallucination.rs); nothing left → no speech
     → optional LLM post-processing with the vocabulary
-  → dispatch → Dictations queue (recording order; waits while a recording runs)
-  → paste (clipboard + ⌘V, restore once the app has read it, then the next one), keep in Recent Dictations, notices → status Idle once the queue is empty
+  → dispatch → Dictations queue (recording order; waits while a recording runs); a failure keeps the recording for Retry Failed Dictation
+  → paste (clipboard + ⌘V into the app in front at the stop, restore once the app has read it, then the next one), keep in Recent Dictations, notices → status Idle once the queue is empty
 ```
 
 ## Critical Implementation Details
@@ -141,6 +144,8 @@ fn UP   → event tap thread → dispatch → App::fn_up → FnGesture (held: st
 - API calls go through `NSURLSession.sharedSession`: it keeps connections alive between dictations and uses HTTP/3 (Groq/Cloudflare offer it). A fresh TLS connection per request cost ~1 s on a high-latency link
 - `url_session::post` enforces a total deadline (`recv_timeout`, then `cancel`) and returns a `RequestError` (`TimedOut`, also for URLSession's own `NSURLErrorTimedOut`; `Failed` with URLSession's localised description)
 - Retry waits end early when `Api::cancel` fires; `transcription::shutdown()` fires it for good when the app quits
+- A `Retry-After` header sets the wait before the next attempt; one longer than 10 s ends the retries, since nobody waits that long for a dictation (Groq sends it with 429, its daily limits ask for minutes)
+- OpenAI answers 429 for a rate limit and for an account without credit; the body (`insufficient_quota`, `credit_balance_exhausted`) tells them apart. No credit is `TranscriptionError::QuotaExhausted`, never retried, and a lasting `Rejection` for post-processing
 - fn down sends a `HEAD` to the provider (at most every 20 s) so the connection is open when the upload starts: first request after a pause 0.61 s → 0.42 s (median, Groq)
 - Microphone start-up (~0.5 s until the first samples on a Studio Display mic) is hardware-bound; `AVAudioEngine` is no faster
 - Sparkle, only in the disk image, reads the feed once a day after the user allowed it on the second launch, see Updates
@@ -151,12 +156,24 @@ fn UP   → event tap thread → dispatch → App::fn_up → FnGesture (held: st
 - In online mode the fallback Parakeet model is loaded and released at launch (`LocalTranscriber::prime`), so the ANE compilation does not hit the first fallback
 - One notification per failure streak; an online success re-arms it
 
+### Text without speech (`transcription/hallucination.rs`)
+- Whisper writes text into silence and noise: the credits of subtitled videos from its training data ("Untertitel im Auftrag des ZDF", "Amara.org") and, now and then, its prompt, here the vocabulary
+- Online Whisper (`whisper-1`, Groq) is asked for `verbose_json`; segments with `no_speech_prob` > 0.6 and `avg_logprob` < −1 are dropped, Whisper's own rule, which whisper.cpp applies to local Whisper itself. gpt-transcribe knows no `verbose_json`
+- Every transcript then loses the sentences that carry a known subtitle credit, and becomes empty if it is nothing but the start of the vocabulary in its order (two terms, or at least three of a longer list). Short thanks such as "Vielen Dank." stay: people dictate them
+- An emptied transcript counts as no speech; the log notes how many characters went, never which
+
 ### Vocabulary (`config/vocabulary.rs`)
 - Terms from Menu → Vocabulary, stored as a comma-separated string in the `vocabulary` default; at most 100 terms of 60 characters, `<`/`>` removed (OpenAI rejects them)
 - `gpt-transcribe`: one `keywords[]` field per term. It also takes `languages[]`, never `language` (OpenAI rejects both together)
 - Whisper (OpenAI `whisper-1`, Groq, whisper.cpp): the terms as `prompt`, cut at 500 characters (Whisper reads at most 224 prompt tokens); whisper.cpp gets them as tokens because `set_initial_prompt` leaks its string in whisper-rs 0.16
+- The prompt ends in a full stop (`vocabulary::prompt`). Whisper takes it for the text before the recording, and after a bare list it dropped one of two sentences that begin alike. Measured on Groq with twelve German and English dictations from `say`, each prepared and encoded as the app uploads it (114 words, five-term vocabularies): Large V3 8.8 % → 3.5 % word errors and 6 → 0 dropped words, Large V3 Turbo 10.5 % → 2.6 % and 7 → 0; without any vocabulary 4.4 % and 3.5 %. `whisper_keeps_repeated_sentences_with_the_vocabulary` (`tests/online.rs`) speaks two such dictations and expects both sentences
 - Post-processing: listed in the system prompt
-- Parakeet ignores it: FluidAudio's vocabulary boosting needs a separate English CTC model (~100 MB) and its own rescoring
+- Parakeet hears no vocabulary; `transcription/spelling.rs` gives its text the terms' spelling afterwards, in local mode, on the raw recording and as the fallback, before post-processing. FluidAudio's boosting would need a separate English CTC model (97.5 MB) that checks each term against the audio and about 4,000 lines of rescoring; without that acoustic check the rules are strict:
+  - a term counts from five letters; words are compared folded (lower case, ä as ae, letters and digits only), with a swap of neighbours as one edit
+  - one edit off a term is a misspelling if the word is no real word; for a term of seven letters or more that is no word itself (Traefik, Lowspeak), also if it is one ("Trafik", Austrian for a tobacconist), since Parakeet writes unknown names as real words. Two edits only from nine letters on, and only for non-words. Words split by a space or hyphen are joined back from seven letters on ("Los Peak")
+  - endings of up to two letters ("Lowspeaks") and words inside addresses, file names and identifiers (`com.lowspeak.app`) stay as written
+  - real words are what the macOS spell checker accepts in the dictation language, the macOS languages or English. Its own list of spelling languages holds every language set to "Automatic by Language", and those without a dictionary accept any word, so a language counts only if it rejects a nonsense word. The check runs on the main thread, since AppKit promises no more; without an answer within 0.5 s the word counts as real
+  - Measured on the twelve `say` dictations of the prompt measurement above and on the English and German README (about 12,000 words): "Träfig" and "Los Peak" are corrected, "traffic" stays (two edits, a real word); the user's own five-term vocabulary changed nothing in any of the texts, the test vocabulary only the casing of `lowspeak` inside addresses, which the identifier rule now leaves alone
 
 ### API keys
 - Generic passwords in the login keychain: service `com.lowspeak.app`, account = provider. Every build is signed with a stable identity (see Signing), so updates read them without asking; a test binary that reads them (`tests/online.rs`) makes macOS ask once per build
@@ -212,6 +229,7 @@ fn UP   → event tap thread → dispatch → App::fn_up → FnGesture (held: st
 - HTTP statuses are classified once (`error::StatusClass`) for transcription and post-processing alike
 - A 404 for the transcription model becomes `TranscriptionError::ModelRetired`, whose notification names the provider and the model; a missing post-processing key names both providers, since either works
 - Notifications show translated texts (`user_facing_description`, and fixed texts for download, deletion, key and login item failures), never raw API bodies, error chains or paths; the details go to the log
+- A failure whose recording is kept adds the hint to Retry Failed Dictation to its notification
 - A failed resampling (`TranscriptionError::Audio`) and a failed ⌘V (`Pasted::Failed`, text left on the clipboard) reach the user as notifications
 
 ### Settings
@@ -223,6 +241,7 @@ fn UP   → event tap thread → dispatch → App::fn_up → FnGesture (held: st
 - The dictation carries `org.nspasteboard.TransientType`, so clipboard history apps that follow nspasteboard.org skip it. One that ignores the marker and reads first starts the 500 ms early
 - Both ⌘V events are created before either is posted, so a failure cannot leave a pressed key behind
 - Without Accessibility permission, or when the ⌘V keystroke cannot be created, the text stays in the clipboard and a notification says so
+- The paste compares the process in front with the one in front when the recording stopped; another app means no ⌘V, the text stays on the clipboard and Dictation Not Pasted says so. Without a process at either end the paste goes ahead
 - A space follows every pasted dictation, so the next one does not run into it (`delivery::pasted`); not after Chinese or Japanese characters and punctuation, which take none between sentences. Thai and Korean do get one
 - Menu → Recent Dictations keeps the last 10 texts in memory only (gone on quit), without the space; a click copies one to the clipboard
 
@@ -361,7 +380,7 @@ cargo clippy --release --all-targets --workspace       # lint rules in Cargo.tom
 cargo test --release --test transcription -- --ignored # installed models; filter with `parakeet` or `whisper`
 cargo test --release --test recording -- --ignored     # the default microphone; the terminal needs microphone access
 cargo test --release --test downloads -- --ignored     # Hugging Face listing, Whisper tiny (75 MB) and Parakeet Ultra (630 MB) downloads
-cargo test --release --test online -- --ignored        # OpenAI and Groq requests with the stored keys, incl. vocabulary
+cargo test --release --test online -- --ignored        # OpenAI and Groq requests with the stored keys, incl. vocabulary and repeated sentences (speaks through `say`)
 cargo test --release --test fallback -- --ignored      # invalid key → local Parakeet Ultra takes over
 cargo run --release --example transcribe -- tests/fixtures/builtin.wav parakeet-ultra
 ```
@@ -379,6 +398,7 @@ Everything run through Cargo (tests, examples, `cargo run`) logs to `target/logs
 - `appstate.log` — recording/transcription flow, models, notifications
 - `audio.log` — devices, capture, compression
 - `crash.log` — fatal signals, panics, uncaught Objective-C exceptions; every launch writes "Crash reporter installed", and `appstate.log` notes crashes of the session before
+- Timestamps carry milliseconds, so the latency of each step can be read off the logs: `audio.log` "Microphone live … after the start" (fn down to the first sound), "Encoded AAC in …"; `appstate.log` per dictation "audio ready … after the recording stopped" (stop and resampling), "Prepared the recording in …", "transcribe took …" (encoding and the request, or the local model), "Post-processing took …", and "Dictation N pasted … after the recording stopped", which splits the whole wait into audio, transcription and waiting for the paste queue
 - macOS crash reports: `~/Library/Logs/DiagnosticReports/Lowspeak-*.ips`
 
 ### Common issues

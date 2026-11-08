@@ -13,6 +13,7 @@ fn plural(n: usize, one: &'static str, few: &'static str, many: &'static str) ->
 pub static PL: Texts = Texts {
     recent_dictations: "Ostatnio podyktowane",
     none_yet: "Na razie brak",
+    retry_failed_dictation: "Ponów nieudane dyktowanie",
     local: "Lokalnie",
     not_installed: |model| format!("{model} (nie zainstalowano)"),
     no_key: |provider| format!("{provider} (brak klucza)"),
@@ -77,7 +78,7 @@ pub static PL: Texts = Texts {
     unknown_key_format: "Nieznany format klucza",
     unknown_key_format_info: "Klucz powinien zaczynać się od sk- (OpenAI) lub gsk_ (Groq). Spróbuj ponownie.",
     vocabulary_title: "Słownictwo",
-    vocabulary_info: "Nazwy własne i terminy fachowe do zapisywania dokładnie w tej formie, rozdzielone przecinkami. Korzystają z nich OpenAI, Groq, Whisper na tym Macu i przetwarzanie końcowe.",
+    vocabulary_info: "Nazwy własne i terminy fachowe do zapisywania dokładnie w tej formie, rozdzielone przecinkami. Korzystają z nich OpenAI, Groq, Whisper i Parakeet na tym Macu oraz przetwarzanie końcowe.",
 
     recording_failed: "Nagrywanie nie powiodło się",
     microphone_silent: "Brak sygnału z mikrofonu",
@@ -91,6 +92,11 @@ pub static PL: Texts = Texts {
     accessibility_list: "Dostępność",
     device_control_list: "Sterowanie urządzeniami i dostęp do danych",
     transcription_failed: "Transkrypcja nie powiodła się",
+    retry_failed_dictation_info: |menu_item| {
+        format!(
+            "Nagranie zostało zachowane: wybierz w menu „{menu_item}”, aby ponownie je przepisać."
+        )
+    },
     transcribed_locally: "Transkrypcja wykonana na tym Macu",
     transcribed_locally_info: |reason| {
         format!("{reason} Zamiast tego transkrypcję wykonał model lokalny.")
@@ -134,6 +140,11 @@ pub static PL: Texts = Texts {
     },
     network_error: |message| format!("Błąd sieci: {message}"),
     key_rejected: |provider| format!("Usługa {provider} odrzuciła klucz API."),
+    quota_exhausted: |provider| {
+        format!(
+            "Usługa {provider} informuje, że na koncie nie ma już środków. Doładuj swoje konto {provider}."
+        )
+    },
     model_retired: |provider| {
         format!("Usługa {provider} nie oferuje już modelu do przetwarzania końcowego.")
     },
@@ -153,6 +164,8 @@ pub static PL: Texts = Texts {
     microphone_error: |detail| format!("Nie można uruchomić mikrofonu: {detail}"),
     paste_failed: "Wklejanie nie powiodło się",
     paste_failed_info: "Tekst jest w schowku. Wklej go, naciskając ⌘V.",
+    not_pasted: "Nie wklejono dyktowanego tekstu",
+    not_pasted_info: "Inna aplikacja przeszła na pierwszy plan, zanim tekst był gotowy. Tekst jest w schowku. Wklej go, naciskając ⌘V.",
     request_timed_out: "Przekroczono limit czasu żądania.",
     audio_failed: "Nie można przetworzyć nagrania.",
     local_model_failed: "Model lokalny nie mógł przepisać nagrania.",

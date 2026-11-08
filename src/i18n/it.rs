@@ -3,6 +3,7 @@ use super::Texts;
 pub static IT: Texts = Texts {
     recent_dictations: "Dettature recenti",
     none_yet: "Nessuna per ora",
+    retry_failed_dictation: "Riprova la dettatura non riuscita",
     local: "Locale",
     not_installed: |model| format!("{model} (non installato)"),
     no_key: |provider| format!("{provider} (nessuna chiave)"),
@@ -68,7 +69,7 @@ pub static IT: Texts = Texts {
     unknown_key_format: "Formato chiave sconosciuto",
     unknown_key_format_info: "La chiave deve iniziare con sk- (OpenAI) o gsk_ (Groq). Riprova.",
     vocabulary_title: "Vocabolario",
-    vocabulary_info: "Nomi e termini tecnici da scrivere esattamente così, separati da virgole. Li usano OpenAI, Groq, Whisper su questo Mac e la post-elaborazione.",
+    vocabulary_info: "Nomi e termini tecnici da scrivere esattamente così, separati da virgole. Li usano OpenAI, Groq, Whisper e Parakeet su questo Mac e la post-elaborazione.",
 
     recording_failed: "Registrazione non riuscita",
     microphone_silent: "Microfono silenzioso",
@@ -82,6 +83,11 @@ pub static IT: Texts = Texts {
     accessibility_list: "Accessibilità",
     device_control_list: "Controllo del dispositivo e accesso ai dati",
     transcription_failed: "Trascrizione non riuscita",
+    retry_failed_dictation_info: |menu_item| {
+        format!(
+            "La registrazione è conservata: scegli “{menu_item}” nel menu per trascriverla di nuovo."
+        )
+    },
     transcribed_locally: "Trascritto su questo Mac",
     transcribed_locally_info: |reason| {
         format!("{reason} La trascrizione è stata eseguita da un modello locale.")
@@ -127,6 +133,11 @@ pub static IT: Texts = Texts {
     },
     network_error: |message| format!("Errore di rete: {message}"),
     key_rejected: |provider| format!("{provider} ha rifiutato la chiave API."),
+    quota_exhausted: |provider| {
+        format!(
+            "{provider} segnala che l’account non ha più credito. Aggiungi credito al tuo account {provider}."
+        )
+    },
     model_retired: |provider| format!("{provider} non offre più il modello di post-elaborazione."),
     no_post_processing_key: |first, second| {
         format!(
@@ -144,6 +155,8 @@ pub static IT: Texts = Texts {
     microphone_error: |detail| format!("Impossibile avviare il microfono: {detail}"),
     paste_failed: "Incolla non riuscito",
     paste_failed_info: "Il testo si trova negli appunti. Incollalo con ⌘V.",
+    not_pasted: "Dettatura non incollata",
+    not_pasted_info: "Un’altra app è passata in primo piano prima che il testo fosse pronto. Il testo si trova negli appunti. Incollalo con ⌘V.",
     request_timed_out: "La richiesta è scaduta.",
     audio_failed: "Impossibile elaborare la registrazione.",
     local_model_failed: "Il modello locale non è riuscito a trascrivere la registrazione.",

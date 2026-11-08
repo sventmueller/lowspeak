@@ -3,6 +3,7 @@ use super::Texts;
 pub static EL: Texts = Texts {
     recent_dictations: "Πρόσφατες υπαγορεύσεις",
     none_yet: "Καμία ακόμη",
+    retry_failed_dictation: "Επανάληψη αποτυχημένης υπαγόρευσης",
     local: "Τοπικά",
     not_installed: |model| format!("{model} (μη εγκατεστημένο)"),
     no_key: |provider| format!("{provider} (χωρίς κλειδί)"),
@@ -68,7 +69,7 @@ pub static EL: Texts = Texts {
     unknown_key_format: "Άγνωστη μορφή κλειδιού",
     unknown_key_format_info: "Αναμενόταν κλειδί που ξεκινά με sk- (OpenAI) ή gsk_ (Groq). Δοκιμάστε ξανά.",
     vocabulary_title: "Λεξιλόγιο",
-    vocabulary_info: "Ονόματα και τεχνικοί όροι που πρέπει να γράφονται ακριβώς έτσι, χωρισμένοι με κόμματα. Χρησιμοποιούνται από το OpenAI, το Groq, το Whisper σε αυτό το Mac και τη μετεπεξεργασία.",
+    vocabulary_info: "Ονόματα και τεχνικοί όροι που πρέπει να γράφονται ακριβώς έτσι, χωρισμένοι με κόμματα. Χρησιμοποιούνται από το OpenAI, το Groq, το Whisper και το Parakeet σε αυτό το Mac και τη μετεπεξεργασία.",
 
     recording_failed: "Η εγγραφή απέτυχε",
     microphone_silent: "Κανένας ήχος από το μικρόφωνο",
@@ -82,6 +83,9 @@ pub static EL: Texts = Texts {
     accessibility_list: "Προσβασιμότητα",
     device_control_list: "Έλεγχος συσκευής και πρόσβαση σε δεδομένα",
     transcription_failed: "Η μεταγραφή απέτυχε",
+    retry_failed_dictation_info: |menu_item| {
+        format!("Η εγγραφή διατηρείται: επιλέξτε «{menu_item}» στο μενού για να μεταγραφεί ξανά.")
+    },
     transcribed_locally: "Μεταγράφηκε σε αυτό το Mac",
     transcribed_locally_info: |reason| {
         format!("{reason} Αντ' αυτού, τη μεταγραφή έκανε ένα τοπικό μοντέλο.")
@@ -131,6 +135,11 @@ pub static EL: Texts = Texts {
     },
     network_error: |message| format!("Σφάλμα δικτύου: {message}"),
     key_rejected: |provider| format!("Το {provider} απέρριψε το κλειδί API."),
+    quota_exhausted: |provider| {
+        format!(
+            "Το {provider} αναφέρει ότι ο λογαριασμός δεν έχει πλέον υπόλοιπο. Προσθέστε υπόλοιπο στον λογαριασμό σας στο {provider}."
+        )
+    },
     model_retired: |provider| {
         format!("Το {provider} δεν προσφέρει πλέον το μοντέλο μετεπεξεργασίας.")
     },
@@ -150,6 +159,8 @@ pub static EL: Texts = Texts {
     microphone_error: |detail| format!("Δεν ήταν δυνατή η εκκίνηση του μικροφώνου: {detail}"),
     paste_failed: "Η επικόλληση απέτυχε",
     paste_failed_info: "Το κείμενο βρίσκεται στο πρόχειρο. Επικολλήστε το με ⌘V.",
+    not_pasted: "Η υπαγόρευση δεν επικολλήθηκε",
+    not_pasted_info: "Μια άλλη εφαρμογή ήρθε σε πρώτο πλάνο πριν είναι έτοιμο το κείμενο. Το κείμενο βρίσκεται στο πρόχειρο. Επικολλήστε το με ⌘V.",
     request_timed_out: "Το αίτημα έληξε.",
     audio_failed: "Δεν ήταν δυνατή η επεξεργασία της εγγραφής.",
     local_model_failed: "Το τοπικό μοντέλο δεν μπόρεσε να μεταγράψει την εγγραφή.",

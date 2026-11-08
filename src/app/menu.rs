@@ -360,6 +360,9 @@ impl StatusUi {
         let t = i18n::texts(state.language);
 
         self.add_recent(menu, state, t);
+        if state.can_retry {
+            self.action_item(menu, t.retry_failed_dictation, Action::RetryFailed);
+        }
         self.separator(menu);
         self.add_local_models(menu, state, t);
         self.add_providers(menu, state, t);

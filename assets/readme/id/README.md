@@ -113,7 +113,7 @@ Lowspeak berbicara dalam 35 bahasa. Nama dan istilah yang Anda gunakan akan dipe
 - **Privat.** Tanpa akun, tanpa telemetri. Audio hanya dikirim ke penyedia yang Anda pilih, atau tidak ke mana pun dalam mode lokal.
 - **Tidak ada dikte yang hilang.** Saat jaringan atau layanan online gagal, model lokal yang terinstal mentranskripsi rekaman yang sama di Mac Anda.
 - **Dalam bahasa Anda.** Dikte berfungsi dalam puluhan bahasa, dan menu, dialog, serta notifikasi tersedia dalam 35 bahasa.
-- **Kata-kata Anda, dieja dengan benar.** Kosakata berisi nama dan istilah teknis memandu OpenAI, Groq, Whisper, dan pascapemrosesan.
+- **Kata-kata Anda, dieja dengan benar.** Kosakata berisi nama dan istilah teknis memandu OpenAI, Groq, Whisper, dan pascapemrosesan, serta memperbaiki cara Parakeet mengejanya.
 - **Teks yang rapi jika Anda mau.** Pascapemrosesan opsional menghapus kata pengisi, memperbaiki tata bahasa, dan hanya menyimpan koreksi Anda saat Anda meralat diri sendiri, atau sekaligus memformat teks sesuai jenis app tempat Anda mendikte.
 - **Papan klip Anda tetap milik Anda.** Lowspeak menempel melalui papan klip dan mengembalikan isi sebelumnya sesaat kemudian. Sepuluh dikte terakhir tetap ada di menu untuk disalin lagi.
 - **Tahan fn, bicara, lepaskan.** Teks diketik ke app yang sedang berada di depan, di mana pun kursornya: email, chat, editor, terminal, atau browser. Tanpa jendela yang perlu dibuka, tanpa tombol yang perlu diklik.
@@ -177,6 +177,7 @@ Klik cincin di bar menu:
 | Item | Fungsinya |
 |---|---|
 | **Dikte Terbaru** | sepuluh teks terakhir; satu klik menyalin teks ke papan klip lagi |
+| **Coba Lagi Dikte yang Gagal** | mentranskripsi lagi dikte terakhir yang gagal, dengan model yang dipilih sekarang; hanya muncul setelah ada kegagalan |
 | **Lokal** | model di Mac Anda, dikelompokkan menjadi Whisper dan Parakeet; yang belum diunduh tampil redup |
 | **OpenAI**, **Groq** | model online; tanpa kunci, model-model ini tampil redup dan menu menawarkan **Atur Kunci API…** |
 | **Bahasa** | bahasa yang Anda pakai untuk mendikte, atau **Deteksi Otomatis**; menu ikut menyesuaikan |
@@ -231,6 +232,8 @@ Rekaman berhenti dengan sendirinya setelah dua menit selagi fn ditahan, dan sete
 ### Ke mana teks masuk
 
 Lowspeak menempel teks ke app yang berada di depan saat Anda berhenti bicara, di posisi kursor, melalui papan klip dan ⌘V. Lowspeak menyimpan semua yang ada di papan klip sebelumnya dan mengembalikannya setengah detik setelah app membaca teks, atau setelah sepuluh detik jika app tidak pernah membacanya, kecuali app lain mengubah papan klip di antaranya. Teks ditandai sebagai sementara, sehingga app riwayat papan klip yang menghormati penanda tersebut tidak mencatatnya.
+
+Jika app lain sudah berada di depan saat teks siap, Lowspeak tidak menempelnya di sana: teks tetap berada di papan klip, dan notifikasi memberitahukannya. Tempel dengan ⌘V di tempat yang semestinya.
 
 Anda dapat memulai dikte berikutnya selagi dikte sebelumnya masih ditranskripsi. Teks ditempel sesuai urutan Anda mengucapkannya, dan tidak pernah selagi Anda merekam atau menahan Shift, sehingga tempelan tidak bisa mendarat di tengah kalimat Anda berikutnya.
 
@@ -288,11 +291,15 @@ Rekaman dikompresi ke AAC sebelum diunggah, sekitar 6 KB per detik ucapan, sehin
 
 Jika transkripsi online gagal, karena jaringan terputus, penyedia sedang bermasalah, atau kuncinya salah, model lokal yang terinstal mentranskripsi rekaman yang sama: model yang dipilih di bawah **Lokal**, jika tidak ada, Parakeet Ultra, lalu Whisper Large v3 Turbo, Large v3, dan model Whisper yang lebih kecil, dengan Parakeet v2 sebagai yang terakhir. Sebuah notifikasi memberi tahu Anda sekali; notifikasi itu baru muncul lagi setelah ada dikte online yang berhasil di antaranya.
 
-Jika ada model lokal sebagai cadangan, Lowspeak memberi permintaan online waktu 20 detik; tanpa cadangan, Lowspeak mencoba tiga kali, masing-masing hingga satu menit. Dalam mode online, Lowspeak menyiapkan model Parakeet cadangan sekali saat peluncuran, sehingga penggantian pertama tidak perlu menunggunya.
+Jika ada model lokal sebagai cadangan, Lowspeak memberi permintaan online waktu 20 detik; tanpa cadangan, Lowspeak mencoba tiga kali, masing-masing hingga satu menit. Dalam mode online, Lowspeak menyiapkan model Parakeet cadangan sekali saat peluncuran, sehingga penggantian pertama tidak perlu menunggunya. Penyedia yang sedang sibuk dan meminta jeda akan mendapatkannya, hingga sepuluh detik; penyedia yang meminta lebih lama, atau melaporkan bahwa akun Anda tidak memiliki saldo lagi, tidak dikirimi permintaan lagi.
+
+Dikte yang tetap gagal tidak hilang: Lowspeak menyimpan rekamannya di memori, dan **Coba Lagi Dikte yang Gagal** di menu mentranskripsinya lagi, misalnya setelah jaringan kembali atau setelah Anda memilih model lain. Hanya rekaman gagal yang terakhir yang disimpan, dan tidak ada yang tersisa setelah Lowspeak ditutup.
 
 ### Cara rekaman disiapkan
 
 Lowspeak merekam pada laju sampel mikrofon Anda sendiri dan mengonversinya ke 16 kHz yang diharapkan model begitu Anda berhenti. Sebelum transkripsi, Lowspeak menghapus dengung rendah di bawah 80 Hz, memangkas keheningan di awal dan akhir, dan menyeimbangkan volume, sehingga pembicara yang pelan dan yang keras menghasilkan hasil yang sama. Rekaman tanpa ucapan sama sekali tidak dikirim. Dalam mode lokal, Parakeet pertama-tama menerima rekaman yang belum diolah, dan rekaman yang telah disiapkan hanya jika yang pertama tidak menghasilkan teks.
+
+Whisper terkadang menulis teks yang tidak diucapkan siapa pun ke dalam keheningan dan kebisingan, seperti kredit dari video bersubtitel atau kosakata yang diberikan kepadanya. Lowspeak membuang bagian yang ditandai sendiri oleh Whisper sebagai keheningan dan menghapus teks semacam itu sebelum menempel.
 
 ### Bahasa per model
 
@@ -317,7 +324,7 @@ Lowspeak adalah app universal dan juga berjalan di Mac Intel dengan macOS 14. Se
 - **GPT Transcribe** menerimanya sebagai kata kunci.
 - **Whisper** (OpenAI, Groq, dan di Mac Anda) membacanya sebagai petunjuk sebelum rekaman, hingga 500 karakter.
 - **Pascapemrosesan** diminta mengejanya persis seperti yang tertulis.
-- **Parakeet** tidak menggunakannya.
+- **Parakeet** tidak mendengarnya. Lowspeak memasukkan ejaan istilah-istilah itu ke dalam teks Parakeet di tempat model itu menulis sesuatu yang sangat mirip: "Träfig" atau "Trafik" menjadi Traefik, "Los Peak" menjadi Lowspeak. Istilah yang kurang dari lima huruf, kata dalam alamat dan nama file, serta bentuk berakhiran seperti "Lowspeaks" tetap seperti yang tertulis. Untuk membedakan kesalahan ejaan dari kata yang sebenarnya, Lowspeak bertanya kepada pemeriksa ejaan macOS, di Mac Anda.
 
 ## Pascapemrosesan
 
@@ -353,7 +360,8 @@ Lowspeak bekerja di latar belakang, sehingga melaporkan masalah sebagai notifika
 | **Mikrofon Senyap** | lima detik keheningan, lihat [Mikrofon](#mikrofon) |
 | **Izin Aksesibilitas Diperlukan** | teks ada di papan klip; izinkan Aksesibilitas agar dapat menempel secara otomatis |
 | **Penempelan Gagal** | teks ada di papan klip; tempel dengan ⌘V |
-| **Transkripsi Gagal** | beserta alasannya: tidak ada kunci, kunci ditolak, batas permintaan, kesalahan server atau jaringan, atau tidak ada model lokal |
+| **Transkripsi Gagal** | beserta alasannya: tidak ada kunci, kunci ditolak, saldo habis, batas permintaan, kesalahan server atau jaringan, atau tidak ada model lokal; rekaman disimpan untuk **Coba Lagi Dikte yang Gagal** |
+| **Dikte Tidak Ditempel** | app lain muncul di depan sebelum teks siap; teks ada di papan klip |
 | **Ditranskripsi di Mac Ini** | layanan online gagal dan model lokal mengambil alih |
 | **Pascapemrosesan Gagal** | penyedia menolak pascapemrosesan atau belum ada kunci yang diatur; teks ditempel tanpa pascapemrosesan |
 | **Tidak Ada Kunci API** | Anda memilih model online tanpa kunci untuk penyedianya |
@@ -400,7 +408,7 @@ Lowspeak mendengar apa yang Anda ucapkan selagi fn ditahan, dapat mengetik ke ap
 - **Pascapemrosesan**, jika Anda menyalakannya, mengirim teks hasil transkripsi dan kosakata Anda ke Groq atau OpenAI. Dalam mode Format, ikut dikirim jenis app tempat Anda mendikte (editor kode, terminal, chat, atau email); nama app-nya tidak dikirim.
 - **Tanpa telemetri, tanpa akun.** Selain untuk transkripsi dan pascapemrosesan, Lowspeak hanya terhubung ke internet untuk membuka koneksi ke penyedia Anda selagi fn ditahan, dalam mode online atau saat pascapemrosesan aktif, untuk mengunduh model saat Anda memintanya, dari Hugging Face melalui HTTPS, pada versi yang tetap dan dengan setiap file dicocokkan dengan ceksumnya, dan untuk mencari versi baru di GitHub, sekali sehari jika Anda mengizinkannya. Permintaan itu memuat versi Lowspeak dan tidak ada yang lain. **Bantuan › Laporkan Masalah…** membuka formulir di GitHub pada browser Anda; alamatnya memuat versi Lowspeak dan versi macOS, tanpa apa pun yang Anda dikte.
 - **Kunci API** tetap berada di rantai kunci masuk Anda. Kunci hanya dikirim ke penyedianya masing-masing dan dihapus dari pesan kesalahan sebelum apa pun ditulis ke log.
-- **Teks yang didikte tidak disimpan.** Sepuluh dikte terakhir tetap ada di memori untuk **Dikte Terbaru** dan hilang saat Lowspeak ditutup. File log mencatat panjang dan waktu, tidak pernah teksnya.
+- **Teks yang didikte tidak disimpan.** Sepuluh dikte terakhir tetap ada di memori untuk **Dikte Terbaru** dan hilang saat Lowspeak ditutup; begitu pula rekaman dikte gagal yang terakhir, yang disimpan untuk **Coba Lagi Dikte yang Gagal**. File log mencatat panjang dan waktu, tidak pernah teksnya.
 - **Papan klip** disimpan sebelum menempel dan dipulihkan setelah app membaca teks, kecuali app lain mengubahnya di antaranya. Dikte ditandai sebagai sementara, sehingga app riwayat papan klip yang menghormati penanda tersebut melewatinya.
 - **Penandatanganan kode** dengan Hardened Runtime; app hanya meminta akses ke mikrofon, Aksesibilitas, notifikasi, dan jaringan. Pembaruan harus membawa tanda tangan pengembang; jika tidak, Sparkle menolaknya.
 
@@ -420,7 +428,7 @@ Diukur di Apple Silicon:
 - **Model lokal di Mac Intel** berjalan di prosesor dan jauh lebih lambat; di sana transkripsi online adalah pilihan yang lebih baik.
 - **Apa yang Anda ucapkan sebelum mikrofon siap akan hilang.** Tunggu ikon rekaman, terutama dengan AirPods.
 - **Tombol fn dapat direbut pihak lain.** Saat pengaturan tombol 🌐 di macOS, Warp, atau Dikte macOS mengklaim fn lebih dulu, Lowspeak tidak melihatnya; lihat [Pemecahan masalah](#pemecahan-masalah).
-- **Parakeet** mengabaikan kosakata dan pilihan bahasa, dan hanya mengenal bahasa Eropa.
+- **Parakeet** mengabaikan pilihan bahasa dan hanya mengenal bahasa Eropa. Kosakata hanya memperbaiki ejaan Parakeet sesudahnya: istilah yang didengarnya sebagai kata yang jauh berbeda tetap salah.
 - **Aksara dan varian:** hanya GPT Transcribe yang dapat diminta menulis bahasa Tionghoa Tradisional; tidak ada model yang dapat diminta menulis bahasa Portugis Eropa alih-alih Portugis Brasil.
 - **Batas waktu:** dua menit selagi fn ditahan, lima menit saat terkunci.
 - **Mode Mik:** Pusat Kontrol menawarkan Isolasi Suara dan Spektrum Lebar untuk Lowspeak dan melaporkannya sebagai aktif, tetapi Lowspeak merekam tanpa pemrosesan suara, sehingga pilihan itu tidak berpengaruh.

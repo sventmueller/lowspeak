@@ -1,4 +1,5 @@
 use std::fmt;
+use std::time::Duration;
 
 use crate::i18n::Texts;
 use crate::models::{ApiProvider, OnlineModel};
@@ -12,7 +13,10 @@ pub enum TranscriptionError {
     Api {
         status: u16,
         message: String,
+        retry_after: Option<Duration>,
     },
+    /// The account has no credit left; asking again does not help until the user adds some.
+    QuotaExhausted(ApiProvider),
     Network(RequestError),
     /// The provider answers 404 for the model, so it no longer offers it under this name.
     ModelRetired(OnlineModel),
@@ -59,6 +63,20 @@ impl StatusClass {
     }
 }
 
+/// OpenAI answers 429 for a rate limit and for an account without credit alike; only the body tells
+/// them apart.
+pub fn quota_exhausted(body: &str) -> bool {
+    let Ok(json) = serde_json::from_str::<serde_json::Value>(body) else {
+        return false;
+    };
+    let error = &json["error"];
+    ["type", "code"].iter().any(|field| {
+        error[*field]
+            .as_str()
+            .is_some_and(|value| matches!(value, "insufficient_quota" | "credit_balance_exhausted"))
+    })
+}
+
 impl fmt::Display for TranscriptionError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
@@ -66,7 +84,14 @@ impl fmt::Display for TranscriptionError {
                 write!(f, "no {} API key configured", provider.display_name())
             }
             Self::InvalidResponse => f.write_str("invalid response from the API"),
-            Self::Api { status, message } => write!(f, "API error ({status}): {message}"),
+            Self::Api {
+                status, message, ..
+            } => write!(f, "API error ({status}): {message}"),
+            Self::QuotaExhausted(provider) => write!(
+                f,
+                "the {} account has no credit left",
+                provider.display_name()
+            ),
             Self::Network(error) => write!(f, "network error: {error}"),
             Self::ModelRetired(model) => write!(
                 f,
@@ -89,6 +114,7 @@ impl std::error::Error for TranscriptionError {
             Self::NoApiKey(_)
             | Self::InvalidResponse
             | Self::Api { .. }
+            | Self::QuotaExhausted(_)
             | Self::ModelRetired(_)
             | Self::ModelNotAvailable => None,
         }
@@ -110,6 +136,7 @@ impl TranscriptionError {
                 | StatusClass::RequestRejected
                 | StatusClass::Unexpected => (t.api_error)(*status),
             },
+            Self::QuotaExhausted(provider) => (t.quota_exhausted)(provider.display_name()),
             Self::Network(RequestError::TimedOut) => t.request_timed_out.to_owned(),
             Self::Network(error) => (t.network_error)(&error.to_string()),
             Self::ModelRetired(model) => {
@@ -128,10 +155,18 @@ impl Retryable for TranscriptionError {
             Self::Api { status, .. } => !StatusClass::of(*status).is_permanent(),
             Self::InvalidResponse | Self::Network(_) => true,
             Self::NoApiKey(_)
+            | Self::QuotaExhausted(_)
             | Self::ModelRetired(_)
             | Self::ModelNotAvailable
             | Self::Audio(_)
             | Self::Engine(_) => false,
+        }
+    }
+
+    fn retry_after(&self) -> Option<Duration> {
+        match self {
+            Self::Api { retry_after, .. } => *retry_after,
+            _ => None,
         }
     }
 }
@@ -148,6 +183,7 @@ mod tests {
         TranscriptionError::Api {
             status,
             message: String::new(),
+            retry_after: None,
         }
     }
 
@@ -186,8 +222,28 @@ mod tests {
         let body = TranscriptionError::Api {
             status: 400,
             message: "sk-secret echoed".into(),
+            retry_after: None,
         };
         assert!(!body.user_facing_description(t).contains("secret"));
+    }
+
+    #[test]
+    fn an_account_without_credit_is_told_apart_from_a_rate_limit() {
+        let exhausted = r#"{"error": {"message": "You have no credits remaining.", "type": "insufficient_quota", "code": "credit_balance_exhausted"}}"#;
+        assert!(quota_exhausted(exhausted));
+        assert!(quota_exhausted(
+            r#"{"error": {"type": "invalid_request_error", "code": "insufficient_quota"}}"#
+        ));
+        assert!(!quota_exhausted(
+            r#"{"error": {"message": "Rate limit reached", "type": "requests", "code": "rate_limit_exceeded"}}"#
+        ));
+        assert!(!quota_exhausted("slow down"));
+        let error = TranscriptionError::QuotaExhausted(ApiProvider::OpenAi);
+        assert!(!error.is_retryable());
+        assert_eq!(
+            error.user_facing_description(i18n::texts(Language::En)),
+            "OpenAI reports that the account has no credit left. Add credit in your OpenAI account."
+        );
     }
 
     #[test]

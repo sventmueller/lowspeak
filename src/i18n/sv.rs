@@ -3,6 +3,7 @@ use super::Texts;
 pub static SV: Texts = Texts {
     recent_dictations: "Senaste dikteringar",
     none_yet: "Inga ännu",
+    retry_failed_dictation: "Försök med misslyckad diktering igen",
     local: "Lokalt",
     not_installed: |model| format!("{model} (inte installerad)"),
     no_key: |provider| format!("{provider} (ingen nyckel)"),
@@ -65,7 +66,7 @@ pub static SV: Texts = Texts {
     unknown_key_format: "Okänt nyckelformat",
     unknown_key_format_info: "Nyckeln ska börja med sk- (OpenAI) eller gsk_ (Groq). Försök igen.",
     vocabulary_title: "Ordlista",
-    vocabulary_info: "Namn och facktermer som ska stavas exakt, åtskilda med kommatecken. OpenAI, Groq, Whisper på den här Macen och efterbearbetningen använder dem.",
+    vocabulary_info: "Namn och facktermer som ska stavas exakt, åtskilda med kommatecken. OpenAI, Groq, Whisper och Parakeet på den här Macen och efterbearbetningen använder dem.",
 
     recording_failed: "Inspelningen misslyckades",
     microphone_silent: "Mikrofonen är tyst",
@@ -79,6 +80,11 @@ pub static SV: Texts = Texts {
     accessibility_list: "Hjälpmedel",
     device_control_list: "Enhetskontroll och dataåtkomst",
     transcription_failed: "Transkriberingen misslyckades",
+    retry_failed_dictation_info: |menu_item| {
+        format!(
+            "Inspelningen finns kvar: välj ”{menu_item}” i menyn för att transkribera den igen."
+        )
+    },
     transcribed_locally: "Transkriberat på den här Macen",
     transcribed_locally_info: |reason| {
         format!("{reason} En lokal modell transkriberade i stället.")
@@ -126,6 +132,11 @@ pub static SV: Texts = Texts {
     },
     network_error: |message| format!("Nätverksfel: {message}"),
     key_rejected: |provider| format!("{provider} avvisade API-nyckeln."),
+    quota_exhausted: |provider| {
+        format!(
+            "{provider} meddelar att kontot inte har något saldo kvar. Fyll på saldot på ditt {provider}-konto."
+        )
+    },
     model_retired: |provider| {
         format!("{provider} erbjuder inte längre modellen för efterbearbetning.")
     },
@@ -145,6 +156,8 @@ pub static SV: Texts = Texts {
     microphone_error: |detail| format!("Det gick inte att starta mikrofonen: {detail}"),
     paste_failed: "Inklistring misslyckades",
     paste_failed_info: "Texten finns i urklippet. Klistra in den med ⌘V.",
+    not_pasted: "Dikteringen klistrades inte in",
+    not_pasted_info: "En annan app kom i förgrunden innan texten var klar. Texten finns i urklippet. Klistra in den med ⌘V.",
     request_timed_out: "Tidsgränsen för begäran överskreds.",
     audio_failed: "Det gick inte att bearbeta inspelningen.",
     local_model_failed: "Den lokala modellen kunde inte transkribera inspelningen.",

@@ -3,6 +3,7 @@ use super::Texts;
 pub static EN: Texts = Texts {
     recent_dictations: "Recent Dictations",
     none_yet: "None Yet",
+    retry_failed_dictation: "Retry Failed Dictation",
     local: "Local",
     not_installed: |model| format!("{model} (Not Installed)"),
     no_key: |provider| format!("{provider} (No Key)"),
@@ -65,7 +66,7 @@ pub static EN: Texts = Texts {
     unknown_key_format: "Unknown Key Format",
     unknown_key_format_info: "Expected a key starting with sk- (OpenAI) or gsk_ (Groq). Please try again.",
     vocabulary_title: "Vocabulary",
-    vocabulary_info: "Names and technical terms to spell exactly, separated by commas. OpenAI, Groq, Whisper on this Mac and post-processing use them.",
+    vocabulary_info: "Names and technical terms to spell exactly, separated by commas. OpenAI, Groq, Whisper and Parakeet on this Mac, and post-processing use them.",
 
     recording_failed: "Recording Failed",
     microphone_silent: "Microphone Silent",
@@ -79,6 +80,9 @@ pub static EN: Texts = Texts {
     accessibility_list: "Accessibility",
     device_control_list: "Device Control and Data Access",
     transcription_failed: "Transcription Failed",
+    retry_failed_dictation_info: |menu_item| {
+        format!("The recording is kept: choose '{menu_item}' in the menu to transcribe it again.")
+    },
     transcribed_locally: "Transcribed on This Mac",
     transcribed_locally_info: |reason| format!("{reason} A local model transcribed instead."),
     post_processing_failed: "Post-Processing Failed",
@@ -120,6 +124,11 @@ pub static EN: Texts = Texts {
     },
     network_error: |message| format!("Network error: {message}"),
     key_rejected: |provider| format!("{provider} rejected the API key."),
+    quota_exhausted: |provider| {
+        format!(
+            "{provider} reports that the account has no credit left. Add credit in your {provider} account."
+        )
+    },
     model_retired: |provider| format!("{provider} no longer offers the post-processing model."),
     no_post_processing_key: |first, second| {
         format!(
@@ -137,6 +146,8 @@ pub static EN: Texts = Texts {
     microphone_error: |detail| format!("The microphone could not be started: {detail}"),
     paste_failed: "Paste Failed",
     paste_failed_info: "The text is on the clipboard. Paste it with ⌘V.",
+    not_pasted: "Dictation Not Pasted",
+    not_pasted_info: "Another app came to the front before the text was ready. The text is on the clipboard: paste it with ⌘V.",
     request_timed_out: "The request timed out.",
     audio_failed: "The recording could not be processed.",
     local_model_failed: "The local model could not transcribe the recording.",

@@ -3,6 +3,7 @@ use super::Texts;
 pub static TR: Texts = Texts {
     recent_dictations: "Son dikteler",
     none_yet: "Henüz yok",
+    retry_failed_dictation: "Başarısız dikteyi yeniden dene",
     local: "Yerel",
     not_installed: |model| format!("{model} (yüklü değil)"),
     no_key: |provider| format!("{provider} (anahtar yok)"),
@@ -64,7 +65,7 @@ pub static TR: Texts = Texts {
     unknown_key_format: "Bilinmeyen anahtar biçimi",
     unknown_key_format_info: "sk- (OpenAI) veya gsk_ (Groq) ile başlayan bir anahtar bekleniyordu. Lütfen yeniden deneyin.",
     vocabulary_title: "Sözlük",
-    vocabulary_info: "Tam olarak bu şekilde yazılması gereken adlar ve teknik terimler; virgülle ayırın. OpenAI, Groq, bu Mac'teki Whisper ve son işleme bunları kullanır.",
+    vocabulary_info: "Tam olarak bu şekilde yazılması gereken adlar ve teknik terimler; virgülle ayırın. OpenAI, Groq, bu Mac'teki Whisper ve Parakeet ile son işleme bunları kullanır.",
 
     recording_failed: "Kayıt başarısız oldu",
     microphone_silent: "Mikrofon sessiz",
@@ -78,6 +79,11 @@ pub static TR: Texts = Texts {
     accessibility_list: "Erişilebilirlik",
     device_control_list: "Aygıt Denetimi ve Veri Erişimi",
     transcription_failed: "Metne dönüştürme başarısız oldu",
+    retry_failed_dictation_info: |menu_item| {
+        format!(
+            "Kayıt saklandı: Yeniden metne dönüştürmek için menüde “{menu_item}” öğesini seçin."
+        )
+    },
     transcribed_locally: "Bu Mac'te metne dönüştürüldü",
     transcribed_locally_info: |reason| {
         format!("{reason} Bunun yerine yerel bir model metne dönüştürdü.")
@@ -121,6 +127,11 @@ pub static TR: Texts = Texts {
     },
     network_error: |message| format!("Ağ hatası: {message}"),
     key_rejected: |provider| format!("{provider} API anahtarını reddetti."),
+    quota_exhausted: |provider| {
+        format!(
+            "{provider}, hesapta kredi kalmadığını bildiriyor. {provider} hesabınıza kredi ekleyin."
+        )
+    },
     model_retired: |provider| format!("{provider} artık son işleme modelini sunmuyor."),
     no_post_processing_key: |first, second| {
         format!(
@@ -138,6 +149,8 @@ pub static TR: Texts = Texts {
     microphone_error: |detail| format!("Mikrofon başlatılamadı: {detail}"),
     paste_failed: "Yapıştırma başarısız",
     paste_failed_info: "Metin panoda. ⌘V ile yapıştırın.",
+    not_pasted: "Dikte yapıştırılmadı",
+    not_pasted_info: "Metin hazır olmadan önce başka bir uygulama öne geldi. Metin panoda. ⌘V ile yapıştırın.",
     request_timed_out: "İstek zaman aşımına uğradı.",
     audio_failed: "Kayıt işlenemedi.",
     local_model_failed: "Yerel model kaydı yazıya dökemedi.",

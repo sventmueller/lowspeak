@@ -3,6 +3,7 @@ use super::Texts;
 pub static HE: Texts = Texts {
     recent_dictations: "הכתבות אחרונות",
     none_yet: "אין עדיין",
+    retry_failed_dictation: "ניסיון חוזר להכתבה שנכשלה",
     local: "מקומי",
     not_installed: |model| format!("{model} (לא מותקן)"),
     no_key: |provider| format!("{provider} (אין מפתח)"),
@@ -65,7 +66,7 @@ pub static HE: Texts = Texts {
     unknown_key_format: "תבנית מפתח לא מוכרת",
     unknown_key_format_info: "נדרש מפתח שמתחיל ב-sk- (OpenAI) או ב-gsk_ (Groq). נסה שוב.",
     vocabulary_title: "אוצר מילים",
-    vocabulary_info: "שמות ומונחים טכניים שיש לאיית בדיוק כך, מופרדים בפסיקים. הם משמשים את OpenAI, את Groq, את Whisper ב-Mac זה ואת עיבוד ההמשך.",
+    vocabulary_info: "שמות ומונחים טכניים שיש לאיית בדיוק כך, מופרדים בפסיקים. הם משמשים את OpenAI, את Groq, את Whisper ואת Parakeet ב-Mac זה ואת עיבוד ההמשך.",
 
     recording_failed: "ההקלטה נכשלה",
     microphone_silent: "אין אות מהמיקרופון",
@@ -79,6 +80,9 @@ pub static HE: Texts = Texts {
     accessibility_list: "נגישות",
     device_control_list: "שליטה במכשיר וגישה לנתונים",
     transcription_failed: "התמלול נכשל",
+    retry_failed_dictation_info: |menu_item| {
+        format!("ההקלטה נשמרה: בחר \"{menu_item}\" בתפריט כדי לתמלל אותה שוב.")
+    },
     transcribed_locally: "תומלל ב-Mac זה",
     transcribed_locally_info: |reason| format!("{reason} מודל מקומי ביצע את התמלול במקום זאת."),
     post_processing_failed: "עיבוד ההמשך נכשל",
@@ -118,6 +122,9 @@ pub static HE: Texts = Texts {
     },
     network_error: |message| format!("שגיאת רשת: {message}"),
     key_rejected: |provider| format!("השירות {provider} דחה את מפתח ה-API."),
+    quota_exhausted: |provider| {
+        format!("השירות {provider} מדווח שאין עוד יתרה בחשבון. הוסף יתרה בחשבון {provider} שלך.")
+    },
     model_retired: |provider| format!("השירות {provider} כבר לא מציע את מודל עיבוד ההמשך."),
     no_post_processing_key: |first, second| {
         format!("עיבוד ההמשך דורש מפתח API של {first} או של {second}. הגדר אותו דרך שורת התפריטים.")
@@ -133,6 +140,8 @@ pub static HE: Texts = Texts {
     microphone_error: |detail| format!("לא ניתן היה להפעיל את המיקרופון: {detail}"),
     paste_failed: "ההדבקה נכשלה",
     paste_failed_info: "הטקסט נמצא בלוח הגזירים. הדבק אותו באמצעות \u{200E}⌘V.",
+    not_pasted: "ההכתבה לא הודבקה",
+    not_pasted_info: "יישום אחר עבר לחזית לפני שהטקסט היה מוכן. הטקסט נמצא בלוח הגזירים. הדבק אותו באמצעות \u{200E}⌘V.",
     request_timed_out: "תם הזמן הקצוב לבקשה.",
     audio_failed: "לא ניתן היה לעבד את ההקלטה.",
     local_model_failed: "המודל המקומי לא הצליח לתמלל את ההקלטה.",

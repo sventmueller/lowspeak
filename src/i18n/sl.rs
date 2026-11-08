@@ -12,6 +12,7 @@ fn plural(n: usize, [one, two, few, other]: [&'static str; 4]) -> &'static str {
 pub static SL: Texts = Texts {
     recent_dictations: "Nedavni nareki",
     none_yet: "Še nobenega",
+    retry_failed_dictation: "Znova poskusi neuspeli narek",
     local: "Lokalno",
     not_installed: |model| format!("{model} (ni nameščen)"),
     no_key: |provider| format!("{provider} (brez ključa)"),
@@ -81,7 +82,7 @@ pub static SL: Texts = Texts {
     unknown_key_format: "Neznana oblika ključa",
     unknown_key_format_info: "Pričakovan je ključ, ki se začne s sk- (OpenAI) ali z gsk_ (Groq). Poskusite znova.",
     vocabulary_title: "Besedišče",
-    vocabulary_info: "Imena in strokovni izrazi, ki naj bodo zapisani natanko tako, ločeni z vejicami. Uporabljajo jih OpenAI, Groq, Whisper na tem Macu in naknadna obdelava.",
+    vocabulary_info: "Imena in strokovni izrazi, ki naj bodo zapisani natanko tako, ločeni z vejicami. Uporabljajo jih OpenAI, Groq, Whisper in Parakeet na tem Macu ter naknadna obdelava.",
 
     recording_failed: "Snemanje ni uspelo",
     microphone_silent: "Mikrofon brez signala",
@@ -95,6 +96,9 @@ pub static SL: Texts = Texts {
     accessibility_list: "Dostopnost",
     device_control_list: "Upravljanje naprave in dostop do podatkov",
     transcription_failed: "Prepis ni uspel",
+    retry_failed_dictation_info: |menu_item| {
+        format!("Posnetek je shranjen: v meniju izberite »{menu_item}«, da ga znova prepišete.")
+    },
     transcribed_locally: "Prepisano na tem Macu",
     transcribed_locally_info: |reason| format!("{reason} Namesto tega je prepisal lokalni model."),
     post_processing_failed: "Naknadna obdelava ni uspela",
@@ -142,6 +146,11 @@ pub static SL: Texts = Texts {
     },
     network_error: |message| format!("Omrežna napaka: {message}"),
     key_rejected: |provider| format!("Storitev {provider} je zavrnila ključ API."),
+    quota_exhausted: |provider| {
+        format!(
+            "Storitev {provider} sporoča, da na računu ni več dobroimetja. Dobroimetje dodajte v svojem računu {provider}."
+        )
+    },
     model_retired: |provider| {
         format!("Storitev {provider} ne ponuja več modela za naknadno obdelavo.")
     },
@@ -161,6 +170,8 @@ pub static SL: Texts = Texts {
     microphone_error: |detail| format!("Mikrofona ni bilo mogoče zagnati: {detail}"),
     paste_failed: "Lepljenje ni uspelo",
     paste_failed_info: "Besedilo je v odložišču. Prilepite ga s ⌘V.",
+    not_pasted: "Narek ni bil prilepljen",
+    not_pasted_info: "Preden je bilo besedilo pripravljeno, je v ospredje prišla druga aplikacija. Besedilo je v odložišču. Prilepite ga s ⌘V.",
     request_timed_out: "Časovna omejitev zahteve je potekla.",
     audio_failed: "Posnetka ni bilo mogoče obdelati.",
     local_model_failed: "Lokalni model posnetka ni mogel prepisati.",

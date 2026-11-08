@@ -3,6 +3,7 @@ use super::Texts;
 pub static MS: Texts = Texts {
     recent_dictations: "Perencanaan Terbaharu",
     none_yet: "Belum Ada",
+    retry_failed_dictation: "Cuba Semula Perencanaan yang Gagal",
     local: "Setempat",
     not_installed: |model| format!("{model} (Tidak Dipasang)"),
     no_key: |provider| format!("{provider} (Tiada Kunci)"),
@@ -64,7 +65,7 @@ pub static MS: Texts = Texts {
     unknown_key_format: "Format Kunci Tidak Diketahui",
     unknown_key_format_info: "Kunci mesti bermula dengan sk- (OpenAI) atau gsk_ (Groq). Sila cuba lagi.",
     vocabulary_title: "Kosa Kata",
-    vocabulary_info: "Nama dan istilah teknikal yang perlu dieja dengan tepat, dipisahkan dengan koma. OpenAI, Groq, Whisper pada Mac ini dan pascapemprosesan menggunakannya.",
+    vocabulary_info: "Nama dan istilah teknikal yang perlu dieja dengan tepat, dipisahkan dengan koma. OpenAI, Groq, Whisper dan Parakeet pada Mac ini serta pascapemprosesan menggunakannya.",
 
     recording_failed: "Rakaman Gagal",
     microphone_silent: "Mikrofon Senyap",
@@ -78,6 +79,9 @@ pub static MS: Texts = Texts {
     accessibility_list: "Kebolehcapaian",
     device_control_list: "Kawalan Peranti dan Akses Data",
     transcription_failed: "Transkripsi Gagal",
+    retry_failed_dictation_info: |menu_item| {
+        format!("Rakaman disimpan: pilih “{menu_item}” dalam menu untuk mentranskripsinya semula.")
+    },
     transcribed_locally: "Ditranskripsi pada Mac Ini",
     transcribed_locally_info: |reason| {
         format!("{reason} Model setempat telah mentranskripsi rakaman sebagai gantinya.")
@@ -123,6 +127,11 @@ pub static MS: Texts = Texts {
     },
     network_error: |message| format!("Ralat rangkaian: {message}"),
     key_rejected: |provider| format!("{provider} menolak kunci API."),
+    quota_exhausted: |provider| {
+        format!(
+            "{provider} melaporkan bahawa akaun tidak mempunyai baki kredit lagi. Tambahkan kredit dalam akaun {provider} anda."
+        )
+    },
     model_retired: |provider| format!("{provider} tidak lagi menawarkan model pascapemprosesan."),
     no_post_processing_key: |first, second| {
         format!(
@@ -140,6 +149,8 @@ pub static MS: Texts = Texts {
     microphone_error: |detail| format!("Mikrofon tidak dapat dimulakan: {detail}"),
     paste_failed: "Penampalan Gagal",
     paste_failed_info: "Teks berada dalam papan klip. Tampalkannya dengan ⌘V.",
+    not_pasted: "Perencanaan Tidak Ditampal",
+    not_pasted_info: "App lain muncul di hadapan sebelum teks sedia. Teks berada dalam papan klip. Tampalkannya dengan ⌘V.",
     request_timed_out: "Permintaan telah tamat masa.",
     audio_failed: "Rakaman tidak dapat diproses.",
     local_model_failed: "Model setempat tidak dapat mentranskripsi rakaman.",

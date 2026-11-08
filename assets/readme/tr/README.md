@@ -113,7 +113,7 @@ Lowspeak 35 dil konuşur. Kullandığınız adları ve terimleri öğrenir, dolg
 - **Gizliliğe saygılı.** Hesap yok, telemetri yok. Ses yalnızca seçtiğiniz sağlayıcıya gider, yerel modda ise hiçbir yere gitmez.
 - **Hiçbir dikte kaybolmaz.** Ağ ya da çevrimiçi hizmet başarısız olduğunda yüklü bir yerel model aynı kaydı Mac’inizde metne dönüştürür.
 - **Kendi dilinizde.** Dikte onlarca dilde çalışır; menü, iletişim kutuları ve bildirimler 35 dilde gelir.
-- **Sözcükleriniz, doğru yazılmış.** Adlardan ve teknik terimlerden oluşan bir sözlük OpenAI, Groq, Whisper ve son işleme için yol gösterir.
+- **Sözcükleriniz, doğru yazılmış.** Adlardan ve teknik terimlerden oluşan bir sözlük OpenAI, Groq, Whisper ve son işleme için yol gösterir ve Parakeet’in bunları nasıl yazdığını düzeltir.
 - **İsterseniz temiz metin.** İsteğe bağlı son işleme dolgu sözcüklerini kaldırır, dil bilgisini düzeltir ve kendinizi düzelttiğinizde yalnızca düzeltmenizi tutar ya da metni ayrıca dikte ettiğiniz uygulamanın türüne göre biçimlendirir.
 - **Panonuz sizin kalır.** Lowspeak pano üzerinden yapıştırır ve panoda önceden ne varsa bir an sonra geri koyar. Son on dikte yeniden kopyalamak için menüde kalır.
 - **fn tuşunu basılı tutun, konuşun, bırakın.** Metin, öndeki uygulamaya, imleç neredeyse oraya yazılır: e-posta, sohbet, düzenleyici, terminal ya da tarayıcı. Geçiş yapılacak bir pencere, tıklanacak bir düğme yok.
@@ -177,6 +177,7 @@ Menü çubuğundaki halkaya tıklayın:
 | Öğe | Ne yapar |
 |---|---|
 | **Son dikteler** | son on metin; bir tıklama birini yeniden panoya kopyalar |
+| **Başarısız dikteyi yeniden dene** | başarısız olan son dikteyi şu an seçili modelle yeniden metne dönüştürür; yalnızca bir hatadan sonra görünür |
 | **Yerel** | Mac’inizdeki modeller, Whisper ve Parakeet olarak gruplanmış; indirilmemiş olanlar soluk görünür |
 | **OpenAI**, **Groq** | çevrimiçi modeller; anahtar yoksa soluk görünür ve menü **API anahtarını ayarla…** seçeneğini sunar |
 | **Dil** | dikte ettiğiniz dil ya da **Otomatik algıla**; menü de bunu izler |
@@ -231,6 +232,8 @@ Kayıt, fn basılı tutulurken iki dakika, kilitliyken beş dakika sonra kendili
 ### Metin nereye gider
 
 Lowspeak metni, konuşmayı bitirdiğiniz anda önde olan uygulamaya, imlecin olduğu yere, pano ve ⌘V aracılığıyla yapıştırır. Panoda önceden ne varsa kaydeder ve uygulama metni okuduktan yarım saniye sonra, hiç okumazsa on saniye sonra geri koyar; bu arada başka bir uygulama panoyu değiştirdiyse geri koymaz. Metin geçici olarak işaretlenir; bu işarete uyan pano geçmişi uygulamaları onu kaydetmez.
+
+Metin hazır olduğunda öne başka bir uygulama gelmişse Lowspeak metni oraya yapıştırmaz: metin panoda kalır ve bir bildirim bunu söyler. Metni ⌘V ile ait olduğu yere yapıştırın.
 
 Önceki dikte hâlâ metne dönüştürülürken bir sonrakini başlatabilirsiniz. Metinler söylediğiniz sırayla yapıştırılır ve kayıt yaparken ya da Shift tuşunu basılı tutarken asla yapıştırılmaz; böylece bir yapıştırma bir sonraki cümlenizin ortasına düşemez.
 
@@ -288,11 +291,15 @@ Kayıt, yüklemeden önce AAC biçiminde sıkıştırılır, konuşmanın saniye
 
 Bir çevrimiçi metne dönüştürme ağ kesik olduğu, sağlayıcıda bir sorun olduğu ya da anahtar yanlış olduğu için başarısız olursa yüklü bir yerel model aynı kaydı metne dönüştürür: **Yerel** altında seçili olan, o yoksa Parakeet Ultra, ardından Whisper Large v3 Turbo, Large v3 ve daha küçük Whisper modelleri, en son da Parakeet v2. Bir bildirim bunu size bir kez söyler; bildirim ancak arada bir çevrimiçi dikte başarılı olduktan sonra yeniden gelir.
 
-Yedek olarak bir yerel model varsa Lowspeak çevrimiçi isteğe 20 saniye tanır; yoksa her biri en fazla bir dakika süren üç deneme yapar. Çevrimiçi modda Lowspeak yedek Parakeet modelini açılışta bir kez hazırlar, böylece ilk yedek dönüştürme onu beklemez.
+Yedek olarak bir yerel model varsa Lowspeak çevrimiçi isteğe 20 saniye tanır; yoksa her biri en fazla bir dakika süren üç deneme yapar. Çevrimiçi modda Lowspeak yedek Parakeet modelini açılışta bir kez hazırlar, böylece ilk yedek dönüştürme onu beklemez. Yoğunluk nedeniyle bekleme isteyen bir sağlayıcı bu beklemeyi en fazla on saniyeye kadar alır; daha uzun bekleme isteyen ya da hesabınızda kredi kalmadığını bildiren bir sağlayıcıya ise yeniden istek gönderilmez.
+
+Buna rağmen başarısız olan bir dikte kaybolmaz: Lowspeak kaydını bellekte tutar ve menüdeki **Başarısız dikteyi yeniden dene** onu yeniden metne dönüştürür; örneğin ağ geri geldiğinde ya da başka bir model seçtikten sonra. Yalnızca başarısız olan en son kayıt saklanır, Lowspeak kapandıktan sonra ise hiçbiri.
 
 ### Kayıt nasıl hazırlanır
 
 Lowspeak, mikrofonunuzun kendi örnekleme hızında kaydeder ve siz durdurduğunuzda kaydı modellerin beklediği 16 kHz’e dönüştürür. Metne dönüştürmeden önce 80 Hz’in altındaki düşük uğultuyu temizler, baştaki ve sondaki sessizliği kırpar ve ses düzeyini dengeler; böylece alçak ve yüksek sesle konuşanlar aynı şekilde çıkar. Konuşma içermeyen bir kayıt hiç gönderilmez. Yerel modda Parakeet önce işlenmemiş kaydı alır, hazırlanmış olanı ise yalnızca ilki metin vermezse.
+
+Whisper bazen sessizliğe ve gürültüye kimsenin söylemediği metinler yazar; örneğin altyazılı videoların jenerik yazılarını ya da kendisine verilen sözlüğü. Lowspeak, Whisper’ın kendisinin sessizlik olarak işaretlediği bölümleri atar ve bu tür metinleri yapıştırmadan önce kaldırır.
 
 ### Modele göre diller
 
@@ -317,7 +324,7 @@ Lowspeak evrensel bir uygulamadır ve macOS 14 yüklü Intel Mac’lerde de çal
 - **GPT Transcribe** bunları anahtar sözcük olarak alır.
 - **Whisper** (OpenAI, Groq ve Mac’inizde) bunları kayıttan önce bir ipucu olarak, 500 karaktere kadar okur.
 - **Son işlemeye** bunları tam yazıldıkları gibi yazması söylenir.
-- **Parakeet** bunları kullanmaz.
+- **Parakeet** bunları duymaz. Lowspeak, Parakeet’in çok yakın bir şey yazdığı yerlerde metne terimlerin yazımını koyar: “Träfig” ya da “Trafik” Traefik olur, “Los Peak” ise Lowspeak olur. Beş harften kısa terimler, adreslerdeki ve dosya adlarındaki sözcükler ve “Lowspeaks” gibi ek almış biçimler yazıldığı gibi kalır. Lowspeak, bir yazım hatasını gerçek bir sözcükten ayırt etmek için Mac’inizde macOS’in yazım denetimine başvurur.
 
 ## Son işleme
 
@@ -353,7 +360,8 @@ Lowspeak arka planda çalıştığı için sorunları bildirim olarak iletir:
 | **Mikrofon sessiz** | beş saniyelik sessizlik; bkz. [Mikrofon](#mikrofon) |
 | **Erişilebilirlik izni gerekli** | metin panoda; otomatik yapıştırma için Erişilebilirlik izni verin |
 | **Yapıştırma başarısız** | metin panoda; ⌘V ile yapıştırın |
-| **Metne dönüştürme başarısız oldu** | nedeniyle birlikte: anahtar yok, anahtar reddedildi, istek sınırı, sunucu ya da ağ hatası veya yerel model yok |
+| **Metne dönüştürme başarısız oldu** | nedeniyle birlikte: anahtar yok, anahtar reddedildi, kredi kalmadı, istek sınırı, sunucu ya da ağ hatası veya yerel model yok; kayıt **Başarısız dikteyi yeniden dene** için saklanır |
+| **Dikte yapıştırılmadı** | metin hazır olmadan önce başka bir uygulama öne geldi; metin panoda |
 | **Bu Mac'te metne dönüştürüldü** | çevrimiçi hizmet başarısız oldu ve bir yerel model devraldı |
 | **Son işleme başarısız oldu** | sağlayıcı son işlemeyi reddediyor ya da anahtar ayarlanmamış; metin son işleme olmadan yapıştırıldı |
 | **API anahtarı yok** | sağlayıcısı için anahtar olmayan bir çevrimiçi model seçtiniz |
@@ -400,7 +408,7 @@ Lowspeak, fn basılıyken söylediklerinizi duyar, herhangi bir uygulamaya yazab
 - **Son işleme**, açarsanız, metne dönüştürülmüş metni ve sözlüğünüzü Groq’a ya da OpenAI’a gönderir. Biçimlendirme modunda dikte ettiğiniz uygulamanın türünü de ekler (kod düzenleyici, terminal, sohbet ya da e-posta); uygulamanın adı gönderilmez.
 - **Telemetri yok, hesap yok.** Lowspeak, metne dönüştürme ve son işleme dışında yalnızca çevrimiçi modda ya da son işleme açıkken fn basılıyken sağlayıcınızla bağlantıyı açmak için, siz istediğinizde Hugging Face’ten HTTPS üzerinden, sabit bir sürümde ve her dosyayı sağlama toplamıyla denetleyerek bir model indirmek için ve izin verirseniz günde bir kez GitHub’da yeni bir sürüm aramak için ağa bağlanır. Bu istek Lowspeak’in sürümünü taşır, başka hiçbir şeyi taşımaz. **Yardım › Sorun Bildir…** tarayıcınızda GitHub’da bir form açar; formun adresi Lowspeak’in sürümünü ve macOS sürümünü taşır, dikte ettiğiniz hiçbir şeyi taşımaz.
 - **API anahtarları** oturum açma anahtar zincirinizde kalır. Yalnızca kendi sağlayıcılarına gönderilir ve günlüğe herhangi bir şey yazılmadan önce hata iletilerinden çıkarılır.
-- **Dikte edilen metin saklanmaz.** Son on dikte **Son dikteler** için bellekte kalır ve Lowspeak kapandığında silinir. Günlük dosyaları uzunlukları ve süreleri kaydeder, metni asla.
+- **Dikte edilen metin saklanmaz.** Son on dikte **Son dikteler** için bellekte kalır ve Lowspeak kapandığında silinir; **Başarısız dikteyi yeniden dene** için tutulan son başarısız diktenin kaydı da öyle. Günlük dosyaları uzunlukları ve süreleri kaydeder, metni asla.
 - **Pano** yapıştırmadan önce kaydedilir ve uygulama metni okuduğunda geri yüklenir; bu arada başka bir uygulama panoyu değiştirdiyse geri yüklenmez. Dikte edilen metin geçici olarak işaretlenir; bu işarete uyan pano geçmişi uygulamaları onu atlar.
 - **Kod imzalama**, Hardened Runtime ile; uygulama yalnızca mikrofon, Erişilebilirlik, bildirimler ve ağ için izin ister. Bir güncelleme geliştiricinin imzasını taşımalıdır, aksi hâlde Sparkle onu reddeder.
 
@@ -420,7 +428,7 @@ Apple Silicon’da ölçülmüştür:
 - **Intel Mac’lerde yerel modeller** işlemcide çalışır ve çok daha yavaştır; orada çevrimiçi metne dönüştürme daha iyi bir seçimdir.
 - **Mikrofon hazır olmadan söylediğiniz kaybolur.** Özellikle AirPods ile kayıt simgesini bekleyin.
 - **fn tuşunu başkaları kapabilir.** macOS’in 🌐 tuşu ayarı, Warp ya da macOS Dikte fn tuşunu önce sahiplenirse Lowspeak onu görmez; bkz. [Sorun giderme](#sorun-giderme).
-- **Parakeet** sözlüğü ve dil seçimini yok sayar ve yalnızca Avrupa dillerini bilir.
+- **Parakeet** dil seçimini yok sayar ve yalnızca Avrupa dillerini bilir. Sözlük, yazımını sadece sonradan düzeltir: oldukça farklı bir sözcük olarak duyduğu bir terim yanlış kalır.
 - **Yazı sistemi ve değişke:** Yalnızca GPT Transcribe’a Geleneksel Çince yazması söylenebilir; hiçbir modele Brezilya Portekizcesi yerine Avrupa Portekizcesi yazması söylenemez.
 - **Süre sınırları:** fn basılıyken iki dakika, kilitliyken beş dakika.
 - **Mikrofon Modu:** Denetim Merkezi Lowspeak için Ses İzolasyonu ve Geniş Spektrum seçeneklerini sunar ve bunları etkin olarak gösterir; ancak Lowspeak ses işleme olmadan kaydeder, bu yüzden seçimin hiçbir etkisi olmaz.

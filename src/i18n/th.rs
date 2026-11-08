@@ -3,6 +3,7 @@ use super::Texts;
 pub static TH: Texts = Texts {
     recent_dictations: "การป้อนตามคำบอกล่าสุด",
     none_yet: "ยังไม่มี",
+    retry_failed_dictation: "ลองถอดเสียงที่ไม่สำเร็จอีกครั้ง",
     local: "ในเครื่อง",
     not_installed: |model| format!("{model} (ไม่ได้ติดตั้ง)"),
     no_key: |provider| format!("{provider} (ไม่มีคีย์)"),
@@ -64,7 +65,7 @@ pub static TH: Texts = Texts {
     unknown_key_format: "รูปแบบคีย์ที่ไม่รู้จัก",
     unknown_key_format_info: "คีย์ต้องขึ้นต้นด้วย sk- (OpenAI) หรือ gsk_ (Groq) โปรดลองอีกครั้ง",
     vocabulary_title: "คำศัพท์",
-    vocabulary_info: "ชื่อและศัพท์เฉพาะที่ต้องสะกดให้ตรงทุกตัวอักษร คั่นด้วยเครื่องหมายจุลภาค OpenAI, Groq, Whisper บน Mac เครื่องนี้ และการประมวลผลภายหลังจะใช้คำเหล่านี้",
+    vocabulary_info: "ชื่อและศัพท์เฉพาะที่ต้องสะกดให้ตรงทุกตัวอักษร คั่นด้วยเครื่องหมายจุลภาค OpenAI, Groq, Whisper และ Parakeet บน Mac เครื่องนี้ และการประมวลผลภายหลังจะใช้คำเหล่านี้",
 
     recording_failed: "บันทึกเสียงไม่สำเร็จ",
     microphone_silent: "ไมโครโฟนไม่มีเสียง",
@@ -78,6 +79,9 @@ pub static TH: Texts = Texts {
     accessibility_list: "การช่วยการเข้าถึง",
     device_control_list: "การควบคุมอุปกรณ์และการเข้าถึงข้อมูล",
     transcription_failed: "ถอดเสียงไม่สำเร็จ",
+    retry_failed_dictation_info: |menu_item| {
+        format!("การบันทึกยังเก็บไว้อยู่ เลือก “{menu_item}” ในเมนูเพื่อถอดเสียงอีกครั้ง")
+    },
     transcribed_locally: "ถอดเสียงบน Mac เครื่องนี้แล้ว",
     transcribed_locally_info: |reason| format!("{reason} โมเดลในเครื่องถอดเสียงแทนแล้ว"),
     post_processing_failed: "ประมวลผลภายหลังไม่สำเร็จ",
@@ -113,6 +117,9 @@ pub static TH: Texts = Texts {
     model_not_available: |menu_item| format!("ไม่มีโมเดลในเครื่องที่ใช้งานได้ ดาวน์โหลดได้ผ่าน “{menu_item}”"),
     network_error: |message| format!("ข้อผิดพลาดของเครือข่าย: {message}"),
     key_rejected: |provider| format!("{provider} ปฏิเสธคีย์ API"),
+    quota_exhausted: |provider| {
+        format!("{provider} แจ้งว่าบัญชีไม่มีเครดิตเหลือแล้ว เพิ่มเครดิตในบัญชี {provider} ของคุณ")
+    },
     model_retired: |provider| format!("{provider} เลิกให้บริการโมเดลสำหรับการประมวลผลภายหลังแล้ว"),
     no_post_processing_key: |first, second| {
         format!("การประมวลผลภายหลังต้องใช้คีย์ API ของ {first} หรือ {second} ตั้งค่าได้จากแถบเมนู")
@@ -128,6 +135,8 @@ pub static TH: Texts = Texts {
     microphone_error: |detail| format!("ไม่สามารถเริ่มไมโครโฟนได้: {detail}"),
     paste_failed: "วางไม่สำเร็จ",
     paste_failed_info: "ข้อความอยู่ในคลิปบอร์ดแล้ว วางได้ด้วย ⌘V",
+    not_pasted: "ไม่ได้วางข้อความที่ป้อนตามคำบอก",
+    not_pasted_info: "แอปอื่นขึ้นมาอยู่ด้านหน้าก่อนที่ข้อความจะพร้อม ข้อความอยู่ในคลิปบอร์ดแล้ว วางได้ด้วย ⌘V",
     request_timed_out: "คำขอหมดเวลา",
     audio_failed: "ไม่สามารถประมวลผลการบันทึกเสียงได้",
     local_model_failed: "โมเดลในเครื่องไม่สามารถถอดเสียงจากการบันทึกได้",

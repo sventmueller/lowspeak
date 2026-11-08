@@ -3,6 +3,7 @@ use super::Texts;
 pub static DA: Texts = Texts {
     recent_dictations: "Seneste dikteringer",
     none_yet: "Ingen endnu",
+    retry_failed_dictation: "Prøv mislykket diktering igen",
     local: "Lokalt",
     not_installed: |model| format!("{model} (ikke installeret)"),
     no_key: |provider| format!("{provider} (ingen nøgle)"),
@@ -65,7 +66,7 @@ pub static DA: Texts = Texts {
     unknown_key_format: "Ukendt nøgleformat",
     unknown_key_format_info: "Nøglen skal starte med sk- (OpenAI) eller gsk_ (Groq). Prøv igen.",
     vocabulary_title: "Ordliste",
-    vocabulary_info: "Navne og fagudtryk, der skal staves præcist, adskilt med komma. OpenAI, Groq, Whisper på denne Mac og efterbehandlingen bruger dem.",
+    vocabulary_info: "Navne og fagudtryk, der skal staves præcist, adskilt med komma. OpenAI, Groq, Whisper og Parakeet på denne Mac og efterbehandlingen bruger dem.",
 
     recording_failed: "Optagelse mislykkedes",
     microphone_silent: "Ingen lyd fra mikrofonen",
@@ -79,6 +80,9 @@ pub static DA: Texts = Texts {
     accessibility_list: "Tilgængelighed",
     device_control_list: "Styring af enhed og adgang til data",
     transcription_failed: "Transskription mislykkedes",
+    retry_failed_dictation_info: |menu_item| {
+        format!("Optagelsen er gemt: Vælg ”{menu_item}” i menuen for at transskribere den igen.")
+    },
     transcribed_locally: "Transskriberet på denne Mac",
     transcribed_locally_info: |reason| format!("{reason} En lokal model transskriberede i stedet."),
     post_processing_failed: "Efterbehandling mislykkedes",
@@ -122,6 +126,11 @@ pub static DA: Texts = Texts {
     },
     network_error: |message| format!("Netværksfejl: {message}"),
     key_rejected: |provider| format!("{provider} afviste API-nøglen."),
+    quota_exhausted: |provider| {
+        format!(
+            "{provider} oplyser, at kontoen ikke har mere kredit. Tilføj kredit på din {provider}-konto."
+        )
+    },
     model_retired: |provider| {
         format!("{provider} tilbyder ikke længere modellen til efterbehandling.")
     },
@@ -141,6 +150,8 @@ pub static DA: Texts = Texts {
     microphone_error: |detail| format!("Mikrofonen kunne ikke startes: {detail}"),
     paste_failed: "Indsætning mislykkedes",
     paste_failed_info: "Teksten ligger i udklipsholderen. Indsæt den med ⌘V.",
+    not_pasted: "Dikteringen blev ikke indsat",
+    not_pasted_info: "En anden app kom i forgrunden, før teksten var klar. Teksten ligger i udklipsholderen. Indsæt den med ⌘V.",
     request_timed_out: "Anmodningen fik timeout.",
     audio_failed: "Optagelsen kunne ikke behandles.",
     local_model_failed: "Den lokale model kunne ikke transskribere optagelsen.",

@@ -32,20 +32,29 @@ pub fn parse(input: &str) -> Vec<String> {
     terms
 }
 
+/// The terms as one finished sentence: Whisper takes the prompt for the text before the
+/// recording, and after a list without a full stop it drops repeated sentences of the dictation
+/// (measured in docs/development.md, Vocabulary).
 pub fn prompt(terms: &[String]) -> Option<String> {
     let mut prompt = String::new();
     let mut chars = 0;
     for term in terms {
         let separator = if prompt.is_empty() { "" } else { ", " };
         let added = separator.chars().count() + term.chars().count();
-        if chars + added > MAX_PROMPT_CHARS {
+        if chars + added + 1 > MAX_PROMPT_CHARS {
             break;
         }
         prompt.push_str(separator);
         prompt.push_str(term);
         chars += added;
     }
-    (!prompt.is_empty()).then_some(prompt)
+    if prompt.is_empty() {
+        return None;
+    }
+    if !prompt.ends_with(['.', '!', '?']) {
+        prompt.push('.');
+    }
+    Some(prompt)
 }
 
 pub fn load() -> Vec<String> {
@@ -98,11 +107,17 @@ mod tests {
         assert_eq!(prompt(&[]), None);
         assert_eq!(
             prompt(&["Postgres".into(), "Traefik".into()]).as_deref(),
-            Some("Postgres, Traefik")
+            Some("Postgres, Traefik.")
+        );
+        assert_eq!(
+            prompt(&["Muster GmbH".into(), "ACME Inc.".into()]).as_deref(),
+            Some("Muster GmbH, ACME Inc.")
         );
         let long: Vec<String> = (0..100).map(|i| format!("Fachbegriff{i:03}")).collect();
         let cut = prompt(&long).unwrap();
-        assert!(cut.len() <= MAX_PROMPT_CHARS && cut.ends_with(|c: char| c.is_ascii_digit()));
+        assert!(cut.len() <= MAX_PROMPT_CHARS, "{}", cut.len());
+        let last_term = cut.strip_suffix('.').unwrap();
+        assert!(last_term.ends_with(|c: char| c.is_ascii_digit()), "{cut}");
     }
 
     #[test]

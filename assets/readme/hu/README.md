@@ -113,7 +113,7 @@ A Lowspeak 35 nyelven beszél. Megtanulja az Ön által használt neveket és ki
 - **Diszkrét.** Nincs fiók, nincs telemetria. A hang csak az Ön által választott szolgáltatóhoz jut el, helyi módban pedig sehová.
 - **Egyetlen diktálás sem vész el.** Ha a hálózat vagy az online szolgáltatás nem működik, egy telepített helyi modell ugyanazt a felvételt írja át a Macen.
 - **Az Ön nyelvén.** A diktálás több tucat nyelven működik, a menü, a párbeszédablakok és az értesítések pedig 35 nyelven érhetők el.
-- **Az Ön szavai, helyesen leírva.** A nevekből és szakkifejezésekből álló szókincs az OpenAI-t, a Groqot, a Whispert és az utófeldolgozást is irányítja.
+- **Az Ön szavai, helyesen leírva.** A nevekből és szakkifejezésekből álló szókincs az OpenAI-t, a Groqot, a Whispert és az utófeldolgozást is irányítja, és kijavítja, ahogyan a Parakeet leírja őket.
 - **Tiszta szöveg, ha szeretné.** Az opcionális utófeldolgozás eltávolítja a töltelékszavakat, kijavítja a nyelvtant, és ha menet közben helyesbít, csak a helyesbítést tartja meg, vagy a szöveget annak az appnak a típusához is igazítja, amelybe diktál.
 - **A vágólap az Öné marad.** A Lowspeak a vágólapon keresztül illeszt be, és egy pillanattal később visszateszi, ami előtte rajta volt. Az utolsó tíz diktálás a menüben marad, hogy újra kimásolhassa.
 - **Tartsa lenyomva az fn billentyűt, beszéljen, engedje fel.** A szöveg az előtérben lévő appba kerül, oda, ahol a kurzor áll: levélbe, csevegésbe, szerkesztőbe, terminálba vagy böngészőbe. Nincs ablak, amelyre át kellene váltani, és nincs gomb, amelyre kattintani kellene.
@@ -177,6 +177,7 @@ Kattintson a menüsorban lévő gyűrűre:
 | Elem | Mire szolgál |
 |---|---|
 | **Legutóbbi diktálások** | az utolsó tíz szöveg; egy kattintás újra a vágólapra másolja valamelyiket |
+| **Sikertelen diktálás újrapróbálása** | újra átírja az utolsó sikertelen diktálást az éppen kiválasztott modellel; csak hiba után jelenik meg |
 | **Helyi** | a Macen lévő modellek Whisper és Parakeet szerint csoportosítva; a le nem töltöttek szürkén jelennek meg |
 | **OpenAI**, **Groq** | az online modellek; kulcs nélkül szürkék, és a menü az **API-kulcs megadása…** pontot kínálja |
 | **Nyelv** | a diktálás nyelve vagy az **Automatikus felismerés**; a menü is ezt követi |
@@ -231,6 +232,8 @@ A felvétel lenyomott fn mellett két perc, zárolva öt perc után magától le
 ### Hová kerül a szöveg
 
 A Lowspeak abba az appba illeszti be a szöveget, amely a beszéd befejezésekor az előtérben volt, a kurzor helyére, a vágólapon és a ⌘V-n keresztül. Előtte elmenti mindazt, ami a vágólapon volt, és fél másodperccel azután teszi vissza, hogy az app kiolvasta a szöveget, vagy tíz másodperc múlva, ha az app ezt sosem teszi meg, hacsak egy másik app közben meg nem változtatta a vágólapot. A szöveg ideiglenesként van megjelölve, így a vágólap-előzményeket kezelő appok, amelyek tiszteletben tartják ezt a jelölést, nem rögzítik.
+
+Ha a szöveg elkészültekor már egy másik app van az előtérben, a Lowspeak nem oda illeszti be: a szöveg a vágólapon marad, és egy értesítés jelzi ezt. Illessze be a ⌘V-vel oda, ahová szánta.
 
 A következő diktálást akkor is elindíthatja, ha az előző átírása még tart. A szövegek abban a sorrendben kerülnek beillesztésre, ahogy elmondta őket, és soha nem felvétel közben vagy a Shift lenyomva tartása alatt, így a beillesztés nem kerülhet a következő mondata közepébe.
 
@@ -288,11 +291,15 @@ A **Parakeet** a leggyorsabb választás: 40 másodpercnyi beszédet nagyjából
 
 Ha egy online átírás nem sikerül, mert nincs hálózat, a szolgáltatónál hiba van, vagy a kulcs hibás, egy telepített helyi modell írja át ugyanazt a felvételt: a **Helyi** alatt kiválasztott, ennek hiányában a Parakeet Ultra, majd a Whisper Large v3 Turbo, a Large v3 és a kisebb Whisper-modellek, végül a Parakeet v2. Erről egyszer értesítés tájékoztatja; újra csak akkor érkezik, ha közben egy online diktálás sikerült.
 
-Ha van helyi modell tartaléknak, a Lowspeak 20 másodpercet ad az online kérésnek; ha nincs, háromszor próbálkozik, alkalmanként legfeljebb egy percig. Online módban a Lowspeak indításkor egyszer előkészíti a tartalékként szolgáló Parakeet-modellt, így az első tartalékátírásnak nem kell rá várnia.
+Ha van helyi modell tartaléknak, a Lowspeak 20 másodpercet ad az online kérésnek; ha nincs, háromszor próbálkozik, alkalmanként legfeljebb egy percig. Online módban a Lowspeak indításkor egyszer előkészíti a tartalékként szolgáló Parakeet-modellt, így az első tartalékátírásnak nem kell rá várnia. Ha egy túlterhelt szolgáltató szünetet kér, megkapja, legfeljebb tíz másodpercig; annál, amelyik ennél hosszabbat kér, vagy azt jelzi, hogy a fiókjában nincs több kredit, a Lowspeak nem próbálkozik újra.
+
+Ha egy diktálás így is sikertelen, nem vész el: a Lowspeak a memóriában tartja a felvételét, és a menü **Sikertelen diktálás újrapróbálása** pontja újra átírja, például amikor ismét van hálózat, vagy miután másik modellt választott. Csak a legutóbbi sikertelen felvétel marad meg, és a Lowspeak bezárása után egy sem.
 
 ### Hogyan készül elő a felvétel
 
 A Lowspeak a mikrofon saját mintavételi frekvenciáján rögzít, és a leállítás után alakítja át a modellek által várt 16 kHz-re. Az átírás előtt eltávolítja a 80 Hz alatti mély dübörgést, levágja a csendet az elejéről és a végéről, és kiegyenlíti a hangerőt, így a halkan és a hangosan beszélők egyformán szólnak. A beszéd nélküli felvételt egyáltalán nem küldi el. Helyi módban a Parakeet először az érintetlen felvételt kapja meg, az előkészítettet pedig csak akkor, ha abból nem lesz szöveg.
+
+A Whisper csendbe és zajba néha olyan szöveget ír, amelyet senki sem mondott, például feliratozott videók stáblistáját vagy a neki megadott szókincset. A Lowspeak elveti azokat a részeket, amelyeket maga a Whisper csendként jelöl meg, és beillesztés előtt eltávolítja az ilyen szöveget.
 
 ### Nyelvek modellenként
 
@@ -317,7 +324,7 @@ A **Szókincs…** azokat a neveket és kifejezéseket fogadja, amelyeket a Lows
 - A **GPT Transcribe** kulcsszavakként kapja meg őket.
 - A **Whisper** (OpenAI, Groq és a saját Macén) a felvétel előtti útmutatásként olvassa őket, legfeljebb 500 karakterig.
 - Az **utófeldolgozás** utasítást kap, hogy pontosan úgy írja őket, ahogy meg vannak adva.
-- A **Parakeet** nem használja őket.
+- A **Parakeet** nem hallja őket. Ahol valami nagyon hasonlót írt, a Lowspeak a kifejezések írásmódját teszi a szövegébe: a „Träfig” vagy a „Trafik” Traefik lesz, a „Los Peak” pedig Lowspeak. Az öt betűnél rövidebb kifejezések, a címekben és fájlnevekben szereplő szavak, valamint a toldalékos alakok, például a „Lowspeaks”, változatlanok maradnak. Ahhoz, hogy egy elírást meg tudjon különböztetni egy valódi szótól, a Lowspeak a macOS helyesírás-ellenőrzőjét kérdezi meg, a saját Macén.
 
 ## Utófeldolgozás
 
@@ -353,7 +360,8 @@ A Lowspeak a háttérben dolgozik, ezért a problémákat értesítésekben jelz
 | **A mikrofon néma** | öt másodperc csend, lásd: [Mikrofon](#mikrofon) |
 | **Engedély szükséges a kisegítő lehetőségekhez** | a szöveg a vágólapon van; engedélyezze a Kisegítő lehetőségeket az automatikus beillesztéshez |
 | **A beillesztés nem sikerült** | a szöveg a vágólapon van; illessze be a ⌘V-vel |
-| **Az átírás nem sikerült** | az okkal együtt: nincs kulcs, elutasított kulcs, túl sok kérés, szerver- vagy hálózati hiba, vagy nincs helyi modell |
+| **Az átírás nem sikerült** | az okkal együtt: nincs kulcs, elutasított kulcs, nincs több kredit, túl sok kérés, szerver- vagy hálózati hiba, vagy nincs helyi modell; a felvétel megmarad a **Sikertelen diktálás újrapróbálása** számára |
+| **A diktálás nem lett beillesztve** | egy másik app került előtérbe, mielőtt a szöveg elkészült; a szöveg a vágólapon van |
 | **Átírva ezen a Macen** | az online szolgáltatás nem működött, és egy helyi modell vette át a feladatot |
 | **Az utófeldolgozás nem sikerült** | a szolgáltató elutasítja az utófeldolgozást, vagy nincs megadva kulcs; a szöveg nélküle lett beillesztve |
 | **Nincs API-kulcs** | olyan online modellt választott, amelynek szolgáltatójához nincs kulcs |
@@ -400,7 +408,7 @@ A Lowspeak hallja, amit mond, amíg az fn le van nyomva, bármelyik appba tud g�
 - Az **utófeldolgozás**, ha bekapcsolja, az átírt szöveget és a szókincsét elküldi a Groqnak vagy az OpenAI-nak. Formázás módban hozzáadja annak az appnak a típusát, amelybe diktál (kódszerkesztő, terminál, csevegés vagy e-mail); az app nevét nem küldi el.
 - **Nincs telemetria, nincs fiók.** Az átíráson és az utófeldolgozáson kívül a Lowspeak csak azért kapcsolódik a hálózathoz, hogy online módban vagy bekapcsolt utófeldolgozásnál az fn lenyomva tartása alatt megnyissa a kapcsolatot a szolgáltatóval, hogy kérésre letöltsön egy modellt a Hugging Face-ről, HTTPS-en keresztül, rögzített verzióban, minden fájlt az ellenőrzőösszegével összevetve, és hogy új verziót keressen a GitHubon, ha engedélyezi, naponta egyszer. Ez a kérés a Lowspeak verzióját tartalmazza, semmi mást. A **Súgó › Probléma jelentése…** egy GitHub-űrlapot nyit meg a böngészőben; a címe a Lowspeak és a macOS verzióját tartalmazza, semmit abból, amit diktált.
 - Az **API-kulcsok** az Ön bejelentkezési kulcskarikáján maradnak. Csak a saját szolgáltatójukhoz jutnak el, és a Lowspeak eltávolítja őket a hibaüzenetekből, mielőtt bármi a naplóba kerülne.
-- **A diktált szöveg nem tárolódik.** Az utolsó tíz diktálás a **Legutóbbi diktálások** számára a memóriában marad, és a Lowspeak bezárásakor eltűnik. A naplófájlok hosszakat és időzítéseket rögzítenek, a szöveget soha.
+- **A diktált szöveg nem tárolódik.** Az utolsó tíz diktálás a **Legutóbbi diktálások** számára a memóriában marad, és a Lowspeak bezárásakor eltűnik; ugyanígy a legutóbbi sikertelen diktálás felvétele is, amelyet a **Sikertelen diktálás újrapróbálása** számára őriz meg. A naplófájlok hosszakat és időzítéseket rögzítenek, a szöveget soha.
 - **A vágólap** tartalmát a Lowspeak beillesztés előtt elmenti, és visszaállítja, amint az app kiolvasta a szöveget, hacsak egy másik app közben meg nem változtatta. A diktált szöveg ideiglenesként van megjelölve, így a vágólap-előzményeket kezelő appok, amelyek tiszteletben tartják ezt a jelölést, kihagyják.
 - **Kódaláírás** Hardened Runtime-mal; az app csak a mikrofonhoz, a Kisegítő lehetőségekhez, az értesítésekhez és a hálózathoz kér engedélyt. A frissítésnek a fejlesztő aláírását kell hordoznia, különben a Sparkle elutasítja.
 
@@ -420,7 +428,7 @@ Apple Siliconon mérve:
 - **Intel-alapú Maceken a helyi modellek** a processzoron futnak, és jóval lassabbak; ott az online átírás a jobb választás.
 - **Ami a mikrofon elkészülte előtt hangzik el, elvész.** Várja meg a felvétel ikonját, különösen AirPods esetén.
 - **Az fn billentyűt mások is lefoglalhatják.** Ha a macOS 🌐 billentyűre vonatkozó beállítása, a Warp vagy a macOS Diktálás funkciója előbb lefoglalja az fn billentyűt, a Lowspeak nem észleli; lásd: [Hibaelhárítás](#hibaelhárítás).
-- A **Parakeet** figyelmen kívül hagyja a szókincset és a nyelvválasztást, és csak európai nyelveket ismer.
+- A **Parakeet** figyelmen kívül hagyja a nyelvválasztást, és csak európai nyelveket ismer. A szókincs mindössze utólag javítja az írásmódját: az a kifejezés, amelyet egészen más szónak hallott, hibás marad.
 - **Írásmód és változat:** csak a GPT Transcribe utasítható hagyományos kínai írásra; egyetlen modell sem utasítható arra, hogy brazíliai helyett európai portugál nyelven írjon.
 - **Időkorlátok:** két perc, amíg az fn le van nyomva, öt perc zárolva.
 - **Mikrofonmód:** a Vezérlőközpont felkínálja a Lowspeaknek a Beszédhang izolálása és a Széles spektrum módot, és aktívként jelzi őket, a Lowspeak azonban hangfeldolgozás nélkül rögzít, így a választásnak nincs hatása.

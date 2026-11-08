@@ -3,6 +3,7 @@ use super::Texts;
 pub static DE: Texts = Texts {
     recent_dictations: "Letzte Diktate",
     none_yet: "Noch keine",
+    retry_failed_dictation: "Fehlgeschlagenes Diktat erneut transkribieren",
     local: "Lokal",
     not_installed: |model| format!("{model} (nicht installiert)"),
     no_key: |provider| format!("{provider} (kein Schlüssel)"),
@@ -65,7 +66,7 @@ pub static DE: Texts = Texts {
     unknown_key_format: "Unbekanntes Schlüsselformat",
     unknown_key_format_info: "Erwartet wird ein Schlüssel, der mit sk- (OpenAI) oder gsk_ (Groq) beginnt. Bitte erneut versuchen.",
     vocabulary_title: "Vokabular",
-    vocabulary_info: "Namen und Fachbegriffe, die genau so geschrieben werden sollen, durch Kommas getrennt. OpenAI, Groq, Whisper auf diesem Mac und die Nachbearbeitung verwenden sie.",
+    vocabulary_info: "Namen und Fachbegriffe, die genau so geschrieben werden sollen, durch Kommas getrennt. OpenAI, Groq, Whisper und Parakeet auf diesem Mac sowie die Nachbearbeitung verwenden sie.",
 
     recording_failed: "Aufnahme fehlgeschlagen",
     microphone_silent: "Mikrofon stumm",
@@ -79,6 +80,9 @@ pub static DE: Texts = Texts {
     accessibility_list: "Bedienungshilfen",
     device_control_list: "Gerätesteuerung und Datenzugriff",
     transcription_failed: "Transkription fehlgeschlagen",
+    retry_failed_dictation_info: |menu_item| {
+        format!("Die Aufnahme bleibt erhalten: Über „{menu_item}“ im Menü erneut transkribieren.")
+    },
     transcribed_locally: "Auf diesem Mac transkribiert",
     transcribed_locally_info: |reason| {
         format!("{reason} Stattdessen hat ein lokales Modell transkribiert.")
@@ -126,6 +130,11 @@ pub static DE: Texts = Texts {
     },
     network_error: |message| format!("Netzwerkfehler: {message}"),
     key_rejected: |provider| format!("{provider} hat den API-Schlüssel abgelehnt."),
+    quota_exhausted: |provider| {
+        format!(
+            "{provider} meldet, dass das Konto kein Guthaben mehr hat. Guthaben im {provider}-Konto aufladen."
+        )
+    },
     model_retired: |provider| {
         format!("{provider} bietet das Modell für die Nachbearbeitung nicht mehr an.")
     },
@@ -145,6 +154,8 @@ pub static DE: Texts = Texts {
     microphone_error: |detail| format!("Das Mikrofon konnte nicht gestartet werden: {detail}"),
     paste_failed: "Einfügen fehlgeschlagen",
     paste_failed_info: "Der Text liegt in der Zwischenablage. Mit ⌘V einfügen.",
+    not_pasted: "Diktat nicht eingefügt",
+    not_pasted_info: "Eine andere App kam nach vorn, bevor der Text fertig war. Der Text liegt in der Zwischenablage. Mit ⌘V einfügen.",
     request_timed_out: "Zeitüberschreitung bei der Anfrage.",
     audio_failed: "Die Aufnahme konnte nicht verarbeitet werden.",
     local_model_failed: "Das lokale Modell konnte die Aufnahme nicht transkribieren.",

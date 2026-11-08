@@ -3,6 +3,7 @@ use super::Texts;
 pub static FR: Texts = Texts {
     recent_dictations: "Dictées récentes",
     none_yet: "Aucune pour l’instant",
+    retry_failed_dictation: "Réessayer la dictée qui a échoué",
     local: "Local",
     not_installed: |model| format!("{model} (non installé)"),
     no_key: |provider| format!("{provider} (aucune clé)"),
@@ -68,7 +69,7 @@ pub static FR: Texts = Texts {
     unknown_key_format: "Format de clé inconnu",
     unknown_key_format_info: "La clé doit commencer par sk- (OpenAI) ou gsk_ (Groq). Veuillez réessayer.",
     vocabulary_title: "Vocabulaire",
-    vocabulary_info: "Noms et termes techniques à écrire exactement ainsi, séparés par des virgules. OpenAI, Groq, Whisper sur ce Mac et le post-traitement les utilisent.",
+    vocabulary_info: "Noms et termes techniques à écrire exactement ainsi, séparés par des virgules. OpenAI, Groq, Whisper et Parakeet sur ce Mac ainsi que le post-traitement les utilisent.",
 
     recording_failed: "Échec de l’enregistrement",
     microphone_silent: "Micro silencieux",
@@ -82,6 +83,11 @@ pub static FR: Texts = Texts {
     accessibility_list: "Accessibilité",
     device_control_list: "Contrôle de l’appareil et accès aux données",
     transcription_failed: "Échec de la transcription",
+    retry_failed_dictation_info: |menu_item| {
+        format!(
+            "L’enregistrement est conservé : choisissez « {menu_item} » dans le menu pour le transcrire à nouveau."
+        )
+    },
     transcribed_locally: "Transcrit sur ce Mac",
     transcribed_locally_info: |reason| format!("{reason} Un modèle local a pris le relais."),
     post_processing_failed: "Échec du post-traitement",
@@ -131,6 +137,11 @@ pub static FR: Texts = Texts {
     },
     network_error: |message| format!("Erreur réseau : {message}"),
     key_rejected: |provider| format!("{provider} a refusé la clé API."),
+    quota_exhausted: |provider| {
+        format!(
+            "{provider} indique que le compte n’a plus de crédit. Ajoutez du crédit dans votre compte {provider}."
+        )
+    },
     model_retired: |provider| format!("{provider} ne propose plus le modèle de post-traitement."),
     no_post_processing_key: |first, second| {
         format!(
@@ -148,6 +159,8 @@ pub static FR: Texts = Texts {
     microphone_error: |detail| format!("Impossible de démarrer le micro : {detail}"),
     paste_failed: "Échec du collage",
     paste_failed_info: "Le texte se trouve dans le presse-papiers. Collez-le avec ⌘V.",
+    not_pasted: "Dictée non collée",
+    not_pasted_info: "Une autre app est passée au premier plan avant que le texte soit prêt. Le texte se trouve dans le presse-papiers. Collez-le avec ⌘V.",
     request_timed_out: "La requête a expiré.",
     audio_failed: "L’enregistrement n’a pas pu être traité.",
     local_model_failed: "Le modèle local n’a pas pu transcrire l’enregistrement.",

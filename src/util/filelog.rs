@@ -42,16 +42,15 @@ macro_rules! flog {
     };
 }
 
-/// UTC timestamp in the form `2026-10-22 15:04:05 +0000`.
+/// UTC timestamp in the form `2026-10-22 15:04:05.123 +0000`.
 pub fn timestamp() -> String {
-    let secs = SystemTime::now()
+    let now = SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .map(|d| d.as_secs())
-        .unwrap_or(0);
-    format_timestamp(secs)
+        .unwrap_or_default();
+    format_timestamp(now.as_secs(), now.subsec_millis())
 }
 
-fn format_timestamp(secs: u64) -> String {
+fn format_timestamp(secs: u64, millis: u32) -> String {
     let days = i64::try_from(secs / 86_400).unwrap_or(0);
     let rem = secs % 86_400;
     // Civil date from days since 1970-01-01 (Howard Hinnant's algorithm).
@@ -65,7 +64,7 @@ fn format_timestamp(secs: u64) -> String {
     let month = if mp < 10 { mp + 3 } else { mp - 9 };
     let year = yoe + era * 400 + i64::from(month <= 2);
     format!(
-        "{year:04}-{month:02}-{day:02} {:02}:{:02}:{:02} +0000",
+        "{year:04}-{month:02}-{day:02} {:02}:{:02}:{:02}.{millis:03} +0000",
         rem / 3_600,
         rem % 3_600 / 60,
         rem % 60
@@ -166,11 +165,20 @@ mod tests {
 
     #[test]
     fn timestamps_are_utc_calendar_dates() {
-        assert_eq!(format_timestamp(0), "1970-01-01 00:00:00 +0000");
-        assert_eq!(format_timestamp(951_782_400), "2000-02-29 00:00:00 +0000");
-        assert_eq!(format_timestamp(1_792_681_445), "2026-10-22 15:04:05 +0000");
-        assert_eq!(format_timestamp(4_107_542_399), "2100-02-28 23:59:59 +0000");
-        assert_eq!(timestamp().len(), 25);
+        assert_eq!(format_timestamp(0, 0), "1970-01-01 00:00:00.000 +0000");
+        assert_eq!(
+            format_timestamp(951_782_400, 7),
+            "2000-02-29 00:00:00.007 +0000"
+        );
+        assert_eq!(
+            format_timestamp(1_792_681_445, 123),
+            "2026-10-22 15:04:05.123 +0000"
+        );
+        assert_eq!(
+            format_timestamp(4_107_542_399, 999),
+            "2100-02-28 23:59:59.999 +0000"
+        );
+        assert_eq!(timestamp().len(), 29);
     }
 
     #[test]

@@ -2,6 +2,7 @@
 //! A test binary of its own, because it points the whole process to an invalid API key.
 
 use std::path::Path;
+use std::sync::Arc;
 
 use lowspeak::audio::wav;
 use lowspeak::config::settings::Settings;
@@ -12,6 +13,7 @@ use lowspeak::transcription::local::LocalTranscriber;
 use lowspeak::transcription::model_store::{self, Disk};
 use lowspeak::transcription::postprocess::ActiveApp;
 use lowspeak::transcription::service::{self, Job, Outcome, Services};
+use lowspeak::transcription::spelling::{self, Lexicon};
 
 #[test]
 #[ignore = "sends one request with an invalid key to Groq; needs Parakeet Ultra installed"]
@@ -31,7 +33,7 @@ fn rejected_online_request_is_transcribed_locally() {
         std::fs::read(Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/builtin.wav"))
             .unwrap();
     let job = Job {
-        samples: wav::decode(&bytes).unwrap().samples,
+        samples: Arc::new(wav::decode(&bytes).unwrap().samples),
         settings: Settings {
             mode: TranscriptionMode::Online,
             local_model: LocalModel::ParakeetUltra,
@@ -50,6 +52,7 @@ fn rejected_online_request_is_transcribed_locally() {
         local: &local,
         models: &Disk,
         api: Api::SYSTEM,
+        lexicon: &MacosWords,
     };
     let outcome = service::run(job, &services);
     let _ = std::fs::remove_dir_all(&dir);
@@ -67,5 +70,14 @@ fn rejected_online_request_is_transcribed_locally() {
             );
         }
         _ => panic!("expected text"),
+    }
+}
+
+/// The macOS spell checker, asked on the test's own thread: the test harness runs no main queue.
+struct MacosWords;
+
+impl Lexicon for MacosWords {
+    fn is_word(&self, word: &str, language: Option<&str>) -> bool {
+        spelling::known_to_macos(word, language)
     }
 }

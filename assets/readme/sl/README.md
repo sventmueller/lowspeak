@@ -113,7 +113,7 @@ Lowspeak govori 35 jezikov. Nauči se imen in izrazov, ki jih uporabljate, zna o
 - **Zasebno.** Brez računa, brez telemetrije. Zvok gre samo k ponudniku, ki ste ga izbrali, v lokalnem načinu pa nikamor.
 - **Noben narek se ne izgubi.** Ko omrežje ali spletna storitev odpove, nameščeni lokalni model isti posnetek prepiše na vašem Macu.
 - **V vašem jeziku.** Narekovanje deluje v desetinah jezikov, meni, pogovorna okna in obvestila pa so na voljo v 35 jezikih.
-- **Vaše besede, pravilno zapisane.** Besedišče imen in strokovnih izrazov usmerja OpenAI, Groq, Whisper in naknadno obdelavo.
+- **Vaše besede, pravilno zapisane.** Besedišče imen in strokovnih izrazov usmerja OpenAI, Groq, Whisper in naknadno obdelavo ter popravlja, kako jih zapiše Parakeet.
 - **Čisto besedilo, če ga želite.** Izbirna naknadna obdelava odstrani mašila, popravi slovnico in, ko se popravite, obdrži samo popravek ali pa besedilo dodatno oblikuje glede na vrsto aplikacije, v katero narekujete.
 - **Vaše odložišče ostane vaše.** Lowspeak lepi prek odložišča in trenutek pozneje vrne, kar je bilo v njem. Zadnjih deset narekov ostane v meniju, da jih lahko znova kopirate.
 - **Pridržite fn, govorite, spustite.** Besedilo se natipka v aplikacijo v ospredju, kjer koli je kazalka: pošta, klepet, urejevalnik, terminal ali brskalnik. Nobenega okna, na katero bi morali preklopiti, nobenega gumba, ki bi ga morali klikniti.
@@ -177,6 +177,7 @@ Kliknite obroč v menijski vrstici:
 | Ukaz | Kaj naredi |
 |---|---|
 | **Nedavni nareki** | zadnjih deset besedil; klik eno od njih znova kopira v odložišče |
+| **Znova poskusi neuspeli narek** | znova prepiše zadnji neuspeli narek s trenutno izbranim modelom; prikaže se le po napaki |
 | **Lokalno** | modeli na vašem Macu, razvrščeni v Whisper in Parakeet; tisti, ki niso preneseni, so zatemnjeni |
 | **OpenAI**, **Groq** | spletni modeli; brez ključa so zatemnjeni, meni pa ponudi **Nastavi ključ API…** |
 | **Jezik** | jezik, v katerem narekujete, ali **Samodejno zaznaj**; meni mu sledi |
@@ -231,6 +232,8 @@ Snemanje se samo ustavi po dveh minutah, ko je fn pridržana, in po petih minuta
 ### Kam gre besedilo
 
 Lowspeak besedilo prilepi v aplikacijo, ki je bila v ospredju, ko ste nehali govoriti, na mesto kazalke, prek odložišča in ⌘V. Shrani vse, kar je bilo prej v odložišču, in to vrne pol sekunde po tem, ko aplikacija prebere besedilo, ali po desetih sekundah, če ga sploh ne prebere, razen če je odložišče medtem spremenila druga aplikacija. Besedilo je označeno kot začasno, zato ga aplikacije z zgodovino odložišča, ki to oznako upoštevajo, ne zabeležijo.
+
+Če je do takrat, ko je besedilo pripravljeno, v ospredje prišla druga aplikacija, ga Lowspeak tja ne prilepi: besedilo ostane v odložišču, obvestilo pa to sporoči. Prilepite ga s ⌘V tja, kamor sodi.
 
 Naslednji narek lahko začnete, medtem ko se prejšnji še prepisuje. Besedila se prilepijo v vrstnem redu, v katerem ste jih izgovorili, in nikoli med snemanjem ali medtem ko držite Shift, zato lepljenje ne more pristati sredi vašega naslednjega stavka.
 
@@ -288,11 +291,15 @@ Posnetek se pred nalaganjem stisne v AAC, približno 6 KB na sekundo govora, zat
 
 Če spletni prepis ne uspe, ker omrežje ne deluje, ima ponudnik težavo ali je ključ napačen, isti posnetek prepiše nameščeni lokalni model: tisti, ki je izbran pod **Lokalno**, sicer Parakeet Ultra, nato Whisper Large v3 Turbo, Large v3 in manjši modeli Whisper, Parakeet v2 pa nazadnje. O tem vas enkrat opozori obvestilo; znova se pojavi šele, ko je medtem uspel kakšen spletni narek.
 
-Če ima lokalni model kot rezervo, Lowspeak spletni zahtevi da 20 sekund; brez njega poskusi trikrat, vsakič do ene minute. V spletnem načinu Lowspeak rezervni model Parakeet pripravi enkrat ob zagonu, zato prvi preklop na rezervo ne čaka nanj.
+Če ima lokalni model kot rezervo, Lowspeak spletni zahtevi da 20 sekund; brez njega poskusi trikrat, vsakič do ene minute. V spletnem načinu Lowspeak rezervni model Parakeet pripravi enkrat ob zagonu, zato prvi preklop na rezervo ne čaka nanj. Preobremenjen ponudnik, ki prosi za premor, ga dobi, največ deset sekund; tistemu, ki prosi za daljši premor ali sporoči, da na vašem računu ni več dobroimetja, Lowspeak ne pošlje nove zahteve.
+
+Narek, ki kljub temu ne uspe, ni izgubljen: Lowspeak njegov posnetek obdrži v pomnilniku, **Znova poskusi neuspeli narek** v meniju pa ga znova prepiše, na primer ko omrežje spet deluje ali ko izberete drug model. Obdrži se le zadnji neuspeli posnetek, po zaprtju Lowspeaka pa nobeden.
 
 ### Kako se posnetek pripravi
 
 Lowspeak snema z lastno frekvenco vzorčenja vašega mikrofona in posnetek, ko končate, pretvori v 16 kHz, ki jih pričakujejo modeli. Pred prepisom odstrani nizko bobnenje pod 80 Hz, obreže tišino na začetku in koncu ter izenači glasnost, tako da tihi in glasni govorci zvenijo enako. Posnetek brez govora sploh ni poslan. V lokalnem načinu Parakeet najprej dobi neobdelan posnetek, pripravljenega pa le, če iz prvega ne dobi besedila.
+
+Whisper v tišino in šum včasih zapiše besedilo, ki ga ni nihče izgovoril, na primer navedbe avtorjev podnapisov iz videov ali besedišče, ki ga je dobil. Lowspeak zavrže odseke, ki jih Whisper sam označi kot tišino, in takšno besedilo odstrani pred lepljenjem.
 
 ### Jeziki po modelih
 
@@ -317,7 +324,7 @@ Lowspeak je univerzalna aplikacija in deluje tudi na Macih s procesorjem Intel i
 - **GPT Transcribe** jih prejme kot ključne besede.
 - **Whisper** (OpenAI, Groq in na vašem Macu) jih prebere kot namig pred posnetkom, do 500 znakov.
 - **Naknadni obdelavi** je naročeno, naj jih zapiše natanko tako, kot so napisani.
-- **Parakeet** jih ne uporablja.
+- **Parakeet** jih ne sliši. Kjer je zapisal nekaj zelo podobnega, Lowspeak to v njegovem besedilu nadomesti z njihovim zapisom: »Träfig« ali »Trafik« postane Traefik, »Los Peak« postane Lowspeak. Izrazi, krajši od petih črk, besede v naslovih in imenih datotek ter oblike s končnico, kot je »Lowspeaks«, ostanejo, kot so zapisani. Da bi napačen zapis ločil od prave besede, Lowspeak povpraša črkovalnik v macOS, in sicer na vašem Macu.
 
 ## Naknadna obdelava
 
@@ -353,7 +360,8 @@ Lowspeak deluje v ozadju, zato težave sporoča z obvestili:
 | **Mikrofon brez signala** | pet sekund tišine, glejte [Mikrofon](#mikrofon) |
 | **Potrebno je dovoljenje za dostopnost** | besedilo je v odložišču; za samodejno lepljenje dovolite dostopnost |
 | **Lepljenje ni uspelo** | besedilo je v odložišču; prilepite ga s ⌘V |
-| **Prepis ni uspel** | z razlogom: ni ključa, ključ zavrnjen, omejitev zahtev presežena, napaka strežnika ali omrežja ali ni lokalnega modela |
+| **Prepis ni uspel** | z razlogom: ni ključa, ključ zavrnjen, ni več dobroimetja, omejitev zahtev presežena, napaka strežnika ali omrežja ali ni lokalnega modela; posnetek se obdrži za **Znova poskusi neuspeli narek** |
+| **Narek ni bil prilepljen** | preden je bilo besedilo pripravljeno, je v ospredje prišla druga aplikacija; besedilo je v odložišču |
 | **Prepisano na tem Macu** | spletna storitev je odpovedala in prevzel je lokalni model |
 | **Naknadna obdelava ni uspela** | ponudnik zavrača naknadno obdelavo ali ključ ni nastavljen; besedilo je bilo prilepljeno brez nje |
 | **Ni ključa API** | izbrali ste spletni model brez ključa za njegovega ponudnika |
@@ -400,7 +408,7 @@ Lowspeak sliši, kaj govorite, dokler je fn pridržana, lahko piše v katero kol
 - **Naknadna obdelava**, če jo vklopite, pošlje prepisano besedilo in vaše besedišče storitvi Groq ali OpenAI. V načinu Oblikovanje doda vrsto aplikacije, v katero narekujete (urejevalnik kode, terminal, klepet ali e-pošta); ime aplikacije ni poslano.
 - **Brez telemetrije, brez računa.** Razen za prepis in naknadno obdelavo gre Lowspeak na splet samo zato, da odpre povezavo s ponudnikom, medtem ko je fn pridržana, v spletnem načinu ali z vklopljeno naknadno obdelavo, da prenese model, ko to zahtevate, s Hugging Face prek HTTPS, v fiksni različici in s preverjanjem kontrolne vsote vsake datoteke, in da na GitHubu poišče novo različico, enkrat na dan, če to dovolite. Ta zahteva vsebuje različico Lowspeaka in nič drugega. **Pomoč › Prijavi težavo…** v brskalniku odpre obrazec na GitHubu; njegov naslov vsebuje različico Lowspeaka in različico macOS, nič od tega, kar ste narekovali.
 - **Ključi API** ostanejo v vaši verigi ključev za prijavo. Pošljejo se samo njihovemu ponudniku in se odstranijo iz sporočil o napakah, preden se karkoli zapiše v dnevnik.
-- **Narekovano besedilo se ne shranjuje.** Zadnjih deset narekov ostane v pomnilniku za **Nedavni nareki** in izgine, ko se Lowspeak zapre. Dnevniške datoteke beležijo dolžine in čase, nikoli besedila.
+- **Narekovano besedilo se ne shranjuje.** Zadnjih deset narekov ostane v pomnilniku za **Nedavni nareki** in izgine, ko se Lowspeak zapre, prav tako posnetek zadnjega neuspelega nareka, ki se hrani za **Znova poskusi neuspeli narek**. Dnevniške datoteke beležijo dolžine in čase, nikoli besedila.
 - **Odložišče** se pred lepljenjem shrani in obnovi, ko aplikacija prebere besedilo, razen če ga je medtem spremenila druga aplikacija. Narek je označen kot začasen, zato ga aplikacije z zgodovino odložišča, ki to oznako upoštevajo, preskočijo.
 - **Podpisovanje kode** s Hardened Runtime; aplikacija zahteva le mikrofon, dostopnost, obvestila in omrežje. Posodobitev mora nositi podpis razvijalca, sicer jo Sparkle zavrne.
 
@@ -420,7 +428,7 @@ Izmerjeno na Applovih čipih:
 - **Lokalni modeli na Macih s procesorjem Intel** tečejo na procesorju in so precej počasnejši; tam je spletni prepis boljša izbira.
 - **Kar rečete, preden je mikrofon pripravljen, se izgubi.** Počakajte na ikono snemanja, zlasti s slušalkami AirPods.
 - **Tipko fn si lahko prilastijo drugi.** Ko nastavitev tipke 🌐 v macOS, Warp ali Narekovanje v macOS prvi zasedejo fn, je Lowspeak ne vidi; glejte [Odpravljanje težav](#odpravljanje-težav).
-- **Parakeet** prezre besedišče in izbiro jezika ter pozna samo evropske jezike.
+- **Parakeet** prezre izbiro jezika in pozna samo evropske jezike. Besedišče njegov zapis le naknadno popravi: izraz, ki ga je model slišal kot precej drugačno besedo, ostane napačen.
 - **Pisava in različica:** samo modelu GPT Transcribe lahko naročite, naj piše tradicionalno kitajščino; nobenemu modelu ne morete naročiti, naj piše evropsko namesto brazilske portugalščine.
 - **Časovne omejitve:** dve minuti, ko je fn pridržana, pet minut, ko je snemanje zaklenjeno.
 - **Način mikrofona:** Nadzorno središče za Lowspeak ponuja Osamitev zvoka in Široki spekter ter ju prikaže kot aktivna, vendar Lowspeak snema brez obdelave glasu, zato izbira nima učinka.

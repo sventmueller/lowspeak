@@ -3,6 +3,7 @@ use super::Texts;
 pub static HU: Texts = Texts {
     recent_dictations: "Legutóbbi diktálások",
     none_yet: "Még nincs",
+    retry_failed_dictation: "Sikertelen diktálás újrapróbálása",
     local: "Helyi",
     not_installed: |model| format!("{model} (nincs telepítve)"),
     no_key: |provider| format!("{provider} (nincs kulcs)"),
@@ -64,7 +65,7 @@ pub static HU: Texts = Texts {
     unknown_key_format: "Ismeretlen kulcsformátum",
     unknown_key_format_info: "A kulcsnak sk- (OpenAI) vagy gsk_ (Groq) előtaggal kell kezdődnie. Próbálja újra.",
     vocabulary_title: "Szókincs",
-    vocabulary_info: "Pontosan így írandó nevek és szakkifejezések, vesszővel elválasztva. Az OpenAI, a Groq, a Whisper ezen a Macen és az utófeldolgozás használja őket.",
+    vocabulary_info: "Pontosan így írandó nevek és szakkifejezések, vesszővel elválasztva. Az OpenAI, a Groq, a Whisper és a Parakeet ezen a Macen, valamint az utófeldolgozás használja őket.",
 
     recording_failed: "A felvétel nem sikerült",
     microphone_silent: "A mikrofon néma",
@@ -78,6 +79,9 @@ pub static HU: Texts = Texts {
     accessibility_list: "Kisegítő lehetőségek",
     device_control_list: "Eszközvezérlés és adathozzáférés",
     transcription_failed: "Az átírás nem sikerült",
+    retry_failed_dictation_info: |menu_item| {
+        format!("A felvétel megmaradt: az újbóli átíráshoz válassza a menü „{menu_item}” pontját.")
+    },
     transcribed_locally: "Átírva ezen a Macen",
     transcribed_locally_info: |reason| {
         format!("{reason} Helyette egy helyi modell végezte az átírást.")
@@ -123,6 +127,11 @@ pub static HU: Texts = Texts {
     },
     network_error: |message| format!("Hálózati hiba: {message}"),
     key_rejected: |provider| format!("A szolgáltató ({provider}) elutasította az API-kulcsot."),
+    quota_exhausted: |provider| {
+        format!(
+            "A szolgáltató ({provider}) szerint a fiókban nincs több kredit. Töltsön fel kreditet a {provider}-fiókjába."
+        )
+    },
     model_retired: |provider| {
         format!("A szolgáltató ({provider}) már nem kínálja az utófeldolgozási modellt.")
     },
@@ -142,6 +151,8 @@ pub static HU: Texts = Texts {
     microphone_error: |detail| format!("Nem sikerült elindítani a mikrofont: {detail}"),
     paste_failed: "A beillesztés nem sikerült",
     paste_failed_info: "A szöveg a vágólapon van. Illessze be a ⌘V billentyűparanccsal.",
+    not_pasted: "A diktálás nem lett beillesztve",
+    not_pasted_info: "Egy másik app került előtérbe, mielőtt a szöveg elkészült. A szöveg a vágólapon van. Illessze be a ⌘V billentyűparanccsal.",
     request_timed_out: "A kérés túllépte az időkorlátot.",
     audio_failed: "A felvételt nem sikerült feldolgozni.",
     local_model_failed: "A helyi modell nem tudta átírni a felvételt.",

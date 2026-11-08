@@ -140,10 +140,13 @@ impl<T> Dictations<T> {
         }
     }
 
-    /// The oldest dictation's result, once its transcription has finished.
-    pub fn pop_ready(&mut self) -> Option<T> {
+    /// The oldest dictation and its result, once its transcription has finished.
+    pub fn pop_ready(&mut self) -> Option<(u64, T)> {
         match self.queue.front() {
-            Some((_, Some(_))) => self.queue.pop_front()?.1,
+            Some((_, Some(_))) => {
+                let (id, result) = self.queue.pop_front()?;
+                Some((id, result?))
+            }
             _ => None,
         }
     }
@@ -237,6 +240,7 @@ mod tests {
             local_fallback: fallback.then_some(TranscriptionError::Api {
                 status: 503,
                 message: String::new(),
+                retry_after: None,
             }),
             post_processing,
         }
@@ -299,12 +303,12 @@ mod tests {
         dictations.finish(2, "second");
         assert_eq!(dictations.pop_ready(), None);
         dictations.finish(1, "first");
-        assert_eq!(dictations.pop_ready(), Some("first"));
-        assert_eq!(dictations.pop_ready(), Some("second"));
+        assert_eq!(dictations.pop_ready(), Some((1, "first")));
+        assert_eq!(dictations.pop_ready(), Some((2, "second")));
         assert_eq!(dictations.pop_ready(), None);
         assert!(!dictations.is_empty());
         dictations.finish(3, "third");
-        assert_eq!(dictations.pop_ready(), Some("third"));
+        assert_eq!(dictations.pop_ready(), Some((3, "third")));
         assert!(dictations.is_empty());
     }
 
@@ -315,6 +319,6 @@ mod tests {
         dictations.finish(7, "stray");
         assert_eq!(dictations.pop_ready(), None);
         dictations.finish(1, "first");
-        assert_eq!(dictations.pop_ready(), Some("first"));
+        assert_eq!(dictations.pop_ready(), Some((1, "first")));
     }
 }

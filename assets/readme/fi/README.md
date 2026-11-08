@@ -113,7 +113,7 @@ Lowspeak puhuu 35 kieltä. Se oppii käyttämäsi nimet ja termit sekä osaa poi
 - **Yksityinen.** Ei tiliä, ei telemetriaa. Ääni menee vain valitsemallesi palveluntarjoajalle, tai paikallisessa tilassa ei minnekään.
 - **Yksikään sanelu ei katoa.** Jos verkko tai verkkopalvelu pettää, asennettu paikallinen malli litteroi saman äänityksen Macillasi.
 - **Omalla kielelläsi.** Sanelu toimii kymmenillä kielillä, ja valikko, valintaikkunat ja ilmoitukset ovat saatavilla 35 kielellä.
-- **Sanasi oikein kirjoitettuina.** Nimien ja erikoistermien sanasto ohjaa OpenAI:ta, Groqia, Whisperiä ja jälkikäsittelyä.
+- **Sanasi oikein kirjoitettuina.** Nimien ja erikoistermien sanasto ohjaa OpenAI:ta, Groqia, Whisperiä ja jälkikäsittelyä sekä korjaa sen, miten Parakeet ne kirjoittaa.
 - **Siisti teksti, jos haluat.** Valinnainen jälkikäsittely poistaa täytesanat, korjaa kieliopin ja säilyttää vain korjauksen, kun korjaat itseäsi, tai muotoilee tekstin lisäksi sen mukaan, millaiseen appiin sanelet.
 - **Leikepöytäsi pysyy omanasi.** Lowspeak sijoittaa tekstin leikepöydän kautta ja palauttaa hetkeä myöhemmin sen, mitä leikepöydällä oli. Kymmenen viimeisintä sanelua jää valikkoon uudelleen kopioitaviksi.
 - **Pidä fn painettuna, puhu, päästä irti.** Teksti kirjoitetaan edessä olevaan appiin, kohdistimen kohdalle: sähköpostiin, chattiin, editoriin, päätteeseen tai selaimeen. Ei ikkunaa, johon vaihtaa, ei painiketta, jota napsauttaa.
@@ -177,6 +177,7 @@ Napsauta valikkorivillä olevaa rengasta:
 | Kohde | Mitä se tekee |
 |---|---|
 | **Viimeaikaiset sanelut** | kymmenen viimeisintä tekstiä; napsautus kopioi yhden niistä uudelleen leikepöydälle |
+| **Yritä epäonnistunutta sanelua uudelleen** | litteroi viimeisimmän epäonnistuneen sanelun uudelleen nyt valitulla mallilla; näkyy vain epäonnistumisen jälkeen |
 | **Paikallinen** | Macisi mallit Whisper- ja Parakeet-ryhmiin jaettuina; lataamattomat näkyvät himmennettyinä |
 | **OpenAI**, **Groq** | verkkomallit; ilman avainta ne näkyvät himmennettyinä ja valikko tarjoaa kohdan **Aseta API-avain…** |
 | **Kieli** | kieli, jolla sanelet, tai **Tunnista automaattisesti**; valikko seuraa sitä |
@@ -231,6 +232,8 @@ Kuvake muuttuu pyöristetyksi neliöksi. Lopeta painamalla kerran **fn** tai **S
 ### Minne teksti menee
 
 Lowspeak sijoittaa tekstin siihen appiin, joka oli edessä, kun lopetit puhumisen, kohdistimen kohdalle, leikepöydän ja ⌘V:n kautta. Se tallentaa kaiken, mitä leikepöydällä oli ennen, ja palauttaa sen puoli sekuntia sen jälkeen, kun vastaanottava appi on lukenut tekstin, tai kymmenen sekunnin kuluttua, jos se ei lue sitä koskaan, ellei jokin toinen appi ole sillä välin muuttanut leikepöytää. Teksti merkitään tilapäiseksi, joten leikepöytähistoriaa keräävät apit, jotka noudattavat merkintää, eivät tallenna sitä.
+
+Jos toinen appi on ehtinyt siirtyä etualalle ennen kuin teksti on valmis, Lowspeak ei sijoita tekstiä siihen: teksti jää leikepöydälle ja ilmoitus kertoo siitä. Sijoita se ⌘V:llä sinne, minne se kuuluu.
 
 Voit aloittaa seuraavan sanelun, vaikka edellistä vielä litteroidaan. Tekstit sijoitetaan siinä järjestyksessä, jossa sanoit ne, eikä koskaan silloin, kun äänität tai pidät Shiftiä painettuna, joten sijoitus ei voi osua keskelle seuraavaa lausettasi.
 
@@ -288,11 +291,15 @@ Paikalliset mallit vievät levyltä latauskokonsa verran tilaa ja valittuina suu
 
 Jos verkkolitterointi epäonnistuu, koska verkko ei toimi, palveluntarjoajalla on ongelma tai avain on väärä, asennettu paikallinen malli litteroi saman äänityksen: kohdassa **Paikallinen** valittu malli, muuten Parakeet Ultra, sitten Whisper Large v3 Turbo, Large v3 ja pienemmät Whisper-mallit, viimeisenä Parakeet v2. Ilmoitus kertoo tästä kerran; se tulee uudelleen vasta, kun välillä jokin verkkosanelu on onnistunut.
 
-Kun paikallinen varamalli on käytettävissä, Lowspeak antaa verkkopyynnölle 20 sekuntia; ilman sitä se yrittää kolme kertaa, kukin yritys enintään minuutin. Verkkotilassa Lowspeak valmistelee Parakeet-varamallin kerran käynnistyksen yhteydessä, jotta ensimmäinen varalitterointi ei joudu odottamaan sitä.
+Kun paikallinen varamalli on käytettävissä, Lowspeak antaa verkkopyynnölle 20 sekuntia; ilman sitä se yrittää kolme kertaa, kukin yritys enintään minuutin. Verkkotilassa Lowspeak valmistelee Parakeet-varamallin kerran käynnistyksen yhteydessä, jotta ensimmäinen varalitterointi ei joudu odottamaan sitä. Kuormittunut palveluntarjoaja saa pyytämänsä tauon, enintään kymmenen sekuntia; sille, joka pyytää pidempää taukoa tai ilmoittaa, ettei tililläsi ole enää saldoa, ei lähetetä uutta pyyntöä.
+
+Sanelu, joka epäonnistuu silti, ei katoa: Lowspeak pitää sen äänityksen muistissa, ja valikon kohta **Yritä epäonnistunutta sanelua uudelleen** litteroi sen uudelleen esimerkiksi silloin, kun verkko toimii taas tai kun olet valinnut toisen mallin. Vain viimeisin epäonnistunut äänitys säilytetään, ja se katoaa, kun Lowspeak lopetetaan.
 
 ### Miten äänitys valmistellaan
 
 Lowspeak äänittää mikrofonin omalla näytteenottotaajuudella ja muuntaa äänityksen lopettaessasi mallien odottamaan 16 kHz:iin. Ennen litterointia se poistaa alle 80 Hz:n matalan jyminän, leikkaa hiljaisuuden alusta ja lopusta ja tasoittaa äänenvoimakkuuden, jotta hiljaiset ja äänekkäät puhujat kuulostavat samalta. Äänitystä, jossa ei ole puhetta, ei lähetetä lainkaan. Paikallisessa tilassa Parakeet saa ensin käsittelemättömän äänityksen ja valmistellun vain, jos ensimmäisestä ei saada tekstiä.
+
+Whisper kirjoittaa joskus hiljaisuuteen ja kohinaan tekstiä, jota kukaan ei ole sanonut, kuten tekstitettyjen videoiden tekijätietoja tai sille annettua sanastoa. Lowspeak hylkää kohdat, jotka Whisper itse merkitsee hiljaisuudeksi, ja poistaa tällaisen tekstin ennen sijoittamista.
 
 ### Kielet malleittain
 
@@ -317,7 +324,7 @@ Lowspeak on universaali appi ja toimii myös Intel-Maceissa, joissa on macOS 14.
 - **GPT Transcribe** saa ne avainsanoina.
 - **Whisper** (OpenAI, Groq ja Macillasi) lukee ne vihjeenä ennen äänitystä, enintään 500 merkkiä.
 - **Jälkikäsittelyä** ohjeistetaan kirjoittamaan ne täsmälleen niin kuin ne on kirjoitettu.
-- **Parakeet** ei käytä niitä.
+- **Parakeet** ei kuule niitä. Kun malli on kirjoittanut jotain hyvin samankaltaista, Lowspeak vaihtaa tekstiin tilalle termin kirjoitusasun: ”Träfig” tai ”Trafik” muuttuu muotoon Traefik, ”Los Peak” muotoon Lowspeak. Alle viiden kirjaimen termit, osoitteiden ja tiedostonimien sanat sekä päätteelliset muodot, kuten ”Lowspeaks”, jäävät sellaisiksi kuin ne on kirjoitettu. Erottaakseen kirjoitusvirheen oikeasta sanasta Lowspeak kysyy macOS:n oikoluvulta, paikallisesti Macillasi.
 
 ## Jälkikäsittely
 
@@ -353,7 +360,8 @@ Lowspeak toimii taustalla, joten se raportoi ongelmista ilmoituksina:
 | **Mikrofonista ei kuulu ääntä** | viisi sekuntia hiljaisuutta, katso [Mikrofoni](#mikrofoni) |
 | **Käyttöapuoikeus vaaditaan** | teksti on leikepöydällä; salli Käyttöapu, jotta teksti sijoitetaan automaattisesti |
 | **Sijoittaminen epäonnistui** | teksti on leikepöydällä; sijoita se ⌘V:llä |
-| **Litterointi epäonnistui** | syyn kera: ei avainta, hylätty avain, pyyntöraja, palvelin- tai verkkovirhe tai ei paikallista mallia |
+| **Litterointi epäonnistui** | syyn kera: ei avainta, hylätty avain, loppunut saldo, pyyntöraja, palvelin- tai verkkovirhe tai ei paikallista mallia; äänitys säilytetään kohtaa **Yritä epäonnistunutta sanelua uudelleen** varten |
+| **Sanelua ei sijoitettu** | toinen appi siirtyi etualalle ennen kuin teksti oli valmis; teksti on leikepöydällä |
 | **Litteroitu tässä Macissa** | verkkopalvelu petti, ja paikallinen malli otti ohjat |
 | **Jälkikäsittely epäonnistui** | palveluntarjoaja hylkää jälkikäsittelyn tai avainta ei ole asetettu; teksti sijoitettiin ilman sitä |
 | **Ei API-avainta** | valitsit verkkomallin ilman sen palveluntarjoajan avainta |
@@ -400,7 +408,7 @@ Lowspeak kuulee, mitä sanot fn:n ollessa painettuna, voi kirjoittaa mihin tahan
 - **Jälkikäsittely**, jos otat sen käyttöön, lähettää litteroidun tekstin ja sanastosi Groqille tai OpenAI:lle. Muotoile-tilassa se lisää tiedon siitä, millaiseen appiin sanelet (koodieditori, pääte, chat tai sähköposti); apin nimeä ei lähetetä.
 - **Ei telemetriaa, ei tiliä.** Litteroinnin ja jälkikäsittelyn lisäksi Lowspeak ottaa yhteyttä verkkoon vain avatakseen yhteyden palveluntarjoajaasi fn:n ollessa painettuna, verkkotilassa tai jälkikäsittelyn ollessa päällä, ladatakseen mallin pyynnöstäsi Hugging Facesta HTTPS:n kautta kiinteänä versiona niin, että jokaista tiedostoa verrataan sen tarkistussummaan, sekä etsiäkseen uutta versiota GitHubista kerran päivässä, jos sallit sen. Pyyntö sisältää Lowspeakin version eikä mitään muuta. **Ohje › Ilmoita ongelmasta…** avaa selaimessa lomakkeen GitHubissa; sen osoite sisältää Lowspeakin ja macOS:n versiot, ei mitään sanelemaasi.
 - **API-avaimet** pysyvät sisäänkirjautumisavainnipussasi. Ne lähetetään vain omalle palveluntarjoajalleen, ja ne poistetaan virheilmoituksista ennen kuin mitään kirjoitetaan lokiin.
-- **Saneltua tekstiä ei tallenneta.** Kymmenen viimeisintä sanelua pysyvät muistissa valikkoa **Viimeaikaiset sanelut** varten ja katoavat, kun Lowspeak lopetetaan. Lokitiedostot kirjaavat pituudet ja ajoitukset, eivät koskaan tekstiä.
+- **Saneltua tekstiä ei tallenneta.** Kymmenen viimeisintä sanelua pysyvät muistissa valikkoa **Viimeaikaiset sanelut** varten ja katoavat, kun Lowspeak lopetetaan; samoin katoaa viimeisimmän epäonnistuneen sanelun äänitys, joka säilytetään kohtaa **Yritä epäonnistunutta sanelua uudelleen** varten. Lokitiedostot kirjaavat pituudet ja ajoitukset, eivät koskaan tekstiä.
 - **Leikepöytä** tallennetaan ennen sijoittamista ja palautetaan, kun vastaanottava appi on lukenut tekstin, ellei jokin toinen appi ole sillä välin muuttanut sitä. Sanelu merkitään tilapäiseksi, joten leikepöytähistoriaa keräävät apit, jotka noudattavat merkintää, ohittavat sen.
 - **Koodin allekirjoitus** Hardened Runtimella; appi pyytää pääsyä vain mikrofoniin, Käyttöapuun, ilmoituksiin ja verkkoon. Päivityksessä on oltava kehittäjän allekirjoitus, muuten Sparkle hylkää sen.
 
@@ -420,7 +428,7 @@ Mitattu Apple Siliconilla:
 - **Paikalliset mallit Intel-Maceissa** toimivat suorittimella ja ovat paljon hitaampia; siellä verkkolitterointi on parempi valinta.
 - **Se, mitä sanot ennen kuin mikrofoni on valmis, menetetään.** Odota äänityskuvaketta, etenkin AirPodsien kanssa.
 - **Muut voivat viedä fn-näppäimen.** Kun macOS:n 🌐-näppäimen asetus, Warp tai macOS:n sanelu varaa fn:n ensin, Lowspeak ei näe sitä; katso [Vianmääritys](#vianmääritys).
-- **Parakeet** ei välitä sanastosta eikä kielivalinnasta ja osaa vain eurooppalaisia kieliä.
+- **Parakeet** ei välitä kielivalinnasta ja osaa vain eurooppalaisia kieliä. Sanasto korjaa sen kirjoitusasua vain jälkikäteen: termi, jonka malli kuuli selvästi eri sanana, jää vääräksi.
 - **Kirjoitusjärjestelmä ja kielivariantti:** vain GPT Transcriben voi ohjeistaa kirjoittamaan perinteistä kiinaa; mitään mallia ei voi ohjeistaa kirjoittamaan eurooppalaista portugalia brasilialaisen sijaan.
 - **Aikarajat:** kaksi minuuttia, kun fn on painettuna, viisi minuuttia lukittuna.
 - **Mikrofonitila:** Ohjauskeskus tarjoaa Lowspeakille vaihtoehdot Puheäänen eristys ja Laaja spektri ja näyttää ne aktiivisina, mutta Lowspeak äänittää ilman puheenkäsittelyä, joten valinnalla ei ole vaikutusta.

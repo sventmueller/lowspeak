@@ -4,6 +4,11 @@ use std::time::{Duration, Instant};
 /// Whether a failed attempt may succeed when repeated.
 pub trait Retryable {
     fn is_retryable(&self) -> bool;
+
+    /// The wait the other side asked for before the next attempt.
+    fn retry_after(&self) -> Option<Duration> {
+        None
+    }
 }
 
 /// How often to try and how long to wait in between; the wait doubles after every attempt.
@@ -11,6 +16,8 @@ pub trait Retryable {
 pub struct Backoff {
     pub max_attempts: u32,
     pub first_delay: Duration,
+    /// A failure that asks for a longer wait ends the retries.
+    pub longest_wait: Duration,
 }
 
 impl Backoff {
@@ -72,8 +79,8 @@ impl CancelToken {
     }
 }
 
-/// Repeats `operation` while it fails with a retryable error; a cancelled `cancel` ends the
-/// retries with the last error.
+/// Repeats `operation` while it fails with a retryable error, waiting at least as long as the
+/// error asks; a cancelled `cancel` ends the retries with the last error.
 pub fn with_exponential_backoff<T, E: Retryable>(
     backoff: Backoff,
     cancel: &CancelToken,
@@ -81,17 +88,21 @@ pub fn with_exponential_backoff<T, E: Retryable>(
 ) -> Result<T, E> {
     let mut attempt = 1;
     loop {
-        match operation() {
+        let error = match operation() {
             Ok(value) => return Ok(value),
-            Err(error)
-                if !error.is_retryable()
-                    || attempt >= backoff.max_attempts
-                    || cancel.wait(backoff.delay(attempt)) =>
-            {
-                return Err(error);
-            }
-            Err(_) => attempt += 1,
+            Err(error) => error,
+        };
+        let wait = backoff
+            .delay(attempt)
+            .max(error.retry_after().unwrap_or_default());
+        if !error.is_retryable()
+            || attempt >= backoff.max_attempts
+            || wait > backoff.longest_wait
+            || cancel.wait(wait)
+        {
+            return Err(error);
         }
+        attempt += 1;
     }
 }
 
@@ -109,9 +120,22 @@ mod tests {
         }
     }
 
+    struct Wait(Duration);
+
+    impl Retryable for Wait {
+        fn is_retryable(&self) -> bool {
+            true
+        }
+
+        fn retry_after(&self) -> Option<Duration> {
+            Some(self.0)
+        }
+    }
+
     const IMMEDIATE: Backoff = Backoff {
         max_attempts: 3,
         first_delay: Duration::ZERO,
+        longest_wait: Duration::from_secs(60),
     };
 
     #[test]
@@ -158,6 +182,7 @@ mod tests {
         let backoff = Backoff {
             max_attempts: 10,
             first_delay: Duration::from_secs(2),
+            longest_wait: Duration::MAX,
         };
         let delays: Vec<u64> = (1..=4).map(|n| backoff.delay(n).as_secs()).collect();
         assert_eq!(delays, [2, 4, 8, 16]);
@@ -170,6 +195,7 @@ mod tests {
         let backoff = Backoff {
             max_attempts: 3,
             first_delay: Duration::from_secs(60),
+            longest_wait: Duration::MAX,
         };
         let canceller = {
             let cancel = Arc::clone(&cancel);
@@ -188,6 +214,43 @@ mod tests {
         assert!(result.is_err());
         assert_eq!(attempts, 1);
         assert!(started.elapsed() < Duration::from_secs(10));
+    }
+
+    #[test]
+    fn the_wait_the_error_asks_for_is_kept() {
+        let backoff = Backoff {
+            longest_wait: Duration::from_millis(500),
+            ..IMMEDIATE
+        };
+        let started = Instant::now();
+        let mut attempts = 0;
+        let result = with_exponential_backoff(backoff, &CancelToken::new(), || {
+            attempts += 1;
+            if attempts == 1 {
+                Err(Wait(Duration::from_millis(150)))
+            } else {
+                Ok(())
+            }
+        });
+        assert!(result.is_ok());
+        assert!(started.elapsed() >= Duration::from_millis(150));
+    }
+
+    #[test]
+    fn a_wait_beyond_the_longest_ends_the_retries() {
+        let backoff = Backoff {
+            longest_wait: Duration::from_secs(10),
+            ..IMMEDIATE
+        };
+        let started = Instant::now();
+        let mut attempts = 0;
+        let result: Result<(), _> = with_exponential_backoff(backoff, &CancelToken::new(), || {
+            attempts += 1;
+            Err(Wait(Duration::from_secs(420)))
+        });
+        assert!(result.is_err());
+        assert_eq!(attempts, 1);
+        assert!(started.elapsed() < Duration::from_secs(1));
     }
 
     #[test]

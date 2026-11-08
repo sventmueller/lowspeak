@@ -13,6 +13,7 @@ fn plural(n: usize, one: &'static str, few: &'static str, many: &'static str) ->
 pub static RU: Texts = Texts {
     recent_dictations: "Последние диктовки",
     none_yet: "Пока нет",
+    retry_failed_dictation: "Повторить неудачную диктовку",
     local: "Локально",
     not_installed: |model| format!("{model} (не установлена)"),
     no_key: |provider| format!("{provider} (нет ключа)"),
@@ -77,7 +78,7 @@ pub static RU: Texts = Texts {
     unknown_key_format: "Неизвестный формат ключа",
     unknown_key_format_info: "Ключ должен начинаться с sk- (OpenAI) или gsk_ (Groq). Повторите попытку.",
     vocabulary_title: "Словарь",
-    vocabulary_info: "Имена, названия и термины, которые нужно писать именно так, через запятую. Их используют OpenAI, Groq, Whisper на этом Mac и постобработка.",
+    vocabulary_info: "Имена, названия и термины, которые нужно писать именно так, через запятую. Их используют OpenAI, Groq, Whisper и Parakeet на этом Mac и постобработка.",
 
     recording_failed: "Ошибка записи",
     microphone_silent: "Нет сигнала с микрофона",
@@ -91,6 +92,9 @@ pub static RU: Texts = Texts {
     accessibility_list: "Универсальный доступ",
     device_control_list: "Управление устройством и доступ к данным",
     transcription_failed: "Ошибка распознавания",
+    retry_failed_dictation_info: |menu_item| {
+        format!("Запись сохранена: выберите в меню «{menu_item}», чтобы распознать её снова.")
+    },
     transcribed_locally: "Распознано на этом Mac",
     transcribed_locally_info: |reason| {
         format!("{reason} Вместо этого текст распознала локальная модель.")
@@ -134,6 +138,11 @@ pub static RU: Texts = Texts {
     },
     network_error: |message| format!("Ошибка сети: {message}"),
     key_rejected: |provider| format!("Сервис {provider} отклонил ключ API."),
+    quota_exhausted: |provider| {
+        format!(
+            "Сервис {provider} сообщает, что на счёте не осталось средств. Пополните баланс в своей учётной записи {provider}."
+        )
+    },
     model_retired: |provider| {
         format!("Сервис {provider} больше не предоставляет модель для постобработки.")
     },
@@ -151,6 +160,8 @@ pub static RU: Texts = Texts {
     microphone_error: |detail| format!("Не удалось запустить микрофон: {detail}"),
     paste_failed: "Не удалось вставить",
     paste_failed_info: "Текст находится в буфере обмена. Вставьте его с помощью ⌘V.",
+    not_pasted: "Диктовка не вставлена",
+    not_pasted_info: "Другое приложение вышло на передний план до того, как текст был готов. Текст находится в буфере обмена. Вставьте его с помощью ⌘V.",
     request_timed_out: "Истекло время ожидания запроса.",
     audio_failed: "Не удалось обработать запись.",
     local_model_failed: "Локальной модели не удалось распознать запись.",

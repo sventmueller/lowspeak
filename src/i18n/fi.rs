@@ -3,6 +3,7 @@ use super::Texts;
 pub static FI: Texts = Texts {
     recent_dictations: "Viimeaikaiset sanelut",
     none_yet: "Ei vielä yhtään",
+    retry_failed_dictation: "Yritä epäonnistunutta sanelua uudelleen",
     local: "Paikallinen",
     not_installed: |model| format!("{model} (ei asennettu)"),
     no_key: |provider| format!("{provider} (ei avainta)"),
@@ -68,7 +69,7 @@ pub static FI: Texts = Texts {
     unknown_key_format: "Tuntematon avainmuoto",
     unknown_key_format_info: "Avaimen pitää alkaa merkeillä sk- (OpenAI) tai gsk_ (Groq). Yritä uudelleen.",
     vocabulary_title: "Sanasto",
-    vocabulary_info: "Nimet ja erikoistermit, jotka kirjoitetaan täsmälleen oikein, pilkuilla erotettuina. Niitä käyttävät OpenAI, Groq, Whisper tässä Macissa ja jälkikäsittely.",
+    vocabulary_info: "Nimet ja erikoistermit, jotka kirjoitetaan täsmälleen oikein, pilkuilla erotettuina. Niitä käyttävät OpenAI, Groq, Whisper ja Parakeet tässä Macissa sekä jälkikäsittely.",
 
     recording_failed: "Äänitys epäonnistui",
     microphone_silent: "Mikrofonista ei kuulu ääntä",
@@ -82,6 +83,9 @@ pub static FI: Texts = Texts {
     accessibility_list: "Käyttöapu",
     device_control_list: "Laitehallinta ja tietojen käyttö",
     transcription_failed: "Litterointi epäonnistui",
+    retry_failed_dictation_info: |menu_item| {
+        format!("Äänitys on tallessa: litteroi se uudelleen valikon kohdasta ”{menu_item}”.")
+    },
     transcribed_locally: "Litteroitu tässä Macissa",
     transcribed_locally_info: |reason| {
         format!("{reason} Litteroinnin teki sen sijaan paikallinen malli.")
@@ -127,6 +131,11 @@ pub static FI: Texts = Texts {
     },
     network_error: |message| format!("Verkkovirhe: {message}"),
     key_rejected: |provider| format!("{provider} hylkäsi API-avaimen."),
+    quota_exhausted: |provider| {
+        format!(
+            "{provider} ilmoittaa, ettei tilillä ole enää saldoa. Lisää saldoa {provider}-tilillesi."
+        )
+    },
     model_retired: |provider| format!("{provider} ei enää tarjoa jälkikäsittelymallia."),
     no_post_processing_key: |first, second| {
         format!(
@@ -144,6 +153,8 @@ pub static FI: Texts = Texts {
     microphone_error: |detail| format!("Mikrofonin käynnistäminen epäonnistui: {detail}"),
     paste_failed: "Sijoittaminen epäonnistui",
     paste_failed_info: "Teksti on leikepöydällä. Sijoita se painamalla ⌘V.",
+    not_pasted: "Sanelua ei sijoitettu",
+    not_pasted_info: "Toinen appi siirtyi etualalle ennen kuin teksti oli valmis. Teksti on leikepöydällä. Sijoita se painamalla ⌘V.",
     request_timed_out: "Pyyntö aikakatkaistiin.",
     audio_failed: "Äänitystä ei voitu käsitellä.",
     local_model_failed: "Paikallinen malli ei pystynyt litteroimaan äänitystä.",

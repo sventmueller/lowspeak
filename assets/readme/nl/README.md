@@ -113,7 +113,7 @@ Lowspeak spreekt 35 talen. Het leert de namen en termen die je gebruikt, kan sto
 - **Privé.** Geen account, geen telemetrie. Audio gaat alleen naar de aanbieder die je hebt gekozen, of in de lokale modus nergens heen.
 - **Geen dictaat verloren.** Valt het netwerk of de onlinedienst uit, dan transcribeert een geïnstalleerd lokaal model dezelfde opname op je Mac.
 - **In jouw taal.** Dicteren werkt in tientallen talen, en het menu, de dialoogvensters en de meldingen zijn er in 35.
-- **Je woorden, goed gespeld.** Een woordenlijst met namen en vaktermen stuurt OpenAI, Groq, Whisper en de nabewerking.
+- **Je woorden, goed gespeld.** Een woordenlijst met namen en vaktermen stuurt OpenAI, Groq, Whisper en de nabewerking, en verbetert hoe Parakeet ze spelt.
 - **Schone tekst als je dat wilt.** De optionele nabewerking verwijdert stopwoorden, verbetert de grammatica en houdt alleen je correctie over als je jezelf verbetert, of maakt de tekst bovendien op voor het soort app waarin je dicteert.
 - **Je klembord blijft van jou.** Lowspeak plakt via het klembord en zet een moment later terug wat erop stond. De laatste tien dictaten blijven in het menu staan, zodat je ze opnieuw kunt kopiëren.
 - **Houd fn ingedrukt, spreek, laat los.** De tekst wordt getypt in de app op de voorgrond, waar de cursor ook staat: mail, chat, editor, terminal of browser. Geen venster om naar over te schakelen, geen knop om op te klikken.
@@ -177,6 +177,7 @@ Klik op de ring in de menubalk:
 | Onderdeel | Wat het doet |
 |---|---|
 | **Recente dictaten** | de laatste tien teksten; een klik kopieert er een opnieuw naar het klembord |
+| **Mislukt dictaat opnieuw proberen** | transcribeert het laatste mislukte dictaat opnieuw, met het model dat nu gekozen is; verschijnt alleen na een fout |
 | **Lokaal** | de modellen op je Mac, gegroepeerd in Whisper en Parakeet; modellen die niet zijn gedownload, zijn grijs weergegeven |
 | **OpenAI**, **Groq** | de onlinemodellen; zonder sleutel zijn ze grijs weergegeven en biedt het menu **Stel API-sleutel in…** aan |
 | **Taal** | de taal waarin je dicteert, of **Automatisch herkennen**; het menu volgt die taal |
@@ -231,6 +232,8 @@ Een opname stopt vanzelf na twee minuten als je fn ingedrukt houdt en na vijf mi
 ### Waar de tekst terechtkomt
 
 Lowspeak plakt de tekst in de app die op de voorgrond stond toen je stopte met spreken, bij de cursor, via het klembord en ⌘V. Het bewaart alles wat eerder op het klembord stond en zet het terug een halve seconde nadat de app de tekst heeft gelezen, of na tien seconden als de app dat nooit doet, tenzij een andere app het klembord in de tussentijd heeft gewijzigd. De tekst is gemarkeerd als tijdelijk, zodat apps voor klembordgeschiedenis die deze markering respecteren hem niet vastleggen.
+
+Komt er een andere app op de voorgrond voordat de tekst klaar is, dan plakt Lowspeak hem daar niet: de tekst blijft op het klembord staan en een melding laat je dat weten. Plak hem met ⌘V waar hij hoort.
 
 Je kunt het volgende dictaat beginnen terwijl het vorige nog wordt getranscribeerd. De teksten worden geplakt in de volgorde waarin je ze uitsprak, en nooit terwijl je opneemt of Shift ingedrukt houdt, zodat er niets midden in je volgende zin geplakt kan worden.
 
@@ -288,11 +291,15 @@ De opname wordt vóór het uploaden gecomprimeerd naar AAC, ongeveer 6 KB per se
 
 Mislukt een online transcriptie omdat het netwerk plat ligt, de aanbieder een probleem heeft of de sleutel onjuist is, dan transcribeert een geïnstalleerd lokaal model dezelfde opname: het model dat onder **Lokaal** is gekozen, anders Parakeet Ultra, dan Whisper Large v3 Turbo, Large v3 en de kleinere Whisper-modellen, met Parakeet v2 als laatste. Een melding laat het je één keer weten; die komt pas terug nadat er tussendoor een online dictaat is gelukt.
 
-Met een lokaal model als terugvaloptie geeft Lowspeak het onlineverzoek 20 seconden; zonder probeert het drie keer, telkens tot een minuut. In de onlinemodus bereidt Lowspeak het Parakeet-model voor de terugval één keer voor bij het starten, zodat de eerste terugval er niet op hoeft te wachten.
+Met een lokaal model als terugvaloptie geeft Lowspeak het onlineverzoek 20 seconden; zonder probeert het drie keer, telkens tot een minuut. In de onlinemodus bereidt Lowspeak het Parakeet-model voor de terugval één keer voor bij het starten, zodat de eerste terugval er niet op hoeft te wachten. Een overbelaste aanbieder die om een pauze vraagt, krijgt die, tot tien seconden; vraagt hij om langer of meldt hij dat er geen tegoed meer op je account staat, dan wordt het verzoek niet herhaald.
+
+Een dictaat dat toch mislukt, gaat niet verloren: Lowspeak bewaart de opname in het geheugen, en **Mislukt dictaat opnieuw proberen** in het menu transcribeert hem opnieuw, bijvoorbeeld zodra het netwerk terug is of nadat je een ander model hebt gekozen. Alleen de laatste mislukte opname wordt bewaard, en geen enkele meer nadat Lowspeak is gestopt.
 
 ### Hoe de opname wordt voorbereid
 
 Lowspeak neemt op met de eigen samplefrequentie van je microfoon en zet na het stoppen om naar de 16 kHz die de modellen verwachten. Vóór de transcriptie verwijdert het laag gerommel onder 80 Hz, knipt het stilte aan het begin en einde weg en egaliseert het het volume, zodat zachte en luide sprekers er gelijk uitkomen. Een opname zonder spraak wordt helemaal niet verstuurd. In de lokale modus krijgt Parakeet eerst de onbewerkte opname, en de voorbereide alleen als dat geen tekst oplevert.
+
+Whisper schrijft in stilte en ruis soms tekst die niemand heeft gezegd, zoals de aftiteling van ondertitelde video's of de woordenlijst die het heeft meegekregen. Lowspeak laat de passages weg die Whisper zelf als stilte markeert en verwijdert zulke tekst vóór het plakken.
 
 ### Talen per model
 
@@ -317,7 +324,7 @@ Lowspeak is een universele app en draait ook op Intel-Macs met macOS 14. Alles w
 - **GPT Transcribe** krijgt ze als trefwoorden.
 - **Whisper** (OpenAI, Groq en op je Mac) leest ze als hint vóór de opname, tot 500 tekens.
 - **Nabewerking** krijgt de opdracht ze precies zo te spellen als ze geschreven zijn.
-- **Parakeet** gebruikt ze niet.
+- **Parakeet** hoort ze niet. Waar het iets heeft geschreven dat er sterk op lijkt, zet Lowspeak hun spelling in de tekst: "Träfig" of "Trafik" wordt Traefik, "Los Peak" wordt Lowspeak. Termen van minder dan vijf letters, woorden in adressen en bestandsnamen, en vormen met een uitgang zoals "Lowspeaks" blijven zoals ze zijn geschreven. Om een spelfout van een echt woord te onderscheiden, raadpleegt Lowspeak de spellingcontrole van macOS, op je Mac.
 
 ## Nabewerking
 
@@ -353,7 +360,8 @@ Lowspeak werkt op de achtergrond, dus meldt het problemen als meldingen:
 | **Geen geluid van microfoon** | vijf seconden stilte, zie [Microfoon](#microfoon) |
 | **Toestemming voor toegankelijkheid vereist** | de tekst staat op het klembord; geef toestemming voor toegankelijkheid om automatisch te plakken |
 | **Plakken mislukt** | de tekst staat op het klembord; plak hem met ⌘V |
-| **Transcriptie mislukt** | met de reden: geen sleutel, geweigerde sleutel, limiet voor verzoeken, server- of netwerkfout, of geen lokaal model |
+| **Transcriptie mislukt** | met de reden: geen sleutel, geweigerde sleutel, geen tegoed meer, limiet voor verzoeken, server- of netwerkfout, of geen lokaal model; de opname blijft bewaard voor **Mislukt dictaat opnieuw proberen** |
+| **Dictaat niet geplakt** | een andere app kwam op de voorgrond voordat de tekst klaar was; de tekst staat op het klembord |
 | **Getranscribeerd op deze Mac** | de onlinedienst viel uit en een lokaal model nam het over |
 | **Nabewerking mislukt** | de aanbieder weigert de nabewerking of er is geen sleutel ingesteld; de tekst is zonder nabewerking geplakt |
 | **Geen API-sleutel** | je hebt een onlinemodel gekozen zonder sleutel voor de aanbieder ervan |
@@ -400,7 +408,7 @@ Lowspeak hoort wat je zegt terwijl fn ingedrukt is, kan in elke app typen en bew
 - **Nabewerking** stuurt, als je die inschakelt, de getranscribeerde tekst en je woordenlijst naar Groq of OpenAI. In de modus Opmaken voegt ze het soort app toe waarin je dicteert (code-editor, terminal, chat of e-mail); de naam van de app wordt niet verstuurd.
 - **Geen telemetrie, geen account.** Naast transcriptie en nabewerking gaat Lowspeak alleen online om de verbinding met je aanbieder te openen terwijl fn ingedrukt is, in de onlinemodus of met nabewerking aan, om een model te downloaden als je daarom vraagt, van Hugging Face via HTTPS, in een vaste versie, waarbij elk bestand wordt gecontroleerd aan de hand van zijn checksum, en om op GitHub naar een nieuwe versie te zoeken, eenmaal per dag als je dat toestaat. Dat verzoek bevat de versie van Lowspeak en verder niets. **Help › Meld een probleem…** opent een formulier op GitHub in je browser; het adres bevat de versie van Lowspeak en de macOS-versie, niets van wat je hebt gedicteerd.
 - **API-sleutels** blijven in je inlogsleutelhanger. Ze worden alleen naar hun eigen aanbieder gestuurd en uit foutmeldingen verwijderd voordat er iets naar het logbestand wordt geschreven.
-- **Gedicteerde tekst wordt niet opgeslagen.** De laatste tien dictaten blijven in het geheugen voor **Recente dictaten** en zijn weg als Lowspeak stopt. De logbestanden leggen lengtes en tijden vast, nooit de tekst.
+- **Gedicteerde tekst wordt niet opgeslagen.** De laatste tien dictaten blijven in het geheugen voor **Recente dictaten** en zijn weg als Lowspeak stopt; dat geldt ook voor de opname van het laatste mislukte dictaat, die voor **Mislukt dictaat opnieuw proberen** wordt bewaard. De logbestanden leggen lengtes en tijden vast, nooit de tekst.
 - **Het klembord** wordt vóór het plakken bewaard en hersteld zodra de app de tekst heeft gelezen, tenzij een andere app het in de tussentijd heeft gewijzigd. Het dictaat is gemarkeerd als tijdelijk, zodat apps voor klembordgeschiedenis die deze markering respecteren het overslaan.
 - **Codeondertekening** met de Hardened Runtime; de app vraagt alleen om de microfoon, toegankelijkheid, meldingen en het netwerk. Een update moet de handtekening van de ontwikkelaar dragen, anders weigert Sparkle hem.
 
@@ -420,7 +428,7 @@ Gemeten op Apple Silicon:
 - **Lokale modellen op Intel-Macs** draaien op de processor en zijn veel langzamer; online transcriptie is daar de betere keuze.
 - **Wat je zegt voordat de microfoon gereed is, gaat verloren.** Wacht op het opnamesymbool, vooral met AirPods.
 - **De fn-toets kan door anderen worden ingepikt.** Als de 🌐-toetsinstelling van macOS, Warp of de dicteerfunctie van macOS fn als eerste claimt, ziet Lowspeak hem niet; zie [Problemen oplossen](#problemen-oplossen).
-- **Parakeet** negeert de woordenlijst en de taalkeuze, en kent alleen Europese talen.
+- **Parakeet** negeert de taalkeuze en kent alleen Europese talen. De woordenlijst verbetert zijn spelling alleen achteraf: een term die het als een duidelijk ander woord heeft gehoord, blijft fout.
 - **Schrift en variant:** alleen GPT Transcribe kan worden opgedragen traditioneel Chinees te schrijven; geen enkel model kan worden opgedragen Europees in plaats van Braziliaans Portugees te schrijven.
 - **Tijdslimieten:** twee minuten als je fn ingedrukt houdt, vijf minuten als de opname vastgezet is.
 - **Microfoonmodus:** Bedieningspaneel biedt Stemisolatie en Breed spectrum aan voor Lowspeak en meldt ze als actief, maar Lowspeak neemt op zonder stemverwerking, dus de keuze heeft geen effect.

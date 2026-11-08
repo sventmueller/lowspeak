@@ -3,6 +3,7 @@ use super::Texts;
 pub static KO: Texts = Texts {
     recent_dictations: "최근 받아쓰기",
     none_yet: "아직 없음",
+    retry_failed_dictation: "실패한 받아쓰기 재시도",
     local: "로컬",
     not_installed: |model| format!("{model} (설치되지 않음)"),
     no_key: |provider| format!("{provider} (키 없음)"),
@@ -64,7 +65,7 @@ pub static KO: Texts = Texts {
     unknown_key_format: "알 수 없는 키 형식",
     unknown_key_format_info: "sk-(OpenAI) 또는 gsk_(Groq)로 시작하는 키여야 합니다. 다시 시도하십시오.",
     vocabulary_title: "어휘",
-    vocabulary_info: "정확한 표기로 받아쓸 이름과 전문 용어를 쉼표로 구분하여 입력합니다. OpenAI, Groq, 이 Mac의 Whisper 및 후처리에서 사용됩니다.",
+    vocabulary_info: "정확한 표기로 받아쓸 이름과 전문 용어를 쉼표로 구분하여 입력합니다. OpenAI, Groq, 이 Mac의 Whisper와 Parakeet 및 후처리에서 사용됩니다.",
 
     recording_failed: "녹음 실패",
     microphone_silent: "마이크 신호 없음",
@@ -78,6 +79,11 @@ pub static KO: Texts = Texts {
     accessibility_list: "손쉬운 사용",
     device_control_list: "기기 제어 및 데이터 접근",
     transcription_failed: "텍스트 변환 실패",
+    retry_failed_dictation_info: |menu_item| {
+        format!(
+            "녹음이 보관되어 있습니다. 다시 텍스트로 변환하려면 메뉴에서 ‘{menu_item}’을(를) 선택하십시오."
+        )
+    },
     transcribed_locally: "이 Mac에서 텍스트로 변환함",
     transcribed_locally_info: |reason| format!("{reason} 대신 로컬 모델로 변환했습니다."),
     post_processing_failed: "후처리 실패",
@@ -117,6 +123,11 @@ pub static KO: Texts = Texts {
     },
     network_error: |message| format!("네트워크 오류: {message}"),
     key_rejected: |provider| format!("{provider}에서 API 키를 거부했습니다."),
+    quota_exhausted: |provider| {
+        format!(
+            "{provider}에 따르면 계정에 남은 크레딧이 없습니다. {provider} 계정에서 크레딧을 추가하십시오."
+        )
+    },
     model_retired: |provider| format!("{provider}에서 후처리 모델을 더 이상 제공하지 않습니다."),
     no_post_processing_key: |first, second| {
         format!("후처리에는 {first} 또는 {second} API 키가 필요합니다. 메뉴 막대에서 설정하십시오.")
@@ -134,6 +145,8 @@ pub static KO: Texts = Texts {
     microphone_error: |detail| format!("마이크를 시작할 수 없습니다: {detail}"),
     paste_failed: "붙여넣기 실패",
     paste_failed_info: "텍스트가 클립보드에 있습니다. ⌘V로 붙여넣으십시오.",
+    not_pasted: "받아쓰기를 붙여넣지 않음",
+    not_pasted_info: "텍스트가 준비되기 전에 다른 앱이 앞으로 나왔습니다. 텍스트가 클립보드에 있습니다. ⌘V로 붙여넣으십시오.",
     request_timed_out: "요청 시간이 초과되었습니다.",
     audio_failed: "녹음을 처리할 수 없습니다.",
     local_model_failed: "로컬 모델이 녹음을 텍스트로 변환할 수 없습니다.",

@@ -1,5 +1,6 @@
 pub mod catalog;
 pub mod error;
+pub mod hallucination;
 pub mod hf;
 pub mod local;
 pub mod model_store;
@@ -7,6 +8,7 @@ pub mod online;
 pub mod parakeet;
 pub mod postprocess;
 pub mod service;
+pub mod spelling;
 #[cfg(test)]
 mod test_server;
 pub mod whisper;

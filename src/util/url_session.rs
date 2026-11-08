@@ -16,12 +16,20 @@ pub struct Response {
     /// `None` when the answer was not an HTTP response.
     pub status: Option<u16>,
     pub body: Vec<u8>,
+    /// How long the server asks the client to wait before it tries again.
+    pub retry_after: Option<Duration>,
 }
 
 impl Response {
     pub fn text(&self) -> String {
         String::from_utf8_lossy(&self.body).into_owned()
     }
+}
+
+/// `Retry-After` in seconds; the HTTP-date form, which OpenAI and Groq do not send, gives `None`.
+pub fn retry_after(value: &str) -> Option<Duration> {
+    let seconds: f64 = value.trim().parse().ok()?;
+    Duration::try_from_secs_f64(seconds).ok()
 }
 
 #[derive(Debug)]
@@ -123,12 +131,19 @@ fn post(
                 unsafe { (data.as_ref(), response.as_ref(), error.as_ref()) };
             let result = match error {
                 Some(error) => Err(request_error(error)),
-                None => Ok(Response {
-                    status: response
-                        .and_then(|response| response.downcast_ref::<NSHTTPURLResponse>())
-                        .and_then(|response| u16::try_from(response.statusCode()).ok()),
-                    body: data.map(NSData::to_vec).unwrap_or_default(),
-                }),
+                None => {
+                    let http =
+                        response.and_then(|response| response.downcast_ref::<NSHTTPURLResponse>());
+                    Ok(Response {
+                        status: http.and_then(|http| u16::try_from(http.statusCode()).ok()),
+                        body: data.map(NSData::to_vec).unwrap_or_default(),
+                        retry_after: http
+                            .and_then(|http| {
+                                http.valueForHTTPHeaderField(ns_string!("Retry-After"))
+                            })
+                            .and_then(|value| retry_after(&value.to_string())),
+                    })
+                }
             };
             let _ = sender.send(result);
         },
@@ -151,6 +166,14 @@ mod tests {
     use objc2_foundation::NSCocoaErrorDomain;
 
     use super::*;
+
+    #[test]
+    fn retry_after_takes_seconds() {
+        assert_eq!(retry_after("2"), Some(Duration::from_secs(2)));
+        assert_eq!(retry_after(" 7.5 "), Some(Duration::from_millis(7_500)));
+        assert_eq!(retry_after("Wed, 21 Oct 2026 07:28:00 GMT"), None);
+        assert_eq!(retry_after("-1"), None);
+    }
 
     #[test]
     fn urlsession_timeouts_are_timeouts() {

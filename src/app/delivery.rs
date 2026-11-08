@@ -57,9 +57,9 @@ impl Delivery {
         self.queue.is_empty()
     }
 
-    /// The oldest dictation's result once it is ready, unless the last paste still has the
+    /// The oldest dictation and its result once it is ready, unless the last paste still has the
     /// clipboard: pasting now would save that text as the content to restore.
-    pub fn next(&mut self) -> Option<Result> {
+    pub fn next(&mut self) -> Option<(u64, Result)> {
         if self.pasting {
             None
         } else {
@@ -107,8 +107,8 @@ mod tests {
         delivery.paste_started();
         assert!(delivery.next().is_none());
         delivery.paste_done();
-        assert!(matches!(delivery.next(), Some(Ok(Outcome::NoSpeech))));
-        assert!(matches!(delivery.next(), Some(Ok(Outcome::TooShort))));
+        assert!(matches!(delivery.next(), Some((1, Ok(Outcome::NoSpeech)))));
+        assert!(matches!(delivery.next(), Some((2, Ok(Outcome::TooShort)))));
         assert!(delivery.is_empty());
     }
 

@@ -30,6 +30,7 @@ use crate::transcription::model_store::{self, Disk, ModelStore};
 use crate::transcription::online;
 use crate::transcription::postprocess::ActiveApp;
 use crate::transcription::service::{self, Job, Outcome, Services};
+use crate::transcription::spelling::SpellChecker;
 
 /// The recording buffer outlasts the longest time limit, whose timer may fire a little late.
 const RECORDING_CAPACITY: Duration =
@@ -51,8 +52,9 @@ pub trait Platform {
     fn reset_hotkey(&self);
     fn warm_up(&self, provider: ApiProvider);
     fn play_start_sound(&self);
-    /// `restored` runs once the clipboard holds what it held before.
-    fn paste(&self, text: &str, restored: Box<dyn FnOnce()>) -> Pasted;
+    /// Leaves the text on the clipboard unless `target` is the process in front; `restored` runs
+    /// once the clipboard holds what it held before.
+    fn paste(&self, text: &str, target: Option<i32>, restored: Box<dyn FnOnce()>) -> Pasted;
     fn copy(&self, text: &str);
     fn notify(&self, title: &str, body: &str);
     /// Modal, so it runs outside the app state's borrow; `None` when cancelled.
@@ -81,7 +83,7 @@ pub trait Platform {
 pub trait Background: Send + Sync {
     fn transcribe(
         &self,
-        samples: Vec<f32>,
+        samples: Arc<Vec<f32>>,
         job: Transcription,
         active_app: ActiveApp,
     ) -> Result<Outcome, TranscriptionError>;
@@ -152,8 +154,8 @@ impl Platform for Mac {
         }
     }
 
-    fn paste(&self, text: &str, restored: Box<dyn FnOnce()>) -> Pasted {
-        paste::paste(text, restored)
+    fn paste(&self, text: &str, target: Option<i32>, restored: Box<dyn FnOnce()>) -> Pasted {
+        paste::paste(text, target, restored)
     }
 
     fn copy(&self, text: &str) {
@@ -219,6 +221,7 @@ impl Platform for Mac {
         ActiveApp {
             bundle_id: app.bundleIdentifier().map(|id| id.to_string()),
             name: app.localizedName().map(|name| name.to_string()),
+            process_id: Some(app.processIdentifier()),
         }
     }
 
@@ -260,7 +263,7 @@ impl ModelStore for Usable {
 impl Background for MacBackground {
     fn transcribe(
         &self,
-        samples: Vec<f32>,
+        samples: Arc<Vec<f32>>,
         job: Transcription,
         active_app: ActiveApp,
     ) -> Result<Outcome, TranscriptionError> {
@@ -271,6 +274,7 @@ impl Background for MacBackground {
             local: &self.local,
             models: &models,
             api: Api::SYSTEM,
+            lexicon: &SpellChecker,
         };
         service::run(
             Job {

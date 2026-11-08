@@ -3,6 +3,7 @@ use super::Texts;
 pub static NO: Texts = Texts {
     recent_dictations: "Nylige dikteringer",
     none_yet: "Ingen ennå",
+    retry_failed_dictation: "Prøv mislykket diktering på nytt",
     local: "Lokalt",
     not_installed: |model| format!("{model} (ikke installert)"),
     no_key: |provider| format!("{provider} (ingen nøkkel)"),
@@ -65,7 +66,7 @@ pub static NO: Texts = Texts {
     unknown_key_format: "Ukjent nøkkelformat",
     unknown_key_format_info: "Nøkkelen må starte med sk- (OpenAI) eller gsk_ (Groq). Prøv igjen.",
     vocabulary_title: "Ordliste",
-    vocabulary_info: "Navn og faguttrykk som skal staves nøyaktig, skilt med komma. OpenAI, Groq, Whisper på denne Macen og etterbehandlingen bruker dem.",
+    vocabulary_info: "Navn og faguttrykk som skal staves nøyaktig, skilt med komma. OpenAI, Groq, Whisper og Parakeet på denne Macen og etterbehandlingen bruker dem.",
 
     recording_failed: "Opptaket mislyktes",
     microphone_silent: "Ingen lyd fra mikrofonen",
@@ -79,6 +80,11 @@ pub static NO: Texts = Texts {
     accessibility_list: "Tilgjengelighet",
     device_control_list: "Enhetskontroll og datatilgang",
     transcription_failed: "Transkriberingen mislyktes",
+    retry_failed_dictation_info: |menu_item| {
+        format!(
+            "Opptaket er tatt vare på: Velg «{menu_item}» i menyen for å transkribere det på nytt."
+        )
+    },
     transcribed_locally: "Transkribert på denne Macen",
     transcribed_locally_info: |reason| format!("{reason} En lokal modell transkriberte i stedet."),
     post_processing_failed: "Etterbehandlingen mislyktes",
@@ -122,6 +128,11 @@ pub static NO: Texts = Texts {
     },
     network_error: |message| format!("Nettverksfeil: {message}"),
     key_rejected: |provider| format!("{provider} avviste API-nøkkelen."),
+    quota_exhausted: |provider| {
+        format!(
+            "{provider} melder at kontoen ikke har mer kreditt. Legg til kreditt på {provider}-kontoen din."
+        )
+    },
     model_retired: |provider| {
         format!("{provider} tilbyr ikke lenger modellen for etterbehandling.")
     },
@@ -141,6 +152,8 @@ pub static NO: Texts = Texts {
     microphone_error: |detail| format!("Kunne ikke starte mikrofonen: {detail}"),
     paste_failed: "Innliming mislyktes",
     paste_failed_info: "Teksten ligger på utklippstavlen. Lim den inn med ⌘V.",
+    not_pasted: "Dikteringen ble ikke limt inn",
+    not_pasted_info: "En annen app kom i forgrunnen før teksten var klar. Teksten ligger på utklippstavlen. Lim den inn med ⌘V.",
     request_timed_out: "Forespørselen fikk tidsavbrudd.",
     audio_failed: "Opptaket kunne ikke behandles.",
     local_model_failed: "Den lokale modellen kunne ikke transkribere opptaket.",

@@ -3,6 +3,7 @@ use super::Texts;
 pub static VI: Texts = Texts {
     recent_dictations: "Đọc chính tả gần đây",
     none_yet: "Chưa có",
+    retry_failed_dictation: "Thử lại đọc chính tả không thành công",
     local: "Cục bộ",
     not_installed: |model| format!("{model} (Chưa cài đặt)"),
     no_key: |provider| format!("{provider} (Không có khóa)"),
@@ -64,7 +65,7 @@ pub static VI: Texts = Texts {
     unknown_key_format: "Định dạng khóa không xác định",
     unknown_key_format_info: "Khóa phải bắt đầu bằng sk- (OpenAI) hoặc gsk_ (Groq). Vui lòng thử lại.",
     vocabulary_title: "Từ vựng",
-    vocabulary_info: "Tên và thuật ngữ chuyên môn cần viết chính xác, phân tách bằng dấu phẩy. OpenAI, Groq, Whisper trên máy Mac này và tính năng hậu xử lý sẽ sử dụng chúng.",
+    vocabulary_info: "Tên và thuật ngữ chuyên môn cần viết chính xác, phân tách bằng dấu phẩy. OpenAI, Groq, Whisper và Parakeet trên máy Mac này cùng tính năng hậu xử lý sẽ sử dụng chúng.",
 
     recording_failed: "Ghi âm không thành công",
     microphone_silent: "Micrô không có tín hiệu",
@@ -78,6 +79,9 @@ pub static VI: Texts = Texts {
     accessibility_list: "Trợ năng",
     device_control_list: "Điều khiển thiết bị và truy cập dữ liệu",
     transcription_failed: "Chép lại không thành công",
+    retry_failed_dictation_info: |menu_item| {
+        format!("Bản ghi âm vẫn được giữ: hãy chọn “{menu_item}” trong menu để chép lại lần nữa.")
+    },
     transcribed_locally: "Đã chép lại trên máy Mac này",
     transcribed_locally_info: |reason| {
         format!("{reason} Một mô hình cục bộ đã chép lại bản ghi âm thay thế.")
@@ -123,6 +127,11 @@ pub static VI: Texts = Texts {
     },
     network_error: |message| format!("Lỗi mạng: {message}"),
     key_rejected: |provider| format!("{provider} đã từ chối khóa API."),
+    quota_exhausted: |provider| {
+        format!(
+            "{provider} báo rằng tài khoản không còn số dư. Hãy nạp thêm số dư vào tài khoản {provider} của bạn."
+        )
+    },
     model_retired: |provider| format!("{provider} không còn cung cấp mô hình hậu xử lý."),
     no_post_processing_key: |first, second| {
         format!("Hậu xử lý cần khóa API của {first} hoặc {second}. Hãy đặt khóa qua thanh menu.")
@@ -138,6 +147,8 @@ pub static VI: Texts = Texts {
     microphone_error: |detail| format!("Không thể khởi động micrô: {detail}"),
     paste_failed: "Dán không thành công",
     paste_failed_info: "Văn bản đang ở trong bảng nhớ tạm. Hãy dán bằng ⌘V.",
+    not_pasted: "Chưa dán đọc chính tả",
+    not_pasted_info: "Một ứng dụng khác đã chuyển lên phía trước trước khi văn bản sẵn sàng. Văn bản đang ở trong bảng nhớ tạm. Hãy dán bằng ⌘V.",
     request_timed_out: "Yêu cầu đã hết thời gian chờ.",
     audio_failed: "Không thể xử lý bản ghi âm.",
     local_model_failed: "Mô hình cục bộ không thể chép lại bản ghi âm.",

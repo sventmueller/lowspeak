@@ -3,6 +3,7 @@ use super::Texts;
 pub static ZH_HANT: Texts = Texts {
     recent_dictations: "最近的聽寫",
     none_yet: "尚無項目",
+    retry_failed_dictation: "重試失敗的聽寫",
     local: "本機",
     not_installed: |model| format!("{model}（未安裝）"),
     no_key: |provider| format!("{provider}（無密鑰）"),
@@ -64,7 +65,7 @@ pub static ZH_HANT: Texts = Texts {
     unknown_key_format: "無法辨識的密鑰格式",
     unknown_key_format_info: "密鑰應以 sk-（OpenAI）或 gsk_（Groq）開頭。請再試一次。",
     vocabulary_title: "詞彙表",
-    vocabulary_info: "需要精確拼寫的名稱和專業術語，以逗號分隔。OpenAI、Groq、這台 Mac 上的 Whisper 以及後處理都會使用這些詞語。",
+    vocabulary_info: "需要精確拼寫的名稱和專業術語，以逗號分隔。OpenAI、Groq、這台 Mac 上的 Whisper 和 Parakeet 以及後處理都會使用這些詞語。",
 
     recording_failed: "錄音失敗",
     microphone_silent: "麥克風沒有聲音",
@@ -78,6 +79,9 @@ pub static ZH_HANT: Texts = Texts {
     accessibility_list: "輔助使用",
     device_control_list: "裝置控制和資料取用",
     transcription_failed: "轉錄失敗",
+    retry_failed_dictation_info: |menu_item| {
+        format!("錄音已保留：請選擇選單中的「{menu_item}」重新轉錄。")
+    },
     transcribed_locally: "已在這台 Mac 上轉錄",
     transcribed_locally_info: |reason| format!("{reason}已改由本機模型轉錄。"),
     post_processing_failed: "後處理失敗",
@@ -111,6 +115,9 @@ pub static ZH_HANT: Texts = Texts {
     model_not_available: |menu_item| format!("無法使用本機模型。請透過「{menu_item}」下載。"),
     network_error: |message| format!("網路錯誤：{message}"),
     key_rejected: |provider| format!("{provider} 拒絕了 API 密鑰。"),
+    quota_exhausted: |provider| {
+        format!("{provider} 回報該帳號已沒有餘額。請在你的 {provider} 帳號中儲值。")
+    },
     model_retired: |provider| format!("{provider} 已不再提供後處理模型。"),
     no_post_processing_key: |first, second| {
         format!("後處理需要 {first} 或 {second} 的 API 密鑰。請透過選單列設定。")
@@ -124,6 +131,8 @@ pub static ZH_HANT: Texts = Texts {
     microphone_error: |detail| format!("無法啟動麥克風：{detail}"),
     paste_failed: "貼上失敗",
     paste_failed_info: "文字已在剪貼板上。請按 ⌘V 貼上。",
+    not_pasted: "聽寫未貼上",
+    not_pasted_info: "文字準備好之前，另一個 App 已切換到前景。文字已在剪貼板上。請按 ⌘V 貼上。",
     request_timed_out: "要求逾時。",
     audio_failed: "無法處理錄音。",
     local_model_failed: "本機模型無法轉錄這段錄音。",

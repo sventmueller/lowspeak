@@ -60,8 +60,13 @@ impl Recording {
     }
 
     pub fn begin(&mut self) -> u64 {
+        self.phase = Phase::Starting(self.reserve());
+        self.last_id
+    }
+
+    /// An id for a dictation that needs no recording, such as another attempt at a failed one.
+    pub fn reserve(&mut self) -> u64 {
         self.last_id += 1;
-        self.phase = Phase::Starting(self.last_id);
         self.last_id
     }
 
@@ -107,5 +112,7 @@ mod tests {
         let second = recording.begin();
         assert_ne!(first, second);
         assert!(!recording.is_current(first) && !recording.go_live(first));
+        let retry = recording.reserve();
+        assert!(retry > second && recording.is_current(second));
     }
 }

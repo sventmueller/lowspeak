@@ -3,6 +3,7 @@ use super::Texts;
 pub static RO: Texts = Texts {
     recent_dictations: "Dictări recente",
     none_yet: "Niciuna deocamdată",
+    retry_failed_dictation: "Reîncercați dictarea eșuată",
     local: "Local",
     not_installed: |model| format!("{model} (neinstalat)"),
     no_key: |provider| format!("{provider} (fără cheie)"),
@@ -70,7 +71,7 @@ pub static RO: Texts = Texts {
     unknown_key_format: "Format de cheie necunoscut",
     unknown_key_format_info: "Cheia trebuie să înceapă cu sk- (OpenAI) sau gsk_ (Groq). Încercați din nou.",
     vocabulary_title: "Vocabular",
-    vocabulary_info: "Nume și termeni tehnici care trebuie scriși exact așa, separați prin virgule. Sunt folosiți de OpenAI, Groq, Whisper pe acest Mac și de postprocesare.",
+    vocabulary_info: "Nume și termeni tehnici care trebuie scriși exact așa, separați prin virgule. Sunt folosiți de OpenAI, Groq, Whisper și Parakeet pe acest Mac și de postprocesare.",
 
     recording_failed: "Înregistrarea a eșuat",
     microphone_silent: "Microfon fără semnal",
@@ -84,6 +85,11 @@ pub static RO: Texts = Texts {
     accessibility_list: "Accesibilitate",
     device_control_list: "Control al dispozitivului și acces la date",
     transcription_failed: "Transcrierea a eșuat",
+    retry_failed_dictation_info: |menu_item| {
+        format!(
+            "Înregistrarea a fost păstrată: alegeți „{menu_item}” din meniu pentru a o transcrie din nou."
+        )
+    },
     transcribed_locally: "Transcris pe acest Mac",
     transcribed_locally_info: |reason| {
         format!("{reason} Transcrierea a fost făcută de un model local.")
@@ -133,6 +139,11 @@ pub static RO: Texts = Texts {
     },
     network_error: |message| format!("Eroare de rețea: {message}"),
     key_rejected: |provider| format!("{provider} a respins cheia API."),
+    quota_exhausted: |provider| {
+        format!(
+            "{provider} raportează că în cont nu mai există credit. Adăugați credit în contul {provider}."
+        )
+    },
     model_retired: |provider| format!("{provider} nu mai oferă modelul de postprocesare."),
     no_post_processing_key: |first, second| {
         format!(
@@ -150,6 +161,8 @@ pub static RO: Texts = Texts {
     microphone_error: |detail| format!("Microfonul nu a putut fi pornit: {detail}"),
     paste_failed: "Lipirea a eșuat",
     paste_failed_info: "Textul se află în clipboard. Lipiți-l cu ⌘V.",
+    not_pasted: "Dictarea nu a fost lipită",
+    not_pasted_info: "O altă aplicație a trecut în prim-plan înainte ca textul să fie gata. Textul se află în clipboard. Lipiți-l cu ⌘V.",
     request_timed_out: "Solicitarea a expirat.",
     audio_failed: "Înregistrarea nu a putut fi procesată.",
     local_model_failed: "Modelul local nu a putut transcrie înregistrarea.",

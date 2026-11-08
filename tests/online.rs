@@ -1,6 +1,7 @@
 //! Calls the paid APIs with the keys stored by the app: `cargo test --release --test online -- --ignored`.
 
 use std::path::Path;
+use std::sync::Arc;
 
 use lowspeak::audio::wav;
 use lowspeak::config::api_keys;
@@ -13,6 +14,7 @@ use lowspeak::transcription::local::LocalTranscriber;
 use lowspeak::transcription::model_store::Disk;
 use lowspeak::transcription::postprocess::{self, ActiveApp};
 use lowspeak::transcription::service::{self, Job, Outcome, Services};
+use lowspeak::transcription::spelling::{self, Lexicon};
 
 fn require_key(provider: ApiProvider) {
     assert!(
@@ -72,6 +74,41 @@ fn transcribe_fixture(
         std::fs::read(Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/builtin.wav"))
             .unwrap();
     let samples = wav::decode(&bytes).unwrap().samples;
+    transcribe(samples, online_model, language, post_processing, vocabulary)
+}
+
+/// 16 kHz speech from macOS's speech synthesis.
+fn spoken(voice: &str, text: &str) -> Vec<f32> {
+    let path = std::env::temp_dir().join(format!(
+        "lowspeak-online-say-{}-{}.wav",
+        std::process::id(),
+        text.len()
+    ));
+    let status = std::process::Command::new("say")
+        .args([
+            "-v",
+            voice,
+            "--file-format=WAVE",
+            "--data-format=LEI16@16000",
+            "-o",
+        ])
+        .arg(&path)
+        .arg(text)
+        .status()
+        .unwrap();
+    assert!(status.success(), "say failed");
+    let audio = wav::decode(&std::fs::read(&path).unwrap()).unwrap();
+    std::fs::remove_file(&path).unwrap();
+    audio.samples
+}
+
+fn transcribe(
+    samples: Vec<f32>,
+    online_model: OnlineModel,
+    language: Language,
+    post_processing: PostProcessingMode,
+    vocabulary: &[&str],
+) -> String {
     let settings = Settings {
         mode: TranscriptionMode::Online,
         local_model: LocalModel::ParakeetUltra,
@@ -82,7 +119,7 @@ fn transcribe_fixture(
         start_sound: false,
     };
     let job = Job {
-        samples,
+        samples: Arc::new(samples),
         settings,
         active_app: ActiveApp::default(),
         raw_parakeet_first: false,
@@ -93,6 +130,7 @@ fn transcribe_fixture(
         local: &local,
         models: &Disk,
         api: Api::SYSTEM,
+        lexicon: &MacosWords,
     };
     match service::run(job, &services).unwrap() {
         Outcome::Text(transcript) => {
@@ -144,16 +182,75 @@ fn openai_transcribes_compressed_upload_with_language() {
 #[ignore = "sends audio to OpenAI and Groq with the stored API keys"]
 fn both_providers_accept_the_vocabulary() {
     let vocabulary = ["Postgres", "Traefik", "Lowspeak"];
-    for (provider, model) in [
+    // Every model gets its request, so one provider's failure does not hide the other's result.
+    let failed: Vec<&str> = [
         (ApiProvider::OpenAi, OnlineModel::GptTranscribe),
+        (ApiProvider::OpenAi, OnlineModel::Whisper1),
         (ApiProvider::Groq, OnlineModel::GroqWhisperLargeV3),
+    ]
+    .into_iter()
+    .filter(|&(provider, model)| {
+        std::panic::catch_unwind(|| {
+            require_key(provider);
+            let text =
+                transcribe_fixture(model, Language::De, PostProcessingMode::Off, &vocabulary);
+            assert!(
+                text.to_lowercase().contains("test"),
+                "unexpected text from {}: {text}",
+                model.raw_value()
+            );
+        })
+        .is_err()
+    })
+    .map(|(_, model)| model.raw_value())
+    .collect();
+    assert!(failed.is_empty(), "failed: {failed:?}");
+}
+
+/// After the vocabulary as a list without a full stop, Groq's Whisper dropped one of two sentences
+/// that begin alike.
+#[test]
+#[ignore = "sends audio to Groq with the stored API key; speaks through macOS's speech synthesis"]
+fn whisper_keeps_repeated_sentences_with_the_vocabulary() {
+    require_key(ApiProvider::Groq);
+    let vocabulary = ["Postgres", "Traefik", "Lowspeak", "Kubernetes", "Grafana"];
+    for (model, voice, language, text, repeated) in [
+        (
+            OnlineModel::GroqWhisperLargeV3Turbo,
+            "Anna",
+            Language::De,
+            "Ich schicke dir den Bericht heute Abend. Ich schicke dir den Bericht heute Abend noch einmal.",
+            "bericht heute abend",
+        ),
+        (
+            OnlineModel::GroqWhisperLargeV3,
+            "Samantha",
+            Language::En,
+            "The quarterly numbers look good. The quarterly numbers look really good.",
+            "quarterly numbers",
+        ),
     ] {
-        require_key(provider);
-        let text = transcribe_fixture(model, Language::De, PostProcessingMode::Off, &vocabulary);
-        assert!(
-            text.to_lowercase().contains("test"),
-            "unexpected text from {}: {text}",
+        let transcript = transcribe(
+            spoken(voice, text),
+            model,
+            language,
+            PostProcessingMode::Off,
+            &vocabulary,
+        );
+        assert_eq!(
+            transcript.to_lowercase().matches(repeated).count(),
+            2,
+            "{}: {transcript}",
             model.raw_value()
         );
+    }
+}
+
+/// The macOS spell checker, asked on the test's own thread: the test harness runs no main queue.
+struct MacosWords;
+
+impl Lexicon for MacosWords {
+    fn is_word(&self, word: &str, language: Option<&str>) -> bool {
+        spelling::known_to_macos(word, language)
     }
 }

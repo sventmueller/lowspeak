@@ -113,7 +113,7 @@ Lowspeak nói được 35 ngôn ngữ. Ứng dụng học những tên riêng v�
 - **Riêng tư.** Không tài khoản, không telemetry. Âm thanh chỉ được gửi tới nhà cung cấp bạn chọn, hoặc không đi đâu cả ở chế độ cục bộ.
 - **Không mất bản đọc chính tả nào.** Khi mạng hoặc dịch vụ trực tuyến gặp sự cố, một mô hình cục bộ đã cài sẽ chép lại chính bản ghi âm đó trên máy Mac của bạn.
 - **Bằng ngôn ngữ của bạn.** Đọc chính tả hoạt động với hàng chục ngôn ngữ, còn menu, hộp thoại và thông báo có 35 ngôn ngữ.
-- **Từ ngữ của bạn, đúng chính tả.** Một bộ từ vựng gồm tên riêng và thuật ngữ chuyên môn định hướng cho OpenAI, Groq, Whisper và hậu xử lý.
+- **Từ ngữ của bạn, đúng chính tả.** Một bộ từ vựng gồm tên riêng và thuật ngữ chuyên môn định hướng cho OpenAI, Groq, Whisper và hậu xử lý, đồng thời sửa cách Parakeet viết chúng.
 - **Văn bản gọn gàng nếu bạn muốn.** Hậu xử lý tùy chọn loại bỏ từ đệm, sửa ngữ pháp và chỉ giữ lại phần đã sửa khi bạn tự đính chính, hoặc định dạng luôn văn bản theo loại ứng dụng bạn đang đọc chính tả vào.
 - **Bảng nhớ tạm vẫn là của bạn.** Lowspeak dán qua bảng nhớ tạm và trả lại nội dung cũ ngay sau đó. Mười bản đọc chính tả gần nhất vẫn nằm trong menu để sao chép lại.
 - **Giữ fn, nói, thả ra.** Văn bản được gõ vào ứng dụng đang ở phía trước, ngay tại con trỏ: thư, trò chuyện, trình soạn thảo, terminal hay trình duyệt. Không phải chuyển sang cửa sổ nào, không phải bấm nút nào.
@@ -177,6 +177,7 @@ Bấm vào vòng tròn trên thanh menu:
 | Mục | Chức năng |
 |---|---|
 | **Đọc chính tả gần đây** | mười văn bản gần nhất; bấm vào một mục để sao chép lại vào bảng nhớ tạm |
+| **Thử lại đọc chính tả không thành công** | chép lại lần đọc chính tả không thành công gần nhất bằng mô hình đang được chọn lúc này; chỉ hiện sau một lần không thành công |
 | **Cục bộ** | các mô hình trên máy Mac, chia thành nhóm Whisper và Parakeet; mô hình chưa tải về sẽ bị làm mờ |
 | **OpenAI**, **Groq** | các mô hình trực tuyến; khi chưa có khóa, chúng bị làm mờ và menu đề xuất **Đặt khóa API…** |
 | **Ngôn ngữ** | ngôn ngữ bạn dùng để đọc chính tả, hoặc **Tự động phát hiện**; menu cũng theo ngôn ngữ này |
@@ -231,6 +232,8 @@ Bản ghi âm tự dừng sau hai phút khi giữ fn, và sau năm phút khi đ�
 ### Văn bản được dán vào đâu
 
 Lowspeak dán văn bản vào ứng dụng đang ở phía trước lúc bạn ngừng nói, tại vị trí con trỏ, qua bảng nhớ tạm và ⌘V. Nó lưu mọi thứ có trong bảng nhớ tạm trước đó và trả lại nửa giây sau khi ứng dụng đã đọc văn bản, hoặc sau mười giây nếu ứng dụng không bao giờ đọc, trừ khi một ứng dụng khác đã thay đổi bảng nhớ tạm trong lúc đó. Văn bản được đánh dấu là tạm thời, nên các ứng dụng lịch sử bảng nhớ tạm tôn trọng dấu này sẽ không ghi lại nó.
+
+Nếu đến lúc văn bản sẵn sàng mà một ứng dụng khác đã chuyển lên phía trước, Lowspeak sẽ không dán vào đó: văn bản vẫn nằm trong bảng nhớ tạm và một thông báo sẽ cho bạn biết. Hãy dán bằng ⌘V vào đúng chỗ của nó.
 
 Bạn có thể bắt đầu lần đọc chính tả tiếp theo trong khi lần trước vẫn đang được chép lại. Các văn bản được dán theo đúng thứ tự bạn nói, và không bao giờ trong lúc bạn đang ghi âm hay giữ Shift, nên một lần dán không thể rơi vào giữa câu tiếp theo của bạn.
 
@@ -288,11 +291,15 @@ Bản ghi âm được nén sang AAC trước khi tải lên, khoảng 6 KB cho 
 
 Nếu việc chép lại trực tuyến không thành công, do mất mạng, nhà cung cấp gặp sự cố hoặc khóa bị sai, một mô hình cục bộ đã cài sẽ chép lại chính bản ghi âm đó: mô hình được chọn trong **Cục bộ**, nếu không thì Parakeet Ultra, tiếp đến Whisper Large v3 Turbo, Large v3 và các mô hình Whisper nhỏ hơn, cuối cùng là Parakeet v2. Một thông báo cho bạn biết một lần; nó chỉ xuất hiện lại sau khi có một lần đọc chính tả trực tuyến thành công ở giữa.
 
-Khi có mô hình cục bộ để dự phòng, Lowspeak cho yêu cầu trực tuyến 20 giây; nếu không có, nó thử ba lần, mỗi lần tối đa một phút. Ở chế độ trực tuyến, Lowspeak chuẩn bị sẵn mô hình Parakeet dự phòng một lần khi khởi động, nên lần dự phòng đầu tiên không phải chờ.
+Khi có mô hình cục bộ để dự phòng, Lowspeak cho yêu cầu trực tuyến 20 giây; nếu không có, nó thử ba lần, mỗi lần tối đa một phút. Ở chế độ trực tuyến, Lowspeak chuẩn bị sẵn mô hình Parakeet dự phòng một lần khi khởi động, nên lần dự phòng đầu tiên không phải chờ. Nếu một nhà cung cấp đang bận yêu cầu tạm dừng, Lowspeak sẽ chờ, tối đa mười giây; nếu nhà cung cấp yêu cầu chờ lâu hơn, hoặc báo rằng tài khoản của bạn không còn số dư, Lowspeak sẽ không gửi yêu cầu cho nó nữa.
+
+Nếu dù vậy lần đọc chính tả vẫn không thành công, nó cũng không bị mất: Lowspeak giữ bản ghi âm của nó trong bộ nhớ, và **Thử lại đọc chính tả không thành công** trong menu sẽ chép lại nó lần nữa, chẳng hạn khi mạng đã có lại hoặc sau khi bạn chọn một mô hình khác. Chỉ bản ghi âm không thành công gần nhất được giữ lại, và không bản nào còn lại sau khi Lowspeak thoát.
 
 ### Cách bản ghi âm được chuẩn bị
 
 Lowspeak ghi âm ở tần số lấy mẫu riêng của micrô và chuyển sang 16 kHz mà các mô hình cần ngay khi bạn dừng. Trước khi chép lại, nó loại bỏ tiếng ù trầm dưới 80 Hz, cắt khoảng lặng ở đầu và cuối, và cân bằng âm lượng, nên người nói nhỏ và người nói to cho kết quả như nhau. Bản ghi âm không có lời nói sẽ không được gửi đi. Ở chế độ cục bộ, Parakeet nhận bản ghi âm nguyên gốc trước, và chỉ nhận bản đã chuẩn bị nếu bản gốc không cho ra văn bản nào.
+
+Đôi khi Whisper viết ra những văn bản không ai nói trong các đoạn im lặng và tiếng ồn, chẳng hạn như dòng ghi công phụ đề của video hoặc từ vựng mà nó được cung cấp. Lowspeak bỏ đi những đoạn mà chính Whisper đánh dấu là im lặng và xóa những văn bản như vậy trước khi dán.
 
 ### Ngôn ngữ theo mô hình
 
@@ -317,7 +324,7 @@ Lowspeak là ứng dụng universal và cũng chạy trên máy Mac Intel với 
 - **GPT Transcribe** nhận chúng làm từ khóa.
 - **Whisper** (OpenAI, Groq và trên máy Mac của bạn) đọc chúng như một gợi ý trước bản ghi âm, tối đa 500 ký tự.
 - **Hậu xử lý** được yêu cầu viết chúng đúng y như đã ghi.
-- **Parakeet** không dùng chúng.
+- **Parakeet** không nghe thấy chúng. Lowspeak đưa cách viết của chúng vào văn bản của Parakeet ở những chỗ mô hình này viết ra một từ rất gần giống: “Träfig” hay “Trafik” trở thành Traefik, “Los Peak” trở thành Lowspeak. Các thuật ngữ ngắn hơn năm chữ cái, các từ trong địa chỉ và tên tệp, cùng các dạng có thêm đuôi như “Lowspeaks” được giữ nguyên như đã viết. Để phân biệt lỗi chính tả với một từ có thật, Lowspeak hỏi trình kiểm tra chính tả của macOS, trên máy Mac của bạn.
 
 ## Hậu xử lý
 
@@ -353,7 +360,8 @@ Lowspeak hoạt động ở chế độ nền, nên nó báo sự cố dưới d
 | **Micrô không có tín hiệu** | năm giây im lặng, xem [Micrô](#micrô) |
 | **Cần quyền Trợ năng** | văn bản nằm trong bảng nhớ tạm; hãy cho phép Trợ năng để dán tự động |
 | **Dán không thành công** | văn bản nằm trong bảng nhớ tạm; hãy dán bằng ⌘V |
-| **Chép lại không thành công** | kèm lý do: không có khóa, khóa bị từ chối, vượt giới hạn yêu cầu, lỗi máy chủ hoặc lỗi mạng, hoặc không có mô hình cục bộ |
+| **Chép lại không thành công** | kèm lý do: không có khóa, khóa bị từ chối, hết số dư, vượt giới hạn yêu cầu, lỗi máy chủ hoặc lỗi mạng, hoặc không có mô hình cục bộ; bản ghi âm được giữ lại cho **Thử lại đọc chính tả không thành công** |
+| **Chưa dán đọc chính tả** | một ứng dụng khác đã chuyển lên phía trước trước khi văn bản sẵn sàng; văn bản nằm trong bảng nhớ tạm |
 | **Đã chép lại trên máy Mac này** | dịch vụ trực tuyến gặp sự cố và một mô hình cục bộ đã thay thế |
 | **Hậu xử lý không thành công** | nhà cung cấp từ chối hậu xử lý hoặc chưa đặt khóa; văn bản đã được dán mà không qua hậu xử lý |
 | **Không có khóa API** | bạn đã chọn một mô hình trực tuyến mà không có khóa cho nhà cung cấp của nó |
@@ -400,7 +408,7 @@ Lowspeak nghe những gì bạn nói khi giữ fn, có thể gõ vào bất kỳ
 - **Hậu xử lý**, nếu bạn bật, sẽ gửi văn bản đã chép lại và từ vựng của bạn tới Groq hoặc OpenAI. Ở chế độ Định dạng, nó gửi kèm loại ứng dụng bạn đang đọc chính tả vào (trình soạn mã, terminal, trò chuyện hoặc thư điện tử); tên ứng dụng không được gửi đi.
 - **Không telemetry, không tài khoản.** Ngoài việc chép lại và hậu xử lý, Lowspeak chỉ kết nối mạng để mở kết nối tới nhà cung cấp của bạn khi giữ fn, ở chế độ trực tuyến hoặc khi hậu xử lý đang bật, để tải về một mô hình khi bạn yêu cầu, từ Hugging Face qua HTTPS, ở một phiên bản cố định và mọi tệp đều được đối chiếu với kiểm tra tổng của nó, và để tìm phiên bản mới trên GitHub, mỗi ngày một lần nếu bạn cho phép. Yêu cầu đó chỉ chứa phiên bản Lowspeak, ngoài ra không có gì khác. **Trợ giúp › Báo cáo sự cố…** mở một biểu mẫu trên GitHub trong trình duyệt của bạn; địa chỉ của nó chứa phiên bản Lowspeak và phiên bản macOS, không có gì bạn đã đọc chính tả.
 - **Khóa API** nằm trong chuỗi khóa đăng nhập của bạn. Chúng chỉ được gửi tới đúng nhà cung cấp của mình và được xóa khỏi thông báo lỗi trước khi bất cứ thứ gì được ghi vào nhật ký.
-- **Văn bản đọc chính tả không được lưu.** Mười bản đọc chính tả gần nhất nằm trong bộ nhớ cho **Đọc chính tả gần đây** và biến mất khi Lowspeak thoát. Các tệp nhật ký ghi lại độ dài và thời gian, không bao giờ ghi văn bản.
+- **Văn bản đọc chính tả không được lưu.** Mười bản đọc chính tả gần nhất nằm trong bộ nhớ cho **Đọc chính tả gần đây** và biến mất khi Lowspeak thoát; bản ghi âm của lần đọc chính tả không thành công gần nhất, được giữ cho **Thử lại đọc chính tả không thành công**, cũng vậy. Các tệp nhật ký ghi lại độ dài và thời gian, không bao giờ ghi văn bản.
 - **Bảng nhớ tạm** được lưu lại trước khi dán và khôi phục khi ứng dụng đã đọc văn bản, trừ khi một ứng dụng khác đã thay đổi nó trong lúc đó. Bản đọc chính tả được đánh dấu là tạm thời, nên các ứng dụng lịch sử bảng nhớ tạm tôn trọng dấu này sẽ bỏ qua nó.
 - **Ký mã** với Hardened Runtime; ứng dụng chỉ xin quyền dùng micrô, Trợ năng, thông báo và mạng. Bản cập nhật phải mang chữ ký của nhà phát triển, nếu không Sparkle sẽ từ chối nó.
 
@@ -420,7 +428,7 @@ Lowspeak nghe những gì bạn nói khi giữ fn, có thể gõ vào bất kỳ
 - **Mô hình cục bộ trên máy Mac Intel** chạy trên bộ xử lý và chậm hơn nhiều; trên các máy đó, chép lại trực tuyến là lựa chọn tốt hơn.
 - **Những gì bạn nói trước khi micrô sẵn sàng sẽ bị mất.** Hãy chờ biểu tượng ghi âm, nhất là với AirPods.
 - **Phím fn có thể bị chiếm.** Khi cài đặt phím 🌐 của macOS, Warp hoặc Đọc chính tả của macOS giành fn trước, Lowspeak không nhận được phím này; xem [Khắc phục sự cố](#khắc-phục-sự-cố).
-- **Parakeet** bỏ qua từ vựng và lựa chọn ngôn ngữ, và chỉ biết các ngôn ngữ châu Âu.
+- **Parakeet** bỏ qua lựa chọn ngôn ngữ và chỉ biết các ngôn ngữ châu Âu. Từ vựng chỉ sửa chính tả của Parakeet về sau: một thuật ngữ mà mô hình nghe thành một từ khác hẳn vẫn sẽ sai.
 - **Hệ chữ và biến thể:** chỉ GPT Transcribe có thể được yêu cầu viết tiếng Trung phồn thể; không mô hình nào có thể được yêu cầu viết tiếng Bồ Đào Nha châu Âu thay vì Bồ Đào Nha Brazil.
 - **Giới hạn thời gian:** hai phút khi giữ fn, năm phút khi đã khóa.
 - **Chế độ mic:** Trung tâm điều khiển đề xuất Tách lời nói và Âm phổ rộng cho Lowspeak và báo chúng đang hoạt động, nhưng Lowspeak ghi âm không qua xử lý giọng nói, nên lựa chọn đó không có tác dụng.

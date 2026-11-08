@@ -5,7 +5,7 @@ use std::sync::Mutex;
 use std::time::{Duration, Instant};
 
 use super::Api;
-use super::error::{StatusClass, TranscriptionError};
+use super::error::{self, StatusClass, TranscriptionError};
 use crate::config::vocabulary;
 use crate::models::{ApiProvider, Language, OnlineModel};
 use crate::util::retry::{self, Backoff};
@@ -23,6 +23,12 @@ const FULL_ATTEMPTS: u32 = 3;
 /// recording over a 1 Mbit/s uplink.
 const BRIEF_TIMEOUT: Duration = Duration::from_secs(20);
 pub const RETRY_DELAY: Duration = Duration::from_secs(2);
+/// A provider that asks for a longer pause is out for longer than anyone waits for a dictation.
+const LONGEST_RETRY_WAIT: Duration = Duration::from_secs(10);
+/// Whisper's own rule for a segment without speech, with the values whisper.cpp drops such segments
+/// at: likely silence, and decoded without confidence.
+const NO_SPEECH_PROBABILITY: f64 = 0.6;
+const LOW_AVERAGE_LOGPROB: f64 = -1.0;
 
 pub struct Upload<'a> {
     pub data: &'a [u8],
@@ -59,6 +65,7 @@ pub fn transcribe(
     let backoff = Backoff {
         max_attempts,
         first_delay: api.retry_delay,
+        longest_wait: LONGEST_RETRY_WAIT,
     };
     retry::with_exponential_backoff(backoff, api.cancel, || {
         send(api, upload, model, &fields, &api_key, timeout)
@@ -116,7 +123,14 @@ fn form_fields(
         fields.extend(language.map(|code| ("language", code.to_owned())));
         fields.extend(vocabulary::prompt(vocabulary).map(|prompt| ("prompt", prompt)));
     }
-    fields.push(("response_format", "json".to_owned()));
+    // Only Whisper reports per segment how likely it heard no speech; gpt-transcribe knows no
+    // `verbose_json`.
+    let format = if model == OnlineModel::GptTranscribe {
+        "json"
+    } else {
+        "verbose_json"
+    };
+    fields.push(("response_format", format.to_owned()));
     fields
 }
 
@@ -189,18 +203,54 @@ fn send(
             if StatusClass::of(status) == StatusClass::ModelRetired {
                 return Err(TranscriptionError::ModelRetired(model));
             }
-            Err(TranscriptionError::Api { status, message })
+            if (400..500).contains(&status) && error::quota_exhausted(&message) {
+                return Err(TranscriptionError::QuotaExhausted(model.provider()));
+            }
+            Err(TranscriptionError::Api {
+                status,
+                message,
+                retry_after: response.retry_after,
+            })
         }
     }
 }
 
+/// The text of the answer; of a `verbose_json` answer without the segments Whisper decoded from
+/// silence, where it invents text such as subtitle credits.
 fn transcript(body: &[u8]) -> Result<String, TranscriptionError> {
     let json: serde_json::Value =
         serde_json::from_slice(body).map_err(|_| TranscriptionError::InvalidResponse)?;
-    json.get("text")
+    let text = json
+        .get("text")
         .and_then(|text| text.as_str())
-        .map(|text| text.trim().to_owned())
-        .ok_or(TranscriptionError::InvalidResponse)
+        .ok_or(TranscriptionError::InvalidResponse)?;
+    let Some(segments) = json
+        .get("segments")
+        .and_then(|segments| segments.as_array())
+    else {
+        return Ok(text.trim().to_owned());
+    };
+    let silent = |segment: &serde_json::Value| {
+        let value = |field: &str| segment.get(field).and_then(serde_json::Value::as_f64);
+        value("no_speech_prob").is_some_and(|p| p > NO_SPEECH_PROBABILITY)
+            && value("avg_logprob").is_some_and(|logprob| logprob < LOW_AVERAGE_LOGPROB)
+    };
+    let dropped = segments.iter().filter(|segment| silent(segment)).count();
+    if dropped == 0 {
+        return Ok(text.trim().to_owned());
+    }
+    flog!(
+        filelog::APP,
+        "Dropped {dropped} of {} segments that Whisper decoded from silence",
+        segments.len()
+    );
+    Ok(segments
+        .iter()
+        .filter(|segment| !silent(segment))
+        .filter_map(|segment| segment.get("text").and_then(|text| text.as_str()))
+        .collect::<String>()
+        .trim()
+        .to_owned())
 }
 
 #[cfg(test)]
@@ -242,15 +292,15 @@ mod tests {
             [
                 ("model", "whisper-large-v3".to_owned()),
                 ("language", "de".to_owned()),
-                ("prompt", "Postgres, Traefik".to_owned()),
-                ("response_format", "json".to_owned()),
+                ("prompt", "Postgres, Traefik.".to_owned()),
+                ("response_format", "verbose_json".to_owned()),
             ]
         );
         assert_eq!(
             form_fields(OnlineModel::Whisper1, Language::Auto, &[]),
             [
                 ("model", "whisper-1".to_owned()),
-                ("response_format", "json".to_owned()),
+                ("response_format", "verbose_json".to_owned()),
             ]
         );
     }
@@ -269,6 +319,31 @@ mod tests {
                 Err(TranscriptionError::InvalidResponse)
             ));
         }
+    }
+
+    #[test]
+    fn segments_whisper_decoded_from_silence_are_dropped() {
+        let body = serde_json::json!({
+            "text": " Hallo zusammen. Untertitel im Auftrag des ZDF für funk, 2017",
+            "segments": [
+                {"text": " Hallo zusammen.", "no_speech_prob": 0.01, "avg_logprob": -0.2},
+                {"text": " Untertitel im Auftrag des ZDF für funk, 2017", "no_speech_prob": 0.83, "avg_logprob": -1.4},
+            ]
+        })
+        .to_string();
+        assert_eq!(transcript(body.as_bytes()).unwrap(), "Hallo zusammen.");
+        let quiet_but_sure = serde_json::json!({
+            "text": " Ja.",
+            "segments": [{"text": " Ja.", "no_speech_prob": 0.7, "avg_logprob": -0.3}]
+        })
+        .to_string();
+        assert_eq!(transcript(quiet_but_sure.as_bytes()).unwrap(), "Ja.");
+        let only_silence = serde_json::json!({
+            "text": " Vielen Dank.",
+            "segments": [{"text": " Vielen Dank.", "no_speech_prob": 0.9, "avg_logprob": -1.1}]
+        })
+        .to_string();
+        assert_eq!(transcript(only_silence.as_bytes()).unwrap(), "");
     }
 
     #[test]

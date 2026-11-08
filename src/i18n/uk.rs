@@ -13,6 +13,7 @@ fn plural(n: usize, one: &'static str, few: &'static str, many: &'static str) ->
 pub static UK: Texts = Texts {
     recent_dictations: "Останні диктування",
     none_yet: "Поки немає",
+    retry_failed_dictation: "Повторити невдале диктування",
     local: "Локально",
     not_installed: |model| format!("{model} (не встановлена)"),
     no_key: |provider| format!("{provider} (немає ключа)"),
@@ -77,7 +78,7 @@ pub static UK: Texts = Texts {
     unknown_key_format: "Невідомий формат ключа",
     unknown_key_format_info: "Ключ має починатися з sk- (OpenAI) або gsk_ (Groq). Спробуйте ще раз.",
     vocabulary_title: "Словник",
-    vocabulary_info: "Імена, назви й терміни, які слід писати саме так, через кому. Їх використовують OpenAI, Groq, Whisper на цьому Mac і постобробка.",
+    vocabulary_info: "Імена, назви й терміни, які слід писати саме так, через кому. Їх використовують OpenAI, Groq, Whisper і Parakeet на цьому Mac і постобробка.",
 
     recording_failed: "Помилка запису",
     microphone_silent: "Немає сигналу з мікрофона",
@@ -91,6 +92,9 @@ pub static UK: Texts = Texts {
     accessibility_list: "Доступність",
     device_control_list: "Керування пристроями й доступ до даних",
     transcription_failed: "Помилка розпізнавання",
+    retry_failed_dictation_info: |menu_item| {
+        format!("Запис збережено: виберіть у меню «{menu_item}», щоб розпізнати його знову.")
+    },
     transcribed_locally: "Розпізнано на цьому Mac",
     transcribed_locally_info: |reason| {
         format!("{reason} Натомість текст розпізнала локальна модель.")
@@ -134,6 +138,11 @@ pub static UK: Texts = Texts {
     },
     network_error: |message| format!("Помилка мережі: {message}"),
     key_rejected: |provider| format!("Сервіс {provider} відхилив ключ API."),
+    quota_exhausted: |provider| {
+        format!(
+            "Сервіс {provider} повідомляє, що на рахунку не залишилося коштів. Поповніть баланс у своєму обліковому записі {provider}."
+        )
+    },
     model_retired: |provider| format!("Сервіс {provider} більше не надає модель для постобробки."),
     no_post_processing_key: |first, second| {
         format!(
@@ -151,6 +160,8 @@ pub static UK: Texts = Texts {
     microphone_error: |detail| format!("Не вдалося запустити мікрофон: {detail}"),
     paste_failed: "Не вдалося вставити",
     paste_failed_info: "Текст у буфері обміну. Вставте його за допомогою ⌘V.",
+    not_pasted: "Диктування не вставлено",
+    not_pasted_info: "Інша програма перейшла на передній план, перш ніж текст був готовий. Текст у буфері обміну. Вставте його за допомогою ⌘V.",
     request_timed_out: "Час очікування запиту минув.",
     audio_failed: "Не вдалося обробити запис.",
     local_model_failed: "Локальній моделі не вдалося розпізнати запис.",

@@ -18,6 +18,7 @@ pub mod state;
 pub mod updates;
 
 use std::cell::RefCell;
+use std::collections::HashMap;
 use std::panic::AssertUnwindSafe;
 use std::rc::Rc;
 use std::sync::Arc;
@@ -28,8 +29,8 @@ use objc2_app_kit::{NSApplication, NSMenu};
 use objc2_foundation::MainThreadMarker;
 
 use self::menu::{PULSE_INTERVAL, StatusUi};
-use self::platform::{Background, Mac, Platform};
-use self::state::{DownloadEnd, Effect, KeyChange, Launch, State, Transcription};
+use self::platform::{Audio, Background, Mac, Platform};
+use self::state::{DownloadEnd, Effect, KeyChange, Launch, Recorded, State, Transcription};
 pub use self::state::{Snapshot, Status};
 use crate::audio::aac;
 use crate::audio::recorder::{self, Microphone, OnLive};
@@ -37,9 +38,11 @@ use crate::config::settings::{self, Settings};
 use crate::config::{api_keys, vocabulary};
 use crate::hotkey::{Hotkey, Key};
 use crate::models::{Language, LocalModel, OnlineModel, PostProcessingMode};
+use crate::paste::Pasted;
 use crate::transcription::error::TranscriptionError;
 use crate::transcription::hf::Cancelled;
 use crate::transcription::model_store;
+use crate::transcription::service::Outcome;
 use crate::util::{filelog, main_thread};
 
 #[derive(Clone, Debug)]
@@ -52,6 +55,7 @@ pub enum Action {
     SelectMicrophone(Option<Microphone>),
     ToggleStartSound,
     CopyRecent(String),
+    RetryFailed,
     Vocabulary,
     Download(LocalModel),
     Delete(LocalModel),
@@ -73,9 +77,61 @@ pub struct App {
     ui: StatusUi,
     platform: Rc<dyn Platform>,
     background: Arc<dyn Background>,
+    /// Dictations on their way from the stop of their recording to the paste.
+    destinations: HashMap<u64, Destination>,
     download_cancel: Option<Arc<AtomicBool>>,
     /// A refresh of the microphones and the login item runs.
     refreshing: bool,
+}
+
+/// The app a dictation is for, and how long it has been underway, for the log.
+struct Destination {
+    app: Option<i32>,
+    stopped: Instant,
+    /// Since `stopped`.
+    audio_ready: Option<Duration>,
+    /// Since `stopped`.
+    transcribed: Option<Duration>,
+}
+
+impl Destination {
+    fn log_paste(&self, recording: u64) {
+        let millis = |duration: Duration| duration.as_secs_f64() * 1000.0;
+        let total = self.stopped.elapsed();
+        let audio = self.audio_ready.unwrap_or_default();
+        let transcribed = self.transcribed.unwrap_or(total);
+        flog!(
+            filelog::APP,
+            "Dictation {recording} pasted {:.0}ms after the recording stopped: audio {:.0}ms, transcription {:.0}ms, waiting {:.0}ms",
+            millis(total),
+            millis(audio),
+            millis(transcribed.saturating_sub(audio)),
+            millis(total.saturating_sub(transcribed))
+        );
+    }
+}
+
+/// Where a transcription takes its recording from.
+enum Source {
+    Recorder(Audio),
+    Kept(Recorded),
+}
+
+/// What a transcription thread hands back.
+struct Finished {
+    result: delivery::Result,
+    audio: Option<Recorded>,
+    audio_ready: Option<Duration>,
+}
+
+impl Finished {
+    fn failed(error: TranscriptionError) -> Self {
+        Self {
+            result: Err(error),
+            audio: None,
+            audio_ready: None,
+        }
+    }
 }
 
 thread_local! {
@@ -178,6 +234,7 @@ pub fn start(mtm: MainThreadMarker, platform: Box<dyn Platform>, launch: Launch)
         ui: StatusUi::new(mtm),
         platform: Rc::from(platform),
         background,
+        destinations: HashMap::new(),
         download_cancel: None,
         refreshing: false,
     };
@@ -251,6 +308,7 @@ pub fn perform(action: Action) {
         }
         Action::ToggleStartSound => update_now_or_later(State::toggle_start_sound),
         Action::CopyRecent(text) => update_now_or_later(move |state| state.copy_recent(text)),
+        Action::RetryFailed => update_now_or_later(State::retry_failed),
         Action::Download(model) => update_now_or_later(move |state| state.download(model)),
         Action::Delete(model) => update_now_or_later(move |state| state.delete(model)),
         Action::ToggleLogin => update_now_or_later(State::toggle_login_item),
@@ -355,8 +413,15 @@ impl App {
                 recording,
                 microphone,
             } => {
-                let on_live: OnLive =
-                    Box::new(move || update(move |state| state.microphone_live(recording)));
+                let requested = Instant::now();
+                let on_live: OnLive = Box::new(move || {
+                    flog!(
+                        filelog::AUDIO,
+                        "Microphone live {:.0}ms after the start",
+                        requested.elapsed().as_secs_f64() * 1000.0
+                    );
+                    update(move |state| state.microphone_live(recording));
+                });
                 self.platform.start_recorder(
                     microphone,
                     on_live,
@@ -380,10 +445,18 @@ impl App {
             Effect::ResetHotkey => self.platform.reset_hotkey(),
             Effect::WarmUp(provider) => self.platform.warm_up(provider),
             Effect::PlayStartSound => self.platform.play_start_sound(),
-            Effect::Paste(text) => {
-                let pasted = self
-                    .platform
-                    .paste(&text, Box::new(|| update(State::clipboard_restored)));
+            Effect::Paste { recording, text } => {
+                let destination = self.destinations.remove(&recording);
+                let pasted = self.platform.paste(
+                    &text,
+                    destination.as_ref().and_then(|destination| destination.app),
+                    Box::new(|| update(State::clipboard_restored)),
+                );
+                if matches!(pasted, Pasted::Yes)
+                    && let Some(destination) = destination
+                {
+                    destination.log_paste(recording);
+                }
                 self.state.pasted(pasted);
             }
             Effect::Copy(text) => self.platform.copy(&text),
@@ -446,25 +519,73 @@ impl App {
         }
     }
 
-    fn transcribe(&self, job: Transcription) {
+    /// The dictation goes to the app in front now, when its recording stops.
+    fn transcribe(&mut self, mut job: Transcription) {
         let active_app = self.platform.active_app();
+        let recording = job.recording;
+        let stopped = Instant::now();
+        self.destinations.insert(
+            recording,
+            Destination {
+                app: active_app.process_id,
+                stopped,
+                audio_ready: None,
+                transcribed: None,
+            },
+        );
+        let kept = job.audio.take();
         let background = Arc::clone(&self.background);
-        self.platform.stop_recorder(Box::new(move |audio| {
-            let recording = job.recording;
+        let run = move |source: Source| {
             spawn_guarded(
                 "lowspeak.transcription",
                 move || {
-                    let samples = audio().map_err(TranscriptionError::Audio)?;
-                    background.transcribe(samples, job, active_app)
+                    let samples = match source {
+                        Source::Kept(recorded) => recorded,
+                        Source::Recorder(audio) => match audio() {
+                            Ok(samples) => Recorded(Arc::new(samples)),
+                            Err(error) => {
+                                return Finished::failed(TranscriptionError::Audio(error));
+                            }
+                        },
+                    };
+                    let audio_ready = stopped.elapsed();
+                    flog!(
+                        filelog::APP,
+                        "Dictation {recording}: audio ready {:.0}ms after the recording stopped",
+                        audio_ready.as_secs_f64() * 1000.0
+                    );
+                    Finished {
+                        result: background.transcribe(Arc::clone(&samples.0), job, active_app),
+                        audio: Some(samples),
+                        audio_ready: Some(audio_ready),
+                    }
                 },
                 || {
-                    Err(TranscriptionError::Engine(anyhow::anyhow!(
+                    Finished::failed(TranscriptionError::Engine(anyhow::anyhow!(
                         "transcription panicked"
                     )))
                 },
-                move |result| update(move |state| state.transcribed(recording, result)),
+                move |finished| dispatch(move |app| app.transcribed(recording, finished)),
             );
-        }));
+        };
+        match kept {
+            Some(recorded) => run(Source::Kept(recorded)),
+            None => self
+                .platform
+                .stop_recorder(Box::new(move |audio| run(Source::Recorder(audio)))),
+        }
+    }
+
+    fn transcribed(&mut self, recording: u64, finished: Finished) {
+        if matches!(finished.result, Ok(Outcome::Text(_))) {
+            if let Some(destination) = self.destinations.get_mut(&recording) {
+                destination.audio_ready = finished.audio_ready;
+                destination.transcribed = Some(destination.stopped.elapsed());
+            }
+        } else {
+            self.destinations.remove(&recording);
+        }
+        self.update(move |state| state.transcribed(recording, finished.result, finished.audio));
     }
 
     fn download(&mut self, model: LocalModel) {

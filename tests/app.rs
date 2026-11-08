@@ -26,6 +26,7 @@ use lowspeak::transcription::error::TranscriptionError;
 use lowspeak::transcription::hf::Cancelled;
 use lowspeak::transcription::postprocess::{self, ActiveApp};
 use lowspeak::transcription::service::{Outcome, Transcript};
+use lowspeak::util::url_session::RequestError;
 
 /// What the substitutes were asked to do, in order, and how they answer.
 #[derive(Default)]
@@ -40,7 +41,12 @@ struct World {
     reenter: bool,
     providers: Vec<ApiProvider>,
     installed: HashSet<LocalModel>,
+    /// The next recording stops while another app than `FRONTMOST` is in front.
+    other_app_in_front: bool,
 }
+
+/// The process ID of the app in front in this world.
+const FRONTMOST: i32 = 4_242;
 
 type Shared = Arc<Mutex<World>>;
 
@@ -88,8 +94,12 @@ impl Platform for FakePlatform {
         note(&self.0, "start sound".into());
     }
 
-    fn paste(&self, text: &str, restored: Box<dyn FnOnce()>) -> Pasted {
+    fn paste(&self, text: &str, target: Option<i32>, restored: Box<dyn FnOnce()>) -> Pasted {
         note(&self.0, format!("paste {text}"));
+        if target.is_some_and(|target| target != FRONTMOST) {
+            note(&self.0, "app changed".into());
+            return Pasted::AppChanged;
+        }
         restored();
         Pasted::Yes
     }
@@ -187,7 +197,11 @@ impl Platform for FakePlatform {
     }
 
     fn active_app(&self) -> ActiveApp {
-        ActiveApp::default()
+        let elsewhere = std::mem::take(&mut self.0.lock().unwrap().other_app_in_front);
+        ActiveApp {
+            process_id: Some(if elsewhere { FRONTMOST + 1 } else { FRONTMOST }),
+            ..ActiveApp::default()
+        }
     }
 
     fn quit(&self) {
@@ -209,7 +223,7 @@ struct FakeBackground(Shared);
 impl Background for FakeBackground {
     fn transcribe(
         &self,
-        samples: Vec<f32>,
+        samples: Arc<Vec<f32>>,
         _job: Transcription,
         _active_app: ActiveApp,
     ) -> Result<Outcome, TranscriptionError> {
@@ -219,6 +233,9 @@ impl Background for FakeBackground {
         let text = self.0.lock().unwrap().transcript.clone();
         match text.as_str() {
             "panic" => panic!("the model crashed"),
+            "offline" => Err(TranscriptionError::Network(RequestError::Failed(
+                "The Internet connection appears to be offline.".into(),
+            ))),
             "" => Ok(Outcome::NoSpeech),
             _ => Ok(Outcome::Text(Transcript {
                 text,
@@ -390,6 +407,32 @@ fn main() {
     app::key(Key::FnDown { shift: false });
     app::key(Key::FnUp);
     wait_for(&world, "paste locked");
+
+    // A dictation for an app that is no longer in front stays on the clipboard.
+    clear(&world);
+    world.lock().unwrap().transcript = "elsewhere".into();
+    world.lock().unwrap().other_app_in_front = true;
+    hold_and_speak(&world);
+    wait_for(&world, "app changed");
+    wait_for(&world, "notify");
+
+    // A failed dictation keeps its recording, and the menu transcribes it again.
+    clear(&world);
+    world.lock().unwrap().transcript = "offline".into();
+    hold_and_speak(&world);
+    wait_for(&world, "notify");
+    assert!(app::snapshot().unwrap().can_retry);
+    world.lock().unwrap().transcript = "back online".into();
+    clear(&world);
+    app::perform(Action::RetryFailed);
+    wait_for(&world, "paste back online");
+    assert!(
+        !logged(&world, "stop recorder"),
+        "{:?}",
+        world.lock().unwrap().log
+    );
+    assert!(logged(&world, "transcribe 32000"));
+    assert!(!app::snapshot().unwrap().can_retry);
 
     // Silence, a crashing model and a missing microphone each end in the right place.
     for (transcript, outcome) in [("", "notify"), ("panic", "notify")] {
