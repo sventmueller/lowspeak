@@ -7,6 +7,7 @@ use std::os::unix::fs::OpenOptionsExt as _;
 use std::path::PathBuf;
 
 use anyhow::{Context as _, Result, bail, ensure};
+use security_framework::item::{ItemClass, ItemSearchOptions};
 use security_framework::passwords::{
     PasswordOptions, delete_generic_password, generic_password, set_generic_password,
 };
@@ -192,17 +193,42 @@ pub fn save(api_key: &str) -> Result<ApiProvider> {
 }
 
 pub fn load(provider: ApiProvider) -> Option<String> {
-    let found = match override_file() {
+    read(provider).unwrap_or_else(|error| {
+        flog!(filelog::APP, "API key unavailable: {error:#}");
+        None
+    })
+}
+
+/// `load`, with the reason when the key cannot be read, such as the user refusing the keychain's request.
+pub fn read(provider: ApiProvider) -> Result<Option<String>> {
+    match override_file() {
         Some(file) => file.read(provider),
         None => keychain().read(provider).map(|key| {
             // Keys stay readable from the old file until a migration succeeds.
             key.or_else(|| legacy_file().load_all().remove(&provider))
         }),
-    };
-    found.unwrap_or_else(|error| {
-        flog!(filelog::APP, "API key unavailable: {error:#}");
-        None
-    })
+    }
+}
+
+/// Whether a key for `provider` is stored, found without reading it: the keychain asks only before it hands out a
+/// secret, so another program can ask this without a prompt.
+pub fn exists(provider: ApiProvider) -> bool {
+    if let Some(file) = override_file() {
+        return file.load_all().contains_key(&provider);
+    }
+    has_item(SERVICE, provider.raw_value()) || legacy_file().load_all().contains_key(&provider)
+}
+
+/// Whether the keychain has a generic password of `service` and `account`, asked for its attributes only.
+fn has_item(service: &str, account: &str) -> bool {
+    ItemSearchOptions::new()
+        .class(ItemClass::generic_password())
+        .service(service)
+        .account(account)
+        .load_attributes(true)
+        .limit(1)
+        .search()
+        .is_ok_and(|found| !found.is_empty())
 }
 
 pub fn configured_providers() -> Vec<ApiProvider> {
@@ -397,5 +423,37 @@ mod tests {
         keychain.erase(ApiProvider::Groq).unwrap();
         keychain.erase(ApiProvider::Groq).unwrap();
         assert_eq!(keychain.read(ApiProvider::Groq).unwrap(), None);
+    }
+
+    /// The item belongs to `security`, so a read of its secret by this test would make macOS ask; the attributes
+    /// come back without a dialog, which the time limit tells.
+    #[test]
+    #[ignore = "adds and removes a test item in the login keychain"]
+    fn a_key_of_another_program_is_found_without_asking() {
+        let service = format!("lowspeak-test-{}", std::process::id());
+        let security = |args: &[&str]| {
+            std::process::Command::new("/usr/bin/security")
+                .args(args)
+                .stdout(std::process::Stdio::null())
+                .status()
+                .is_ok_and(|status| status.success())
+        };
+        assert!(security(&[
+            "add-generic-password",
+            "-s",
+            &service,
+            "-a",
+            "probe",
+            "-w",
+            "not-a-key"
+        ]));
+        let (sender, answer) = std::sync::mpsc::channel();
+        let asked = service.clone();
+        std::thread::spawn(move || sender.send(has_item(&asked, "probe")));
+        let found = answer.recv_timeout(std::time::Duration::from_secs(5));
+        let removed = security(&["delete-generic-password", "-s", &service, "-a", "probe"]);
+        assert_eq!(found, Ok(true), "found in time, without a dialog");
+        assert!(removed);
+        assert!(!has_item(&service, "probe"));
     }
 }

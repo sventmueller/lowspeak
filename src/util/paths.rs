@@ -42,19 +42,30 @@ pub fn app_dir() -> PathBuf {
     .clone()
 }
 
+static LOG_DIR: OnceLock<PathBuf> = OnceLock::new();
+
 /// The directory of the log files, created on first use.
 pub fn log_dir() -> PathBuf {
-    static DIR: OnceLock<PathBuf> = OnceLock::new();
-    DIR.get_or_init(|| {
-        let dir = std::env::var_os(LOG_DIR_ENV)
-            .filter(|dir| !dir.is_empty())
-            .map_or_else(app_dir, PathBuf::from);
-        if let Err(error) = create(&dir) {
-            report_once(&error);
-        }
-        dir
-    })
-    .clone()
+    LOG_DIR
+        .get_or_init(|| {
+            let dir = std::env::var_os(LOG_DIR_ENV)
+                .filter(|dir| !dir.is_empty())
+                .map_or_else(app_dir, PathBuf::from);
+            if let Err(error) = create(&dir) {
+                report_once(&error);
+            }
+            dir
+        })
+        .clone()
+}
+
+/// Puts the log files into `dir` instead, for an app other than Lowspeak that uses this crate; it counts only before
+/// the first log line, and tells whether it did.
+pub fn use_log_dir(dir: PathBuf) -> bool {
+    if let Err(error) = create(&dir) {
+        report_once(&error);
+    }
+    LOG_DIR.set(dir).is_ok()
 }
 
 fn create(dir: &Path) -> io::Result<()> {

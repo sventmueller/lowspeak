@@ -28,6 +28,7 @@ Xcode.
 | `src/main.rs` | `NSApplication` setup, single-instance check, Accessibility prompt, app delegate (terminate) |
 | `src/app/` | `state.rs` what the app decides, without AppKit or threads (events in, `Effect`s out), built from `recording.rs` (the running recording), `delivery.rs` (dictations on their way to the paste) and `model_library.rs` (installed models, the running download or deletion); `mod.rs` carries the effects out on the main thread; `capture.rs` the recorder on its own thread; `policy.rs` further decisions without AppKit (selection fallback, notification streaks, time limits, dictation order); `gesture.rs` fn hold/double-tap; `menu.rs` status item, icons, menu; `dialogs.rs` API key and vocabulary alerts; `notify.rs` user notifications; `reference.rs` Help → Quick Reference window; `feedback.rs` GitHub links of the Help menu; `about.rs` About panel; `updates.rs` Sparkle, loaded at run time where the bundle carries it; `platform.rs` everything `App` does outside its state, behind `Platform` and `Background`, and `Mac`, which does it |
 | `src/hotkey.rs` | fn key detection via event tap |
+| `src/dictation.rs` | dictation for another app that uses this crate (Vibeedit): Lowspeak's recorder, pipeline, models and settings (suite `com.lowspeak.app`, read only) with the host's own key store and log directory, results per text field in recording order; `Lowspeak.app` does not use it |
 | `src/models.rs` | the settings enums and the model catalogue (`LocalModel::spec`); how a model runs and where it comes from is in `transcription/catalog.rs` |
 | `src/audio/` | `mod.rs` sample rate and minimum length; `recorder.rs` capture, `vad.rs` silence trimming, `preprocess.rs` resampling, HPF and normalisation, `aac.rs` M4A encoding, `mp4.rs` M4A padding removal, `wav.rs` |
 | `src/transcription/` | `service.rs` pipeline (`Services`), `mod.rs` `Api` (HTTP client, key store, cancellation, retry delay), `online.rs`, `postprocess.rs`, `hallucination.rs` (text Whisper writes without speech), `local.rs` model thread (`LocalEngine`, `ModelLoader`), `whisper.rs`, `parakeet/` (CoreML port of FluidAudio), `catalog.rs` engine and pinned repository commit of each model, `model_store.rs` paths/download/delete (`ModelStore`, `Library`), `hf.rs` checked Hugging Face downloads (`Hub`), `error.rs`, `test_server.rs` local HTTP server for the download tests |
@@ -358,8 +359,9 @@ half is missing. `make universal` builds only the program, into `target/universa
   and a program built on an M3 can stop with an illegal instruction on an M1. The x86_64 half enables SSE4.2, AVX,
   AVX2, BMI2, FMA and F16C, which every Intel Mac with macOS 14 has; cross-compiling would otherwise switch them off
 - With macOS 14 as deployment target, whisper.cpp's Metal code calls `__isPlatformVersionAtLeast` for its
-  `@available` checks. That lives in clang's runtime library, which rustc does not link, so `build.rs` adds
-  `libclang_rt.osx.a` from `xcrun clang --print-resource-dir` to every build
+  `@available` checks. That lives in clang's runtime library, which rustc does not link, so `build.rs` links
+  `libclang_rt.osx.a` from `xcrun clang --print-resource-dir` as a static library: unlike a link argument, which reaches
+  only this crate's own programs, a library also reaches the program of a crate that depends on this one
 - On Intel, Whisper runs on the CPU (`use_gpu` only on aarch64): ggml's fast Metal kernels need an Apple GPU. Parakeet's
   CoreML models fall back from the Neural Engine to the CPU by themselves
 - `make test-intel` (`cargo xtask intel-tests`) runs the tests of `make check` as x86_64 code, which Rosetta runs on
@@ -385,6 +387,7 @@ cargo test --release --test fallback -- --ignored      # invalid key → local P
 cargo run --release --example transcribe -- tests/fixtures/builtin.wav parakeet-ultra
 ```
 - `tests/menu.rs` and `tests/app.rs` run without the test harness, because AppKit needs the main thread. `tests/app.rs` runs `App` with substitutes for `Platform` and `Background`: dictations held and locked, silence, a crashing model, a failing recorder, the level check after five seconds, every menu action, keys stored and removed, downloads done, failed, cancelled and crashed, deletion, calls from other threads and from inside the app's own work, and quitting during a download. What stays untested is `launch()` with the real Mac, the forced exit when a model does not let go, and `platform::Mac`
+- `tests/dictation.rs` drives `dictation::Dictation` with a recorder and a transcriber in place of the microphone and the models: event order, texts in recording order, cancelling while recording and while transcribing, one recording at a time, failures, the recording limit, missing keys and texts by language tag; `tests/log_dir.rs` a host's own log directory
 - Tests that need models, keys, the network or the microphone are `#[ignore]` with the reason and fail when run without what they need
 - Property tests (`proptest`) cover the MP4 and WAV parsers and the chunk merge; a failure leaves its seed in `proptest-regressions/`
 - Seams for tests without hardware or network: `State` (app decisions), `Platform` and `Background` (what `App` carries out), `ModelLoader` (model thread), `Networks` and `WindowDecoder` (Parakeet decoding), `Library` and `test_server` (downloads), `Api::retry_delay` (retries without waiting)

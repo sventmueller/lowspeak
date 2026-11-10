@@ -65,7 +65,7 @@ pub fn save(terms: &[String]) {
     save_to(&NSUserDefaults::standardUserDefaults(), terms);
 }
 
-fn load_from(defaults: &NSUserDefaults) -> Vec<String> {
+pub fn load_from(defaults: &NSUserDefaults) -> Vec<String> {
     defaults
         .stringForKey(&NSString::from_str(KEY))
         .map(|value| parse(&value.to_string()))

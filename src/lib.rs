@@ -3,6 +3,7 @@ pub mod util;
 pub mod app;
 pub mod audio;
 pub mod config;
+pub mod dictation;
 pub mod hotkey;
 pub mod i18n;
 pub mod models;

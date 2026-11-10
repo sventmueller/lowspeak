@@ -2,7 +2,7 @@
 //! the clipboard and background threads, and hands their results back to it.
 
 pub mod about;
-mod capture;
+pub(crate) mod capture;
 mod delivery;
 mod dialogs;
 mod feedback;

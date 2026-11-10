@@ -208,6 +208,12 @@ pub fn texts(language: Language) -> &'static Texts {
     }
 }
 
+/// The texts of the language a tag such as `de-CH`, `zh-Hant` or `nb-NO` names; English for a tag no interface
+/// language matches.
+pub fn texts_for_locale(tag: &str) -> &'static Texts {
+    texts(from_locale(tag).unwrap_or(Language::En))
+}
+
 fn ui_language(language: Language) -> Language {
     if language != Language::Auto {
         return language;
