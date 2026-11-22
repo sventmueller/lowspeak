@@ -20,52 +20,9 @@ Lowspeak govori 35 jezika. Nauči imena i pojmove koje koristite, može ukloniti
 
 **Pronašli ste grešku?** [Otvorite issue](https://github.com/sventmueller/lowspeak/issues/new/choose) ili u izborniku Lowspeaka odaberite **Pomoć › Prijavi problem…**: obrazac se otvara s već upisanom vašom verzijom. Ako vam je Lowspeak koristan, [zvjezdica na GitHubu](https://github.com/sventmueller/lowspeak) pomaže drugima da ga pronađu.
 
-[![Rust, izdanje 2024.](https://img.shields.io/badge/Rust-2024_edition-000000?logo=rust&logoColor=white)](https://www.rust-lang.org)
-[![macOS 14 ili noviji](https://img.shields.io/badge/macOS-14%2B-000000?logo=apple&logoColor=white)](https://www.apple.com/macos/)
-![Univerzalno: Apple Silicon i Intel](https://img.shields.io/badge/Universal-Apple_Silicon_%7C_Intel-333333?logo=apple&logoColor=white)
-[![AppKit preko objc2](https://img.shields.io/badge/AppKit-objc2_0.6-147EFB?logo=apple&logoColor=white)](https://github.com/madsmtm/objc2)
-[![whisper.cpp na Metalu](https://img.shields.io/badge/whisper.cpp-Metal-0A84FF)](https://github.com/ggml-org/whisper.cpp)
-[![Parakeet na Neural Engineu](https://img.shields.io/badge/Parakeet-Neural_Engine-76B900?logo=nvidia&logoColor=white)](https://huggingface.co/FluidInference)
-![Online putem OpenAI-ja ili Groqa](https://img.shields.io/badge/online-OpenAI_%7C_Groq-333333)
-![35 jezika sučelja](https://img.shields.io/badge/languages-35-4C9A2A)
-![Potpisano s Hardened Runtimeom](https://img.shields.io/badge/Hardened_Runtime-signed-4C9A2A)
-[![Licenca: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT_OR_Apache--2.0-4C9A2A)](#licenca)
+[![Rust, izdanje 2024.](https://img.shields.io/badge/Rust-2024_edition-000000?logo=rust&logoColor=white)](https://www.rust-lang.org) [![macOS 14 ili noviji](https://img.shields.io/badge/macOS-14%2B-000000?logo=apple&logoColor=white)](https://www.apple.com/macos/) ![Univerzalno: Apple Silicon i Intel](https://img.shields.io/badge/Universal-Apple_Silicon_%7C_Intel-333333?logo=apple&logoColor=white) [![AppKit preko objc2](https://img.shields.io/badge/AppKit-objc2_0.6-147EFB?logo=apple&logoColor=white)](https://github.com/madsmtm/objc2) [![whisper.cpp na Metalu](https://img.shields.io/badge/whisper.cpp-Metal-0A84FF)](https://github.com/ggml-org/whisper.cpp) [![Parakeet na Neural Engineu](https://img.shields.io/badge/Parakeet-Neural_Engine-76B900?logo=nvidia&logoColor=white)](https://huggingface.co/FluidInference) ![Online putem OpenAI-ja ili Groqa](https://img.shields.io/badge/online-OpenAI_%7C_Groq-333333) ![35 jezika sučelja](https://img.shields.io/badge/languages-35-4C9A2A) ![Potpisano s Hardened Runtimeom](https://img.shields.io/badge/Hardened_Runtime-signed-4C9A2A) [![Licenca: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT_OR_Apache--2.0-4C9A2A)](#licenca)
 
-[Bahasa Indonesia](../id/README.md) ·
-[Bahasa Melayu](../ms/README.md) ·
-[Català](../ca/README.md) ·
-[Čeština](../cs/README.md) ·
-[Dansk](../da/README.md) ·
-[Deutsch](../de/README.md) ·
-[English](../../../README.md) ·
-[Español](../es/README.md) ·
-[Français](../fr/README.md) ·
-**Hrvatski** ·
-[Italiano](../it/README.md) ·
-[Magyar](../hu/README.md) ·
-[Nederlands](../nl/README.md) ·
-[Norsk](../no/README.md) ·
-[Polski](../pl/README.md) ·
-[Português (Brasil)](../pt_BR/README.md) ·
-[Português (Portugal)](../pt_PT/README.md) ·
-[Română](../ro/README.md) ·
-[Slovenčina](../sk/README.md) ·
-[Slovenščina](../sl/README.md) ·
-[Suomi](../fi/README.md) ·
-[Svenska](../sv/README.md) ·
-[Tiếng Việt](../vi/README.md) ·
-[Türkçe](../tr/README.md) ·
-[Ελληνικά](../el/README.md) ·
-[Русский](../ru/README.md) ·
-[Українська](../uk/README.md) ·
-[עברית](../he/README.md)‎ ·
-[العربية](../ar/README.md)‎ ·
-[हिन्दी](../hi/README.md) ·
-[ไทย](../th/README.md) ·
-[한국어](../ko/README.md) ·
-[日本語](../ja/README.md) ·
-[简体中文](../zh-Hans/README.md) ·
-[繁體中文](../zh-Hant/README.md)
+[Bahasa Indonesia](../id/README.md) · [Bahasa Melayu](../ms/README.md) · [Català](../ca/README.md) · [Čeština](../cs/README.md) · [Dansk](../da/README.md) · [Deutsch](../de/README.md) · [English](../../../README.md) · [Español](../es/README.md) · [Français](../fr/README.md) · **Hrvatski** · [Italiano](../it/README.md) · [Magyar](../hu/README.md) · [Nederlands](../nl/README.md) · [Norsk](../no/README.md) · [Polski](../pl/README.md) · [Português (Brasil)](../pt_BR/README.md) · [Português (Portugal)](../pt_PT/README.md) · [Română](../ro/README.md) · [Slovenčina](../sk/README.md) · [Slovenščina](../sl/README.md) · [Suomi](../fi/README.md) · [Svenska](../sv/README.md) · [Tiếng Việt](../vi/README.md) · [Türkçe](../tr/README.md) · [Ελληνικά](../el/README.md) · [Русский](../ru/README.md) · [Українська](../uk/README.md) · [עברית](../he/README.md)‎ · [العربية](../ar/README.md)‎ · [हिन्दी](../hi/README.md) · [ไทย](../th/README.md) · [한국어](../ko/README.md) · [日本語](../ja/README.md) · [简体中文](../zh-Hans/README.md) · [繁體中文](../zh-Hant/README.md)
 
 ## Sadržaj
 

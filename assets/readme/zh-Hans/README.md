@@ -20,52 +20,9 @@ Lowspeak 支持 35 种语言。它能学会你常用的名称和术语，可以�
 
 **发现 Bug 了？** 请[提交 Issue](https://github.com/sventmueller/lowspeak/issues/new/choose)，或在 Lowspeak 的菜单中选取 **帮助 › 报告问题…**：表单打开时会自动填好你的版本。如果 Lowspeak 对你有用，在 [GitHub 上点个 Star](https://github.com/sventmueller/lowspeak) 能帮助更多人找到它。
 
-[![Rust 2024 版](https://img.shields.io/badge/Rust-2024_edition-000000?logo=rust&logoColor=white)](https://www.rust-lang.org)
-[![macOS 14 或更高版本](https://img.shields.io/badge/macOS-14%2B-000000?logo=apple&logoColor=white)](https://www.apple.com/macos/)
-![通用：Apple 芯片和 Intel](https://img.shields.io/badge/Universal-Apple_Silicon_%7C_Intel-333333?logo=apple&logoColor=white)
-[![通过 objc2 使用 AppKit](https://img.shields.io/badge/AppKit-objc2_0.6-147EFB?logo=apple&logoColor=white)](https://github.com/madsmtm/objc2)
-[![在 Metal 上运行的 whisper.cpp](https://img.shields.io/badge/whisper.cpp-Metal-0A84FF)](https://github.com/ggml-org/whisper.cpp)
-[![在神经网络引擎上运行的 Parakeet](https://img.shields.io/badge/Parakeet-Neural_Engine-76B900?logo=nvidia&logoColor=white)](https://huggingface.co/FluidInference)
-![通过 OpenAI 或 Groq 在线转写](https://img.shields.io/badge/online-OpenAI_%7C_Groq-333333)
-![35 种界面语言](https://img.shields.io/badge/languages-35-4C9A2A)
-![使用 Hardened Runtime 签名](https://img.shields.io/badge/Hardened_Runtime-signed-4C9A2A)
-[![许可证：MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT_OR_Apache--2.0-4C9A2A)](#许可证)
+[![Rust 2024 版](https://img.shields.io/badge/Rust-2024_edition-000000?logo=rust&logoColor=white)](https://www.rust-lang.org) [![macOS 14 或更高版本](https://img.shields.io/badge/macOS-14%2B-000000?logo=apple&logoColor=white)](https://www.apple.com/macos/) ![通用：Apple 芯片和 Intel](https://img.shields.io/badge/Universal-Apple_Silicon_%7C_Intel-333333?logo=apple&logoColor=white) [![通过 objc2 使用 AppKit](https://img.shields.io/badge/AppKit-objc2_0.6-147EFB?logo=apple&logoColor=white)](https://github.com/madsmtm/objc2) [![在 Metal 上运行的 whisper.cpp](https://img.shields.io/badge/whisper.cpp-Metal-0A84FF)](https://github.com/ggml-org/whisper.cpp) [![在神经网络引擎上运行的 Parakeet](https://img.shields.io/badge/Parakeet-Neural_Engine-76B900?logo=nvidia&logoColor=white)](https://huggingface.co/FluidInference) ![通过 OpenAI 或 Groq 在线转写](https://img.shields.io/badge/online-OpenAI_%7C_Groq-333333) ![35 种界面语言](https://img.shields.io/badge/languages-35-4C9A2A) ![使用 Hardened Runtime 签名](https://img.shields.io/badge/Hardened_Runtime-signed-4C9A2A) [![许可证：MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT_OR_Apache--2.0-4C9A2A)](#许可证)
 
-[Bahasa Indonesia](../id/README.md) ·
-[Bahasa Melayu](../ms/README.md) ·
-[Català](../ca/README.md) ·
-[Čeština](../cs/README.md) ·
-[Dansk](../da/README.md) ·
-[Deutsch](../de/README.md) ·
-[English](../../../README.md) ·
-[Español](../es/README.md) ·
-[Français](../fr/README.md) ·
-[Hrvatski](../hr/README.md) ·
-[Italiano](../it/README.md) ·
-[Magyar](../hu/README.md) ·
-[Nederlands](../nl/README.md) ·
-[Norsk](../no/README.md) ·
-[Polski](../pl/README.md) ·
-[Português (Brasil)](../pt_BR/README.md) ·
-[Português (Portugal)](../pt_PT/README.md) ·
-[Română](../ro/README.md) ·
-[Slovenčina](../sk/README.md) ·
-[Slovenščina](../sl/README.md) ·
-[Suomi](../fi/README.md) ·
-[Svenska](../sv/README.md) ·
-[Tiếng Việt](../vi/README.md) ·
-[Türkçe](../tr/README.md) ·
-[Ελληνικά](../el/README.md) ·
-[Русский](../ru/README.md) ·
-[Українська](../uk/README.md) ·
-[עברית](../he/README.md)‎ ·
-[العربية](../ar/README.md)‎ ·
-[हिन्दी](../hi/README.md) ·
-[ไทย](../th/README.md) ·
-[한국어](../ko/README.md) ·
-[日本語](../ja/README.md) ·
-**简体中文** ·
-[繁體中文](../zh-Hant/README.md)
+[Bahasa Indonesia](../id/README.md) · [Bahasa Melayu](../ms/README.md) · [Català](../ca/README.md) · [Čeština](../cs/README.md) · [Dansk](../da/README.md) · [Deutsch](../de/README.md) · [English](../../../README.md) · [Español](../es/README.md) · [Français](../fr/README.md) · [Hrvatski](../hr/README.md) · [Italiano](../it/README.md) · [Magyar](../hu/README.md) · [Nederlands](../nl/README.md) · [Norsk](../no/README.md) · [Polski](../pl/README.md) · [Português (Brasil)](../pt_BR/README.md) · [Português (Portugal)](../pt_PT/README.md) · [Română](../ro/README.md) · [Slovenčina](../sk/README.md) · [Slovenščina](../sl/README.md) · [Suomi](../fi/README.md) · [Svenska](../sv/README.md) · [Tiếng Việt](../vi/README.md) · [Türkçe](../tr/README.md) · [Ελληνικά](../el/README.md) · [Русский](../ru/README.md) · [Українська](../uk/README.md) · [עברית](../he/README.md)‎ · [العربية](../ar/README.md)‎ · [हिन्दी](../hi/README.md) · [ไทย](../th/README.md) · [한국어](../ko/README.md) · [日本語](../ja/README.md) · **简体中文** · [繁體中文](../zh-Hant/README.md)
 
 ## 目录
 

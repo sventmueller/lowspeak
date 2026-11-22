@@ -3,9 +3,7 @@
 How Lowspeak is built, tested and laid out, and the rules its code follows.
 
 ## Overview
-Native macOS menu bar app for speech-to-text, written in Rust. Hold fn (Globe) to record, release to
-transcribe and paste. Rust with `objc2` bindings to AppKit and the other system frameworks, built with Cargo — no
-Xcode.
+Native macOS menu bar app for speech-to-text, written in Rust. Hold fn (Globe) to record, release to transcribe and paste. Rust with `objc2` bindings to AppKit and the other system frameworks, built with Cargo — no Xcode.
 
 ## Tech Stack
 - **Language:** Rust 2024 edition, macOS 14+ (Sonoma); the disk image is universal (arm64 and x86_64), every other build is for this Mac's processor
@@ -288,84 +286,35 @@ cargo xtask signing-identity  # once per Mac: local certificate so updates keep 
 - At runtime `util::version::app_version` reads the bundle's version ("dev" outside a bundle) for the About panel, the problem report, the download User-Agent and the launch line in `appstate.log`
 
 ### Distribution
-`cargo xtask dmg` (or `make release`, which runs `make check` first) builds a release, signs it with the Developer ID,
-notarizes the app with Apple and staples the ticket, packs it into a compressed, read-only disk image with a link to
-Applications, signs, notarizes and staples the image as well and checks the result with Gatekeeper (`spctl`). The app
-carries its own ticket so that a copy taken out of the image opens offline on first launch too; the two rounds with the
-notary service take a few minutes each. Only an image that passed every step becomes `dist/Lowspeak-<version>.dmg`,
-next to `dist/Lowspeak-<version>.md` with the notes and `dist/appcast.xml`, the update feed; older ones go to the Trash
-and the build number goes up. A failed run leaves `dist/` and `VERSION` as they were. It needs:
+`cargo xtask dmg` (or `make release`, which runs `make check` first) builds a release, signs it with the Developer ID, notarizes the app with Apple and staples the ticket, packs it into a compressed, read-only disk image with a link to Applications, signs, notarizes and staples the image as well and checks the result with Gatekeeper (`spctl`). The app carries its own ticket so that a copy taken out of the image opens offline on first launch too; the two rounds with the notary service take a few minutes each. Only an image that passed every step becomes `dist/Lowspeak-<version>.dmg`, next to `dist/Lowspeak-<version>.md` with the notes and `dist/appcast.xml`, the update feed; older ones go to the Trash and the build number goes up. A failed run leaves `dist/` and `VERSION` as they were. It needs:
 
 - a "Developer ID Application" certificate in the keychain
-- a saved login for Apple's notary service with an app-specific password, created once per Mac with
-  `xcrun notarytool store-credentials notary --apple-id <Apple ID> --team-id <team ID>`; splat uses the same profile
-- the private key that signs updates, in the login keychain. Sparkle's `generate_keys` created it for splat, and
-  Lowspeak signs with the same one, as Sparkle recommends one key per developer; its public half is `UPDATE_KEY` in
-  `xtask/src/updates.rs` and inside every installed copy, which accepts only updates signed with it. splat's
-  development guide says how to back it up and move it to another Mac. Without it, installed copies can never be
-  updated again
-- `RELEASE_NOTES.md` with what this release brings; `dmg` stops if it is empty or still holds the notes in `dist/`.
-  The update dialog shows the notes above a line on how to report a problem
-- the same notes in the 34 other interface languages as `release-notes/<language>.md`, each new since the previous
-  feed. The feed carries them with `xml:lang`, and Sparkle shows the one in the language macOS picks for the app,
-  with the report line in that language (`REPORT_LINES` in `xtask/src/release.rs`). Copies up to 1.0.1 declare no
-  languages and show the English notes
+- a saved login for Apple's notary service with an app-specific password, created once per Mac with `xcrun notarytool store-credentials notary --apple-id <Apple ID> --team-id <team ID>`; splat uses the same profile
+- the private key that signs updates, in the login keychain. Sparkle's `generate_keys` created it for splat, and Lowspeak signs with the same one, as Sparkle recommends one key per developer; its public half is `UPDATE_KEY` in `xtask/src/updates.rs` and inside every installed copy, which accepts only updates signed with it. splat's development guide says how to back it up and move it to another Mac. Without it, installed copies can never be updated again
+- `RELEASE_NOTES.md` with what this release brings; `dmg` stops if it is empty or still holds the notes in `dist/`. The update dialog shows the notes above a line on how to report a problem
+- the same notes in the 34 other interface languages as `release-notes/<language>.md`, each new since the previous feed. The feed carries them with `xml:lang`, and Sparkle shows the one in the language macOS picks for the app, with the report line in that language (`REPORT_LINES` in `xtask/src/release.rs`). Copies up to 1.0.1 declare no languages and show the English notes
 
-If one of them is missing, `dmg` stops before building. On the first run, macOS asks whether Terminal may control the
-Finder, which lays out the disk image window. `dmg` then reads the icon positions Finder stored in the image and stops
-if they are not the intended ones, as when Finder shows hidden files (⇧⌘. hides them) or lacks the permission;
-`deploy` packs its image with Finder's default window instead.
+If one of them is missing, `dmg` stops before building. On the first run, macOS asks whether Terminal may control the Finder, which lays out the disk image window. `dmg` then reads the icon positions Finder stored in the image and stops if they are not the intended ones, as when Finder shows hidden files (⇧⌘. hides them) or lacks the permission; `deploy` packs its image with Finder's default window instead.
 
-The images are not committed (`.gitignore`); the notes and the feed are. The download link in the README points at
-`Lowspeak.dmg` in the latest GitHub release, so each release carries a copy under that name:
-`cp dist/Lowspeak-<version>.dmg target/Lowspeak.dmg`, then
-`gh release create v<version> dist/Lowspeak-<version>.dmg target/Lowspeak.dmg dist/appcast.xml --notes-file dist/Lowspeak-<version>.md`.
-Creating the release publishes the update: installed copies read the feed from the latest release, and its download
-link points at `Lowspeak-<version>.dmg` of that release, so pushing to `main` alone offers nothing.
+The images are not committed (`.gitignore`); the notes and the feed are. The download link in the README points at `Lowspeak.dmg` in the latest GitHub release, so each release carries a copy under that name: `cp dist/Lowspeak-<version>.dmg target/Lowspeak.dmg`, then `gh release create v<version> dist/Lowspeak-<version>.dmg target/Lowspeak.dmg dist/appcast.xml --notes-file dist/Lowspeak-<version>.md`. Creating the release publishes the update: installed copies read the feed from the latest release, and its download link points at `Lowspeak-<version>.dmg` of that release, so pushing to `main` alone offers nothing.
 
-Last, the Homebrew cask: set `version` and `sha256` (`shasum -a 256 dist/Lowspeak-<version>.dmg`) in
-`Casks/lowspeak.rb` of [sventmueller/homebrew-tap](https://github.com/sventmueller/homebrew-tap), push it to `main` and
-check it with `brew audit --cask --online sventmueller/tap/lowspeak` and `brew livecheck --cask
-sventmueller/tap/lowspeak`. Copies from Homebrew update themselves through Sparkle as well (`auto_updates true`); the
-cask decides what `brew install` and `brew upgrade` fetch. Its `zap` leaves `Application Support/Lowspeak/Signing`
-alone, the local signing identity of a developer's Mac.
+Last, the Homebrew cask: set `version` and `sha256` (`shasum -a 256 dist/Lowspeak-<version>.dmg`) in `Casks/lowspeak.rb` of [sventmueller/homebrew-tap](https://github.com/sventmueller/homebrew-tap), push it to `main` and check it with `brew audit --cask --online sventmueller/tap/lowspeak` and `brew livecheck --cask sventmueller/tap/lowspeak`. Copies from Homebrew update themselves through Sparkle as well (`auto_updates true`); the cask decides what `brew install` and `brew upgrade` fetch. Its `zap` leaves `Application Support/Lowspeak/Signing` alone, the local signing identity of a developer's Mac.
 
 ### Updates
-Only the disk image carries the updater, [Sparkle](https://sparkle-project.org), which the build downloads once into
-`target/` from its GitHub release and checks against the checksum in `xtask/src/updates.rs`. Local builds have none:
-an update must not replace a build of your own. Sparkle's XPC services are left out, since only a sandboxed app needs
-them, and its helpers are signed inside out before the app. The hardened runtime loads the framework only when it
-carries the app's Team ID, which the Developer ID signature gives it.
+Only the disk image carries the updater, [Sparkle](https://sparkle-project.org), which the build downloads once into `target/` from its GitHub release and checks against the checksum in `xtask/src/updates.rs`. Local builds have none: an update must not replace a build of your own. Sparkle's XPC services are left out, since only a sandboxed app needs them, and its helpers are signed inside out before the app. The hardened runtime loads the framework only when it carries the app's Team ID, which the Developer ID signature gives it.
 
-- `app/updates.rs` loads `Sparkle.framework` from the bundle at run time, so the program links nothing of it and runs
-  the same without it; the menu then shows no update items
-- Sparkle asks on the second launch whether it may check once a day; the choice and the two update items of the menu
-  are Sparkle's settings
-- A menu bar app is always in the background, so Sparkle shows the update a scheduled check found behind the other
-  windows, except right after launch. Lowspeak implements Sparkle's gentle reminders: a dot on the status item and a
-  badge on Check for Updates…, which brings the update to the front, until the user turns to it
-- Sparkle installs an update when the app quits, also with the `_exit` of `app::shutdown`: its installer waits for the
-  process to end, not for the termination notification
+- `app/updates.rs` loads `Sparkle.framework` from the bundle at run time, so the program links nothing of it and runs the same without it; the menu then shows no update items
+- Sparkle asks on the second launch whether it may check once a day; the choice and the two update items of the menu are Sparkle's settings
+- A menu bar app is always in the background, so Sparkle shows the update a scheduled check found behind the other windows, except right after launch. Lowspeak implements Sparkle's gentle reminders: a dot on the status item and a badge on Check for Updates…, which brings the update to the front, until the user turns to it
+- Sparkle installs an update when the app quits, also with the `_exit` of `app::shutdown`: its installer waits for the process to end, not for the termination notification
 
-The disk image is a universal binary for Apple Silicon and Intel; other builds are for the host processor alone.
-Homebrew's Rust ships the standard library for the host processor only, so `dmg` builds through rustup, which installs
-the toolchain and targets of `rust-toolchain.toml` on first use, joins the two programs with `lipo` and stops if either
-half is missing. `make universal` builds only the program, into `target/universal/`.
+The disk image is a universal binary for Apple Silicon and Intel; other builds are for the host processor alone. Homebrew's Rust ships the standard library for the host processor only, so `dmg` builds through rustup, which installs the toolchain and targets of `rust-toolchain.toml` on first use, joins the two programs with `lipo` and stops if either half is missing. `make universal` builds only the program, into `target/universal/`.
 
-- The universal build has a target directory of its own (`target/universal/`): whisper-rs-sys hands every `GGML_*`
-  environment variable to whisper.cpp's CMake but does not rebuild when one changes, so it must not share output with
-  the builds for this Mac
-- `GGML_NATIVE=OFF` for both halves. Otherwise whisper.cpp is compiled with `-mcpu=native` for the build Mac's chip,
-  and a program built on an M3 can stop with an illegal instruction on an M1. The x86_64 half enables SSE4.2, AVX,
-  AVX2, BMI2, FMA and F16C, which every Intel Mac with macOS 14 has; cross-compiling would otherwise switch them off
-- With macOS 14 as deployment target, whisper.cpp's Metal code calls `__isPlatformVersionAtLeast` for its
-  `@available` checks. That lives in clang's runtime library, which rustc does not link, so `build.rs` links
-  `libclang_rt.osx.a` from `xcrun clang --print-resource-dir` as a static library: unlike a link argument, which reaches
-  only this crate's own programs, a library also reaches the program of a crate that depends on this one
-- On Intel, Whisper runs on the CPU (`use_gpu` only on aarch64): ggml's fast Metal kernels need an Apple GPU. Parakeet's
-  CoreML models fall back from the Neural Engine to the CPU by themselves
-- `make test-intel` (`cargo xtask intel-tests`) runs the tests of `make check` as x86_64 code, which Rosetta runs on
-  Apple Silicon, built with the same settings as the universal program. CI runs them on an Intel runner as well
+- The universal build has a target directory of its own (`target/universal/`): whisper-rs-sys hands every `GGML_*` environment variable to whisper.cpp's CMake but does not rebuild when one changes, so it must not share output with the builds for this Mac
+- `GGML_NATIVE=OFF` for both halves. Otherwise whisper.cpp is compiled with `-mcpu=native` for the build Mac's chip, and a program built on an M3 can stop with an illegal instruction on an M1. The x86_64 half enables SSE4.2, AVX, AVX2, BMI2, FMA and F16C, which every Intel Mac with macOS 14 has; cross-compiling would otherwise switch them off
+- With macOS 14 as deployment target, whisper.cpp's Metal code calls `__isPlatformVersionAtLeast` for its `@available` checks. That lives in clang's runtime library, which rustc does not link, so `build.rs` links `libclang_rt.osx.a` from `xcrun clang --print-resource-dir` as a static library: unlike a link argument, which reaches only this crate's own programs, a library also reaches the program of a crate that depends on this one
+- On Intel, Whisper runs on the CPU (`use_gpu` only on aarch64): ggml's fast Metal kernels need an Apple GPU. Parakeet's CoreML models fall back from the Neural Engine to the CPU by themselves
+- `make test-intel` (`cargo xtask intel-tests`) runs the tests of `make check` as x86_64 code, which Rosetta runs on Apple Silicon, built with the same settings as the universal program. CI runs them on an Intel runner as well
 
 ### Signing
 - `bundle` and `deploy` sign with the first available identity: "Developer ID Application", "Apple Development", the local "Lowspeak Local Signing" identity, else ad hoc. `dmg` requires the Developer ID

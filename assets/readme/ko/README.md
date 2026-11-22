@@ -20,52 +20,9 @@ Lowspeak는 35개 언어를 지원합니다. 자주 쓰는 이름과 용어를 �
 
 **버그를 발견하셨나요?** [이슈를 열거나](https://github.com/sventmueller/lowspeak/issues/new/choose) Lowspeak 메뉴에서 **도움말 › 문제 보고…** 항목을 선택해 주세요. 사용 중인 버전이 채워진 상태로 양식이 열립니다. Lowspeak가 유용하다면 [GitHub 스타](https://github.com/sventmueller/lowspeak)가 다른 사람들이 Lowspeak를 찾는 데 도움이 됩니다.
 
-[![Rust 2024 에디션](https://img.shields.io/badge/Rust-2024_edition-000000?logo=rust&logoColor=white)](https://www.rust-lang.org)
-[![macOS 14 이상](https://img.shields.io/badge/macOS-14%2B-000000?logo=apple&logoColor=white)](https://www.apple.com/macos/)
-![유니버설: Apple Silicon 및 Intel](https://img.shields.io/badge/Universal-Apple_Silicon_%7C_Intel-333333?logo=apple&logoColor=white)
-[![objc2를 통한 AppKit](https://img.shields.io/badge/AppKit-objc2_0.6-147EFB?logo=apple&logoColor=white)](https://github.com/madsmtm/objc2)
-[![Metal에서 실행되는 whisper.cpp](https://img.shields.io/badge/whisper.cpp-Metal-0A84FF)](https://github.com/ggml-org/whisper.cpp)
-[![Neural Engine에서 실행되는 Parakeet](https://img.shields.io/badge/Parakeet-Neural_Engine-76B900?logo=nvidia&logoColor=white)](https://huggingface.co/FluidInference)
-![온라인: OpenAI 또는 Groq](https://img.shields.io/badge/online-OpenAI_%7C_Groq-333333)
-![35개 인터페이스 언어](https://img.shields.io/badge/languages-35-4C9A2A)
-![Hardened Runtime으로 서명됨](https://img.shields.io/badge/Hardened_Runtime-signed-4C9A2A)
-[![라이선스: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT_OR_Apache--2.0-4C9A2A)](#라이선스)
+[![Rust 2024 에디션](https://img.shields.io/badge/Rust-2024_edition-000000?logo=rust&logoColor=white)](https://www.rust-lang.org) [![macOS 14 이상](https://img.shields.io/badge/macOS-14%2B-000000?logo=apple&logoColor=white)](https://www.apple.com/macos/) ![유니버설: Apple Silicon 및 Intel](https://img.shields.io/badge/Universal-Apple_Silicon_%7C_Intel-333333?logo=apple&logoColor=white) [![objc2를 통한 AppKit](https://img.shields.io/badge/AppKit-objc2_0.6-147EFB?logo=apple&logoColor=white)](https://github.com/madsmtm/objc2) [![Metal에서 실행되는 whisper.cpp](https://img.shields.io/badge/whisper.cpp-Metal-0A84FF)](https://github.com/ggml-org/whisper.cpp) [![Neural Engine에서 실행되는 Parakeet](https://img.shields.io/badge/Parakeet-Neural_Engine-76B900?logo=nvidia&logoColor=white)](https://huggingface.co/FluidInference) ![온라인: OpenAI 또는 Groq](https://img.shields.io/badge/online-OpenAI_%7C_Groq-333333) ![35개 인터페이스 언어](https://img.shields.io/badge/languages-35-4C9A2A) ![Hardened Runtime으로 서명됨](https://img.shields.io/badge/Hardened_Runtime-signed-4C9A2A) [![라이선스: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT_OR_Apache--2.0-4C9A2A)](#라이선스)
 
-[Bahasa Indonesia](../id/README.md) ·
-[Bahasa Melayu](../ms/README.md) ·
-[Català](../ca/README.md) ·
-[Čeština](../cs/README.md) ·
-[Dansk](../da/README.md) ·
-[Deutsch](../de/README.md) ·
-[English](../../../README.md) ·
-[Español](../es/README.md) ·
-[Français](../fr/README.md) ·
-[Hrvatski](../hr/README.md) ·
-[Italiano](../it/README.md) ·
-[Magyar](../hu/README.md) ·
-[Nederlands](../nl/README.md) ·
-[Norsk](../no/README.md) ·
-[Polski](../pl/README.md) ·
-[Português (Brasil)](../pt_BR/README.md) ·
-[Português (Portugal)](../pt_PT/README.md) ·
-[Română](../ro/README.md) ·
-[Slovenčina](../sk/README.md) ·
-[Slovenščina](../sl/README.md) ·
-[Suomi](../fi/README.md) ·
-[Svenska](../sv/README.md) ·
-[Tiếng Việt](../vi/README.md) ·
-[Türkçe](../tr/README.md) ·
-[Ελληνικά](../el/README.md) ·
-[Русский](../ru/README.md) ·
-[Українська](../uk/README.md) ·
-[עברית](../he/README.md)‎ ·
-[العربية](../ar/README.md)‎ ·
-[हिन्दी](../hi/README.md) ·
-[ไทย](../th/README.md) ·
-**한국어** ·
-[日本語](../ja/README.md) ·
-[简体中文](../zh-Hans/README.md) ·
-[繁體中文](../zh-Hant/README.md)
+[Bahasa Indonesia](../id/README.md) · [Bahasa Melayu](../ms/README.md) · [Català](../ca/README.md) · [Čeština](../cs/README.md) · [Dansk](../da/README.md) · [Deutsch](../de/README.md) · [English](../../../README.md) · [Español](../es/README.md) · [Français](../fr/README.md) · [Hrvatski](../hr/README.md) · [Italiano](../it/README.md) · [Magyar](../hu/README.md) · [Nederlands](../nl/README.md) · [Norsk](../no/README.md) · [Polski](../pl/README.md) · [Português (Brasil)](../pt_BR/README.md) · [Português (Portugal)](../pt_PT/README.md) · [Română](../ro/README.md) · [Slovenčina](../sk/README.md) · [Slovenščina](../sl/README.md) · [Suomi](../fi/README.md) · [Svenska](../sv/README.md) · [Tiếng Việt](../vi/README.md) · [Türkçe](../tr/README.md) · [Ελληνικά](../el/README.md) · [Русский](../ru/README.md) · [Українська](../uk/README.md) · [עברית](../he/README.md)‎ · [العربية](../ar/README.md)‎ · [हिन्दी](../hi/README.md) · [ไทย](../th/README.md) · **한국어** · [日本語](../ja/README.md) · [简体中文](../zh-Hans/README.md) · [繁體中文](../zh-Hant/README.md)
 
 ## 목차
 
