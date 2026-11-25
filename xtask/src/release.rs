@@ -166,9 +166,9 @@ fn report_line(language: &str) -> Result<String> {
 /// its ticket stapled. Only an image that passed all of this becomes `dist/Lowspeak-<version>.dmg`, next to
 /// `dist/Lowspeak-<version>.md` with the notes of `RELEASE_NOTES.md` and `dist/appcast.xml`, which offers the image to
 /// installed copies once it is on the GitHub release, with the notes in every interface language; it replaces the
-/// older ones there, and the build number goes up. A failed run leaves `dist/` and VERSION as they were.
+/// older ones there. The build number goes up first and is committed last; a failed or interrupted run leaves `dist/`,
+/// Cargo.toml and Cargo.lock as they were.
 pub(crate) fn release() -> Result<PathBuf> {
-    let version = version()?;
     let dist = root().join("dist");
     let notes_path = root().join(NOTES);
     let written = std::fs::read_to_string(&notes_path)
@@ -193,6 +193,8 @@ pub(crate) fn release() -> Result<PathBuf> {
     })?;
     check_update_key()?;
 
+    let bump = Bump::start()?;
+    let version = bump.version().to_owned();
     let app = assemble(Build::Distribution, &version)?;
     println!("Signing {version} with {}", identity.name);
     sign(&app, Some(&identity))?;
@@ -243,19 +245,32 @@ pub(crate) fn release() -> Result<PathBuf> {
     std::fs::create_dir_all(&dist)?;
     let name = format!("{APP_NAME}-{version}");
     let published = dist.join(format!("{name}.dmg"));
-    // Copied rather than renamed: target/ may be a link to another volume.
-    std::fs::copy(&image, &published)
-        .with_context(|| format!("copying to {}", published.display()))?;
+    let published_notes = dist.join(format!("{name}.md"));
+    let previous_feed = std::fs::read(dist.join(FEED)).ok();
+    let publish = || -> Result<()> {
+        // Copied rather than renamed: target/ may be a link to another volume.
+        std::fs::copy(&image, &published)
+            .with_context(|| format!("copying to {}", published.display()))?;
+        std::fs::write(&published_notes, &notes)?;
+        std::fs::write(dist.join(FEED), &feed)?;
+        Ok(())
+    };
+    if let Err(error) = publish().and_then(|()| bump.commit()) {
+        let _ = std::fs::remove_file(&published);
+        let _ = std::fs::remove_file(&published_notes);
+        let _ = match &previous_feed {
+            Some(previous) => std::fs::write(dist.join(FEED), previous),
+            None => std::fs::remove_file(dist.join(FEED)),
+        };
+        return Err(error);
+    }
     std::fs::remove_file(&image)?;
-    std::fs::write(dist.join(format!("{name}.md")), &notes)?;
-    std::fs::write(dist.join(FEED), feed)?;
     for entry in std::fs::read_dir(&dist)?.flatten() {
         let file = entry.file_name().to_string_lossy().into_owned();
         if released_version(&file).is_some_and(|other| other != version) {
             run(Command::new("trash").arg(entry.path()))?;
         }
     }
-    next_build(&version)?;
     Ok(published)
 }
 

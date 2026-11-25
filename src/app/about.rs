@@ -4,8 +4,8 @@ use objc2::AnyThread as _;
 use objc2::rc::Retained;
 use objc2::runtime::AnyObject;
 use objc2_app_kit::{
-    NSAboutPanelOptionCredits, NSAboutPanelOptionVersion, NSApplication, NSFont,
-    NSFontAttributeName, NSLinkAttributeName, NSMutableParagraphStyle,
+    NSAboutPanelOptionApplicationVersion, NSAboutPanelOptionCredits, NSAboutPanelOptionVersion,
+    NSApplication, NSFont, NSFontAttributeName, NSLinkAttributeName, NSMutableParagraphStyle,
     NSParagraphStyleAttributeName, NSTextAlignment,
 };
 use objc2_foundation::{
@@ -15,17 +15,25 @@ use objc2_foundation::{
 
 use super::feedback::REPOSITORY;
 use crate::i18n::Texts;
+use crate::util::version;
 
 pub fn show(mtm: MainThreadMarker, t: &Texts) {
     // The version ends in the build number already, which the panel would repeat in parentheses.
-    let version = NSString::new();
+    let build = NSString::new();
+    let shown = NSString::from_str(version::app_version());
     let credits = credits(t);
     // SAFETY: framework constants.
-    let keys = unsafe { [NSAboutPanelOptionVersion, NSAboutPanelOptionCredits] };
-    let values: [&AnyObject; 2] = [&version, &credits];
+    let keys = unsafe {
+        [
+            NSAboutPanelOptionApplicationVersion,
+            NSAboutPanelOptionVersion,
+            NSAboutPanelOptionCredits,
+        ]
+    };
+    let values: [&AnyObject; 3] = [&shown, &build, &credits];
     let options = NSDictionary::from_slices(&keys, &values);
     super::bring_to_front(mtm);
-    // SAFETY: the panel takes a string for the version and an attributed string for the credits.
+    // SAFETY: the panel takes strings for both versions and an attributed string for the credits.
     unsafe {
         NSApplication::sharedApplication(mtm).orderFrontStandardAboutPanelWithOptions(&options);
     };

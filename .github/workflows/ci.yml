@@ -40,6 +40,6 @@ jobs:
       - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
       # The window tests drive AppKit, the same on both processors; this runner draws windows so slowly that they
       # took a quarter of an hour here, against seconds on Apple Silicon and under Rosetta.
-      - run: cargo test --release --workspace --no-fail-fast
+      - run: cargo test --locked --release --workspace --no-fail-fast
         env:
           LOWSPEAK_SKIP_WINDOW_TESTS: "1"

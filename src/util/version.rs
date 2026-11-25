@@ -1,9 +1,22 @@
-use objc2_foundation::{NSBundle, NSString, ns_string};
+/// The version of `[workspace.package]` in Cargo.toml, which xtask also writes into the bundle's Info.plist.
+pub fn app_version() -> &'static str {
+    env!("CARGO_PKG_VERSION")
+}
 
-/// The version from the bundle's Info.plist, which `cargo xtask bundle` takes from VERSION; "dev" outside a bundle.
-pub fn app_version() -> String {
-    NSBundle::mainBundle()
-        .objectForInfoDictionaryKey(ns_string!("CFBundleShortVersionString"))
-        .and_then(|value| value.downcast::<NSString>().ok())
-        .map_or_else(|| "dev".to_owned(), |value| value.to_string())
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn the_app_reports_the_workspace_version() {
+        let manifest = include_str!("../../Cargo.toml");
+        let declared = manifest
+            .split("[workspace.package]")
+            .nth(1)
+            .and_then(|section| section.lines().find(|line| line.starts_with("version = ")))
+            .and_then(|line| line.split('"').nth(1))
+            .expect("Cargo.toml declares the version in [workspace.package]");
+        assert_eq!(app_version(), declared);
+        assert_ne!(app_version(), "0.0.0");
+    }
 }

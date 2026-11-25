@@ -23,7 +23,7 @@ pub fn problem_report() -> String {
         "{}.{}.{}",
         system.majorVersion, system.minorVersion, system.patchVersion
     );
-    problem_address(&version::app_version(), &macos)
+    problem_address(version::app_version(), &macos)
 }
 
 pub fn feature_suggestion() -> String {

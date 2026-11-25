@@ -303,16 +303,12 @@ pub(crate) fn check_universal(program: &Path) -> Result<()> {
     Ok(())
 }
 
-/// Builds and signs the app for this Mac. A release build raises the build number in VERSION once it is signed.
-pub(crate) fn bundle(build: Build) -> Result<(PathBuf, String)> {
-    let version = version()?;
-    let app = assemble(build, &version)?;
+/// Builds and signs the app for this Mac.
+pub(crate) fn bundle(build: Build, version: &str) -> Result<PathBuf> {
+    let app = assemble(build, version)?;
     sign(&app, signing_identity()?.as_ref())?;
     println!("Bundle: {} ({version})", app.display());
-    if build == Build::Release {
-        next_build(&version)?;
-    }
-    Ok((app, version))
+    Ok(app)
 }
 
 /// The installed copy, wherever under /Applications it lives.
@@ -329,15 +325,25 @@ pub(crate) fn installed_location() -> PathBuf {
         .unwrap_or_else(|| PathBuf::from(format!("/Applications/{APP_NAME}.app")))
 }
 
-/// Installs the build and packs it as `target/bundle/Lowspeak-<version>.dmg`, not notarized, to pass on for testing.
+/// Installs the build and packs it as `target/bundle/Lowspeak-<version>.dmg`, not notarized, to pass on for testing. A
+/// release build raises the version first and commits it once all of this succeeded; otherwise the version stays.
 pub(crate) fn deploy(build: Build) -> Result<()> {
-    let (app, version) = bundle(build)?;
+    let bump = if build == Build::Release {
+        Some(Bump::start()?)
+    } else {
+        None
+    };
+    let version = match &bump {
+        Some(bump) => bump.version().to_owned(),
+        None => version()?,
+    };
+    let app = bundle(build, &version)?;
     install(&app)?;
     let image = disk_image(&app, Layout::Optional)?;
     let named = image.with_file_name(format!("{APP_NAME}-{version}.dmg"));
     std::fs::rename(&image, &named)?;
     println!("DMG: {}", named.display());
-    Ok(())
+    bump.map_or(Ok(()), Bump::commit)
 }
 
 pub(crate) fn install(app: &Path) -> Result<()> {
